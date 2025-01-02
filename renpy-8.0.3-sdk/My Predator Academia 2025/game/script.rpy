@@ -3,8 +3,12 @@
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
-define e = Character("Eileen")
-
+define sof = Character("Sofie")
+define jes = Character("Jessie")
+define mer = Character("Merry")
+define yul = Character("yuli")
+define ash = Character("Ash")
+define fel = Character("Felicity")
 
 # The game starts here.
 
