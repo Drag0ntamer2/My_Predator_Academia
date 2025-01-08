@@ -1,0 +1,10 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/screens.rpy", line 232: end of line expected.
+    if not prey.recDis:
+    ^
+
+Ren'Py Version: Ren'Py 8.0.3.22090809
+Tue Jan  7 19:23:08 2025

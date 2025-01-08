@@ -97,18 +97,73 @@ style frame:
 
 screen say(who, what):
     style_prefix "say"
-
+    # Main dialogue window
     window:
         id "window"
 
+        # Display the name of the speaker
         if who is not None:
-
             window:
                 id "namebox"
                 style "namebox"
                 text who id "who"
 
+        # Display the dialogue text
         text what id "what"
+
+
+    # minigame stats
+    if minigame_active:
+        #### Prey
+        vbox:
+            xalign 1.0
+            yalign 0.0
+            spacing 10  # Optional spacing between bars
+            bar value (prey.hp * 100) range (prey.maxHp * 100) style "prey_health_bar"
+            bar value (prey.stam * 100) range (prey.maxStam * 100) style "prey_stamina_bar"
+            if not prey.recDis:
+                bar value (prey.dis * 100) range (5 * 100) style "prey_orientation_bar"
+            else:
+                bar value (prey.dis * 100) range (5 * 100) style "prey_orientation_bar_locked"
+            bar value (prey.arousal * 10) range (500) style "prey_arousal_bar"
+        vbox:
+            spacing 10
+            xalign 1.0
+            yalign 0.0
+            text preyName color "#000000"
+
+        #### Pred
+        vbox:
+            xalign 0.0
+            yalign 0.0
+            spacing 10  # Optional spacing between bars
+            bar value (pred.shp * 100) range (pred.maxShp * 100) style "pred_health_bar"
+            bar value (pred.stam * 100) range (pred.maxStam * 100) style "pred_stamina_bar"
+            if not prey.recDis:
+                bar value (pred.dis * 100) range (5 * 100) style "pred_nausea_bar"
+            else:
+                bar value (pred.dis * 100) range (5 * 100) style "pred_nausea_bar_locked"
+            bar value (pred.arousal * 10) range (500) style "pred_arousal_bar"
+        vbox:
+            spacing 10
+            xalign 0.0
+            yalign 0.0
+            text predName color "#000000"
+        #### Stomach
+        frame:
+            xalign 0.5
+            yalign 0.0
+            vbox:
+                xalign 0.5
+                yalign 0.0
+                spacing 10
+                text f"Oxygen      | {pred.oxy:.2f}"
+                text f"Acid Level  | {pred.aLev:.2f}"
+                text f"Compression | {pred.sComp:.2f}"
+
+
+
+
 
 
     ## If there's a side image, display it above the text. Do not display on the
@@ -162,6 +217,77 @@ style say_dialogue:
 
     adjust_spacing False
 
+style prey_health_bar:
+    xalign 1.0
+    left_bar Solid("#550000")
+    right_bar Solid("#ff0000")
+    bar_invert True  # Fill from right to left
+    xsize 800  # Width of the bar
+    ysize 40   # Height of the bar
+
+style prey_stamina_bar:
+    xalign 1.0
+    left_bar Solid("#000055")
+    right_bar Solid("#0000ff")
+    bar_invert True  # Fill from right to left
+    xsize 600  # Width of the bar
+    ysize 20   # Height of the bar
+
+style prey_orientation_bar:
+    xalign 1.0
+    left_bar Solid("#005500")
+    right_bar Solid("#00ff00")
+    bar_invert True  # Fill from right to left
+    xsize 600  # Width of the bar
+    ysize 20   # Height of the bar
+style prey_orientation_bar_locked:
+    xalign 1.0
+    left_bar Solid("#555555")
+    right_bar Solid("#aaaaaa")
+    bar_invert True  # Fill from right to left
+    xsize 600  # Width of the bar
+    ysize 20   # Height of the bar
+
+style prey_arousal_bar:
+    xalign 1.0
+    left_bar Solid("#8b008b")
+    right_bar Solid("#ff69b4")
+    bar_invert True  # Fill from right to left
+    xsize 600  # Width of the bar
+    ysize 20   # Height of the bar
+
+style pred_health_bar:
+    left_bar Solid("#ff0000")  # Red for health
+    right_bar Solid("#550000")  # Dark red for health background
+    xsize 800  # Width of the bar
+    ysize 40   # Height of the bar
+
+style pred_stamina_bar:
+    left_bar Solid("#0000ff")  # Blue for stamina
+    right_bar Solid("#000055")  # Dark blue for stamina background
+    xsize 600  # Width of the bar
+    ysize 20   # Height of the bar
+
+style pred_nausea_bar:
+    left_bar Solid("#00ff00")  # Green for nausea
+    right_bar Solid("#005500")
+    xsize 600  # Width of the bar
+    ysize 20   # Height of the bar
+style pred_nausea_bar_locked:
+    left_bar Solid("#555555")
+    right_bar Solid("#aaaaaa")
+    xsize 600  # Width of the bar
+    ysize 20   # Height of the bar
+
+style pred_arousal_bar:
+    left_bar Solid("#ff69b4")  # Pink for arousal
+    right_bar Solid("#8b008b")
+    xsize 600  # Width of the bar
+    ysize 20   # Height of the bar
+
+
+
+
 ## Input screen ################################################################
 ##
 ## This screen is used to display renpy.input. The prompt parameter is used to
@@ -186,6 +312,51 @@ screen input(prompt):
             text prompt style "input_prompt"
             input id "input"
 
+    # minigame stats
+    if minigame_active:
+        #### Prey
+        vbox:
+            xalign 1.0
+            yalign 0.0
+            spacing 10  # Optional spacing between bars
+            bar value (prey.hp * 100) range (prey.maxHp * 100) style "prey_health_bar"
+            bar value (prey.stam * 100) range (prey.maxStam * 100) style "prey_stamina_bar"
+            bar value (prey.dis * 100) range (5 * 100) style "prey_orientation_bar"
+            bar value (prey.arousal * 10) range (500) style "prey_arousal_bar"
+        vbox:
+            spacing 10
+            xalign 1.0
+            yalign 0.0
+            text preyName color "#000000"
+
+        #### Pred
+        vbox:
+            xalign 0.0
+            yalign 0.0
+            spacing 10  # Optional spacing between bars
+            bar value (pred.shp * 100) range (pred.maxShp * 100) style "pred_health_bar"
+            bar value (pred.stam * 100) range (pred.maxStam * 100) style "pred_stamina_bar"
+            bar value (pred.dis * 100) range (5 * 100) style "pred_nausea_bar"
+            bar value (pred.arousal * 10) range (500) style "pred_arousal_bar"
+        vbox:
+            spacing 10
+            xalign 0.0
+            yalign 0.0
+            text predName color "#000000"
+        #### Stomach
+        frame:
+            xalign 0.5
+            yalign 0.0
+            vbox:
+                xalign 0.5
+                yalign 0.0
+                spacing 10
+                text f"Oxygen      | {pred.oxy:.2f}"
+                text f"Acid Level  | {pred.aLev:.2f}"
+                text f"Compression | {pred.sComp:.2f}"
+
+
+
 style input_prompt is default
 
 style input_prompt:
@@ -208,9 +379,56 @@ style input:
 screen choice(items):
     style_prefix "choice"
 
+
+
     vbox:
         for i in items:
             textbutton i.caption action i.action
+
+
+
+    # minigame stats
+    if minigame_active:
+        #### Prey
+        vbox:
+            xalign 1.0
+            yalign 0.0
+            spacing 10  # Optional spacing between bars
+            bar value (prey.hp * 100) range (prey.maxHp * 100) style "prey_health_bar"
+            bar value (prey.stam * 100) range (prey.maxStam * 100) style "prey_stamina_bar"
+            bar value (prey.dis * 100) range (5 * 100) style "prey_orientation_bar"
+            bar value (prey.arousal * 10) range (500) style "prey_arousal_bar"
+        vbox:
+            spacing 10
+            xalign 1.0
+            yalign 0.0
+            text preyName color "#000000"
+
+        #### Pred
+        vbox:
+            xalign 0.0
+            yalign 0.0
+            spacing 10  # Optional spacing between bars
+            bar value (pred.shp * 100) range (pred.maxShp * 100) style "pred_health_bar"
+            bar value (pred.stam * 100) range (pred.maxStam * 100) style "pred_stamina_bar"
+            bar value (pred.dis * 100) range (5 * 100) style "pred_nausea_bar"
+            bar value (pred.arousal * 10) range (500) style "pred_arousal_bar"
+        vbox:
+            spacing 10
+            xalign 0.0
+            yalign 0.0
+            text predName color "#000000"
+        #### Stomach
+        frame:
+            xalign 0.5
+            yalign 0.0
+            vbox:
+                xalign 0.5
+                yalign 0.0
+                spacing 10
+                text f"Oxygen      | {pred.oxy:.2f}"
+                text f"Acid Level  | {pred.aLev:.2f}"
+                text f"Compression | {pred.sComp:.2f}"
 
 
 style choice_vbox is vbox
@@ -230,6 +448,19 @@ style choice_button is default:
 style choice_button_text is default:
     properties gui.button_text_properties("choice_button")
 
+
+
+style health_bar_small:
+    left_bar Solid("#ff0000")  # Red for health
+    right_bar Solid("#550000")  # Dark red for health background
+    xsize 300  # Width of the bar
+    ysize 10   # Height of the bar
+
+style stamina_bar_small:
+    left_bar Solid("#0000ff")  # Blue for stamina
+    right_bar Solid("#000055")  # Dark blue for stamina background
+    xsize 300  # Width of the bar
+    ysize 10   # Height of the bar
 
 ## Quick Menu screen ###########################################################
 ##
@@ -733,6 +964,16 @@ screen preferences():
                     textbutton _("Unseen Text") action Preference("skip", "toggle")
                     textbutton _("After Choices") action Preference("after choices", "toggle")
                     textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle"))
+                vbox:
+                    style_prefix "radio"
+                    label _("Difficulty")
+                    textbutton _("Easy") action SetField(preferences, "difficulty", 1) selected (preferences.difficulty == 1)
+                    textbutton _("Normal") action SetField(preferences, "difficulty", 2) selected (preferences.difficulty == 2)
+                    textbutton _("Hard") action SetField(preferences, "difficulty", 3) selected (preferences.difficulty == 3)
+
+
+
+
 
                 ## Additional vboxes of type "radio_pref" or "check_pref" can be
                 ## added here, to add additional creator-defined preferences.
@@ -787,6 +1028,7 @@ screen preferences():
                         textbutton _("Mute All"):
                             action Preference("all mute", "toggle")
                             style "mute_all_button"
+
 
 
 style pref_label is gui_label

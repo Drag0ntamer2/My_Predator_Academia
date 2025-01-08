@@ -14,6 +14,9 @@
 
 define config.name = _("My Predator Academia 2025")
 
+## The game's difficulty
+## Default difficulty level: 2 = Normal
+default preferences.difficulty = 2
 
 ## Determines if the title given above is shown on the main menu screen. Set
 ## this to False to hide the title.

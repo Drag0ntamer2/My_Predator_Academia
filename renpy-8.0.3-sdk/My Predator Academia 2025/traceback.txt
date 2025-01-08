@@ -1,0 +1,30 @@
+﻿I'm sorry, but an uncaught exception occurred.
+
+While running game code:
+  File "game/script.rpy", line 229, in script call
+    call pred_vore_action("rest")
+  File "game/vore_minigames.rpy", line 97, in script
+    python:
+  File "game/vore_minigames.rpy", line 155, in <module>
+    if (pred.aStren * pred.aLev >= prey.aRes * 2) & type != "contain":
+TypeError: unsupported operand type(s) for &: 'bool' and 'str'
+
+-- Full Traceback ------------------------------------------------------------
+
+Full traceback:
+  File "game/script.rpy", line 229, in script call
+    call pred_vore_action("rest")
+  File "game/vore_minigames.rpy", line 97, in script
+    python:
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1131, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\python.py", line 1061, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+  File "game/vore_minigames.rpy", line 155, in <module>
+    if (pred.aStren * pred.aLev >= prey.aRes * 2) & type != "contain":
+TypeError: unsupported operand type(s) for &: 'bool' and 'str'
+
+Windows-10-10.0.22631 AMD64
+Ren'Py 8.0.3.22090809
+My Predator Academia 2025 1.0
+Tue Jan  7 18:30:40 2025
