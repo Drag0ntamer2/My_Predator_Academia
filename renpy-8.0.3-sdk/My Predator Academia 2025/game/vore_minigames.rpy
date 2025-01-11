@@ -1,206 +1,181 @@
-﻿label digestion_start(Prey, Pred):
+﻿label digestion_start(prey_list, Pred):
     python:
-        prey = Prey
-        pred = Pred
-        preyName = prey.name
-        predName = pred.name
-        minigame_active = True
-        digestion_active = True
+        preyList = prey_list                                        # List of prey involved in the minigame
+        pred = Pred                                                 # Single pred participating in the minigame
+        predName = pred.name                                        # Store pred's name for display
+        minigame_active = True                                      # Flag to indicate minigame is active
+
+        for prey in preyList:
+            prey.inStomach = True
     return
-label prey_vore_action(preyAction="rest", type="digest"):
+
+
+
+label prey_vore_action(prey, preyAction="rest", target = None):
+    $ preyName = prey.name                                          # Get prey's name for display
 
     if prey.disOverload:
-        $ preyAction = "rest"  # Force rest if disOverload is active
+        $ preyAction = "rest"                                       # Force rest if disOverload is active
 
-    "[preyName] used {b}[preyAction]{/b}"
+    "[preyName] used {b}[preyAction]{/b}"                           # reveal action used by prey
+
     python:
-        damage = 0
-        difficulty = preferences.difficulty
+        diff = preferences.difficulty                               # Game Difficulty
+        diffDamage = difficultyDamage()                             # Difficulty scaling for damage
+        actionCost = 0                                              # Stores the cost, in stamina, of an action
+        damage = 0                                                  # Stores damage to apply to pred's stomach
+        prey.bracing = False                                        # stop bracing
+        prey.disDecay()                                             # reduce disorientation
+
         if preyAction == "light struggle":
-            # Check stamina and calculate damage
-            actionCost = 15 + difficulty * 4
-            if prey.stam >= actionCost:
-                damage = max(0, (difficultyDamage(difficulty) * prey.stren) - (pred.con * pred.sComp))
-                if damage == 0:
-                    prey.addDis(disOverflow(difficulty, pred.sComp, prey.con))
-            else:
-                prey.addDis(disOverflow(actionCost * 0.1 - prey.stam, pred.sComp, prey.con))
-            prey.stam = max(prey.stam - actionCost, 0)
+            actionCost = 15 + diff * 4
+            damage = damageCalc(actionCost, 2)                      # Calculate Struggle Damage
 
         elif preyAction == "moderate struggle":
-            # Check stamina and calculate damage
-            actionCost = 25 + difficulty * 4
-            if prey.stam >= actionCost:
-                damage = max(0, (difficultyDamage(difficulty) * 2 * prey.stren) - (pred.con * pred.sComp))
-                if damage == 0:
-                    prey.addDis(disOverflow(difficulty, pred.sComp, prey.con))
-            else:
-                prey.addDis(disOverflow(actionCost * 0.1 - prey.stam, pred.sComp, prey.con))
-            prey.stam = max(prey.stam - actionCost, 0)
+            actionCost = 25 + diff * 4
+            damage = damageCalc(actionCost, 3)                      # Calculate Struggle Damage
 
         elif preyAction == "aggressive struggle":
-            # Check stamina and calculate damage
-            actionCost = 35 + difficulty * 4
-            if prey.stam >= actionCost:
-                damage = max(0, (difficultyDamage(difficulty) * 4 * prey.stren) - (pred.con * pred.sComp))
-                if damage == 0:
-                    prey.addDis(disOverflow(difficulty, pred.sComp, prey.con))
-            else:
-                prey.addDis(disOverflow(actionCost * 0.1 - prey.stam, pred.sComp, prey.con))
-            prey.stam = max(prey.stam - actionCost, 0)
+            actionCost = 35 + diff * 4
+            damage = damageCalc(actionCost, 4)                      # Calculate Struggle Damage
 
         elif preyAction == "rest":
-            # Recover stamina only if no recent disorientation increase
-            if not prey.recDis:
-                prey.stam += 5 * prey.con - difficulty * 4
-                prey.stam = min(prey.maxStam, prey.stam)
+            prey.addStam(5 * prey.con - diff * 4)                   # Restore Stamina
 
         elif preyAction == "massage":
-            # Reduce compression and increase predator arousal
-            actionCost = 15 + difficulty * 4
+            actionCost = 15 + diff * 4
             if prey.stam >= actionCost:
-                pred.sComp = max(0.01, pred.sComp - prey.dex)
-                pred.arousal += prey.dex * pred.lewdness * 0.1
-            else:
-                prey.addDis(disOverflow(actionCost * 0.1 - prey.stam, pred.sComp, prey.con))
-            prey.stam = max(prey.stam - actionCost, 0)
+                pred.loseComp(prey.dex)                             # Reduce Stomach Compression
+                if (prey.lewdness >= 3) or (type == "pleasure"):
+                    pred.addArousal(prey.dex * pred.lewdness * 0.1) # Increase pred Arousal
+                    prey.addArousal(prey.dex * prey.lewdness * 0.1) # Increase prey Arousal
 
-        ##### Apply Prey Disorientation #####
-        pred.shp -= applyDis(prey.dis, damage)
+        elif preyAction == "Pleasure Self":
+            actionCost = 5 + diff
+            if prey.stam >= actionCost:
+                prey.addArousal(prey.lewdness * prey.dex * 0.1)     # Increase pred Arousal
 
-        ##### End of Round Conditions #####
-        prey.disDecay(prey.con * 0.1)
-        if prey.hp <= 0:
-            prey.alive = False
-        if pred.shp <= 0:
-            prey.inStomach = False
+        elif preyAction == "Try to pleasure pred":
+            actionCost = 10 + diff * 2
+            if prey.stam >= actionCost:
+                pred.addArousal(prey.dex * pred.lewdness * 0.1)     # Increase pred Arousal
 
+        elif preyAction == "Pleasure Fellow Prey":
+            actionCost = 5 + diff
+            if prey.stam >= actionCost:
+                target.addArousal(target.lewdness * prey.dex * 0.1)     # Increase pred Arousal
+
+        elif preyAction == "brace":
+            actionCost = 15 + diff * 4
+            if prey.stam >= actionCost:
+                prey.bracing = True
+
+
+
+
+        ##### End of Turn Calculations #####
+        prey.loseStam(actionCost)                                   # apply stamina cost
+        overflow = max((actionCost - prey.stam) * 0.1, 0)           # calculate stamina overflow
+        prey.addDis((overflow + pred.comp) / prey.con)              # apply disOverflow
+
+    if damage > pred.shp:
+        $ prey.inStomach = False
+        "[preyName] has escaped!"
+        python:
+            newPreyList = []
+            for prey in preyList:
+                if prey.inStomach:
+                    newPreyList.append(prey)
+            preyList = newPreyList
+    else:
+        $ pred.loseShp(applyDis(prey.dis, damage))                    # apply stomach damage
+
+    call acidDamage(prey)
+    if not prey.alive:
+        "[preyName] has been digested!"
+        python:
+            newPreyList = []
+            for Prey in preyList:
+                if Prey.alive:
+                    newPreyList.append(Prey)
+            preyList = newPreyList
+
+    if len(preyList) == 0:
+        $ minigame_active = False                                     # Flag to indicate minigame is no longer active
     return preyAction
 
 
 
-label pred_vore_action(predAction="auto", type="digest"):
-    python:
-        compMultiplier = 1
-        # Local variables for effects
-        disorientation = 0
-        compression = 0
-        damage = 0
-        nausea = 0
-        pred.disDecay(pred.con * 0.1)
-        difficulty = preferences.difficulty
+label pred_vore_action(predAction, type="digest", target=None):
 
     if pred.disOverload:
-        $ predAction = "rest"  # Force rest if disOverload is active
+        $ predAction = "rest"                                       # Force rest if disOverload is active
 
-    "[predName] used {b}[predAction]{/b}"
+    "[predName] used {b}[predAction]{/b}"                           # Reveal the action used by the pred
+
     python:
+        # Variables for calculations
+        compMultiplier = 1                                          # Multiplier for balancing compression
+        diff = preferences.difficulty                               # Game Difficulty
+        diffDamage = difficultyDamage()                             # Increases inversely from difficulty
+        actionCost = 0                                              # Stamina cost of the pred's action
+        nausea = 0                                                  # Nausea to apply to pred
+        comp = 0                                                    # Compression of pred's stomach
+        prey.disDecay()
+
+
         if predAction == "squeeze":
-            actionCost = 15 + difficultyDamage(difficulty) * 2
-            if pred.stam >= actionCost:
-                compression = max(0, (difficulty * pred.stren * compMultiplier) / (prey.con * prey.stren))
-                if compression == 0:
-                    pred.addDis(disOverflow(actionCost * 0.1, prey.stren, pred.con))
-            else:
-                pred.addDis(disOverflow(actionCost * 0.1 - pred.stam, prey.stren, pred.con))
-            pred.stam = max(pred.stam - actionCost, 0)
+            actionCost = 15 + diffDamage * 2
+            comp = compress(actionCost, compMultiplier)             # Calculate compression
 
         elif predAction == "crush":
-            actionCost = 30 + difficultyDamage(difficulty) * 2
-            if pred.stam >= difficultyDamage(difficulty) * 4:
-                compression = max(0, (difficulty * pred.stren * compMultiplier) / (prey.con * prey.stren))
-                if compression == 0:
-                    pred.addDis(disOverflow(difficultyDamage(difficulty), prey.stren, pred.con))
-            else:
-                pred.addDis(disOverflow(actionCost * 0.1 - pred.stam, prey.stren, pred.con))
-            pred.stam = max(pred.stam - actionCost, 0)
-
-        elif predAction == "massage":
-            actionCost = 15 + difficultyDamage(difficulty) * 2
-            if pred.stam >= actionCost:
-                compression = min(0, (-1 * pred.con) * 1.5)
-                prey.arousal += pred.dex * prey.lewdness * 0.1
-                pred.arousal += pred.dex * pred.lewdness * 0.1
-                pred.shp = min(pred.maxShp, pred.shp + 5)
-            else:
-                pred.addDis(disOverflow(actionCost * 0.1 - pred.stam, prey.stren, pred.con))
-            pred.stam = max(pred.stam - actionCost, 0)
+            actionCost = 30 + diffDamage * 2
+            comp = compress(actionCost, compMultiplier)             # Calculate compression
 
         elif predAction == "rest":
-            if not pred.recDis:
-                pred.stam += difficulty * pred.con
-                pred.stam = min(pred.maxStam, pred.stam)
+            pred.addStam(5 * pred.con - diffDamage * 4)             # Recover stamina for the pred
+
+        elif predAction == "pleasure self":
+            actionCost = 5 + diffDamage
+            pred.addArousal(pred.lewdness * pred.dex * 0.1)         # Pred increases their own arousal
+
+
+        elif predAction == "massage":
+            actionCost = 15 + diffDamage * 2
+            pred.addShp(5 + diff)                                   # Recover stomach health
+            for prey in preyList:
+                prey.addArousal(pred.dex * prey.lewdness * 0.1)     # Increase prey arousal
+
 
         elif predAction == "shake":
-            actionCost = 40 + difficultyDamage(difficulty) * 3
-            if pred.stam >= actionCost:
-                # Prey effects
-                disorientation = 2.5 - (prey.con * 0.1)  # Base disorientation for prey
-                if renpy.random.randint(1, 5) == 1:  # 1/5 chance for minor damage
-                    damage = max(0, difficulty - prey.con)
+            actionCost = 40 + diffDamage * 3
+            nausea = 2 + pred.aLev - (pred.con * 0.1)               # Calculate nausea recoil
+            dis = 2.5 - (prey.con * 0.1)                            # Base disorientation for prey
+            for prey in preyList:
+                Dis = applyDis(pred.dis, dis)
+                prey.addDis(Dis)                                    # Apply disorientation to prey
+                if renpy.random.randint(1, 5) == 1:                 # 20% chance to apply damage
+                    damage = pred.stren + diff - prey.con           # Calculate prey damage
+                    prey.loseHp(max(0, damage))                     # Apply damage to prey
 
-                # Recoil effects
-                nausea = 2 + pred.aLev - (pred.con * 0.1)# Disorientation recoil
-                pred.shp -= pred.aLev
+        elif predAction == "try to pleasure prey":
+            actionCost = 10 + diffDamage * 2
+            if target:
+                dex = pred.dex * 0.5
+                target.addArousal(dex * target.lewdness)            # Increase specific prey arousal
             else:
-                pred.addDis(disOverflow((actionCost - pred.stam) * 0.1, prey.stren, pred.con))
-            pred.stam = max(pred.stam - actionCost, 0)
+                dex = pred.dex * 0.1
+                for prey in preyList:
+                    prey.addArousal(dex * prey.lewdness)            # Increase arousal for all prey
 
-        ##### Apply Predator Disorientation #####
-        prey.hp = max(prey.hp - applyDis(pred.dis, damage), 0)  # Apply disoriented damage
-        pred.sComp = max(0.01, min(50, pred.sComp + applyDis(pred.dis, compression)))  # Apply disoriented compression
-        prey.addDis(applyDis(pred.dis, disorientation))  # Apply disoriented disorientation
+        # End-of-action calculations for pred
+        pred.loseStam(actionCost)                                   # Apply stamina cost to pred
+        overflow = max((actionCost - pred.stam) * 0.1, 0)           # calculate stamina overflow
+        pred.addDis(overflow / pred.con)                            # apply disOverflow
+        renpy.say("debug", f"{overflow}")
+        pred.addComp(applyDis(pred.dis, comp))                      # Apply Compression
+        pred.acidRise()                                             # Increase stomach acid level
 
-        ##### Acid Damage ##### (passive, and separate from dealt damage)
-        if (pred.aStren * pred.aLev >= prey.aRes * 2) & (type != "contain"):
-            damage = (pred.aStren / prey.aRes) * pred.aLev
-            if type == "digest":
-                prey.hp -= max(damage, 0)
-            else:
-                if pred.arousal <= 25:
-                    prey.hp -= max(damage, 0) / 2
-                else:
-                    prey.hp -= max(damage, 0) + (0.1 * pred.arousal)
-
-
-
-        ##### Acid Level Adjustments #####
-        pred.aLev += pred.aFill
-        pred.aLev = min(pred.aLev, 1)
-
-        ##### Nausea & Decay #####
-        pred.addDis(nausea)
-
-        ##### End of Round Conditions #####
-        if prey.hp <= 0:
-            prey.alive = False
 
     return predAction
-
-
-
-
-
-
-
-
-
-
-####################################################################################################
-# - the pred is attempting only to contain her prey.
-# - The pred doesn't have a set win condition, but rather, only needs to contain the prey until
-#     she decides she no longer wants to do so.
-# - the prey wins if they escape before that happens.
-####################################################################################################
-#label containment_round():
-
-
-
-####################################################################################################
-# - the pred may or may not be attempting to digest the prey
-# - the prey's objective is to pleasure the pred as much as possible
-# - the pred may or may not reciprocate
-####################################################################################################
-#label pleasure_round():
-
 

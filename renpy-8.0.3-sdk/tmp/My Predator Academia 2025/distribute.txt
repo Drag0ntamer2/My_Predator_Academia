@@ -103,6 +103,11 @@ game/gui/window_icon.png matches ** (['all']).
 game/gui.rpy matches ** (['all']).
 game/gui.rpyc matches ** (['all']).
 game/images/ matches ** (['all']).
+game/images/Acid Bar Empty.png matches ** (['all']).
+game/images/Acid Bar Full.png matches ** (['all']).
+game/images/acid fill.png matches ** (['all']).
+game/images/acid stren.png matches ** (['all']).
+game/images/Bars.clip matches ** (['all']).
 game/images/base/ matches ** (['all']).
 game/images/base/arcade.png matches ** (['all']).
 game/images/base/backyard.jpg matches ** (['all']).
@@ -160,6 +165,53 @@ game/images/base/street1.jpg matches ** (['all']).
 game/images/base/street2.jpg matches ** (['all']).
 game/images/base/teacheroffice.jpg matches ** (['all']).
 game/images/base/workout.png matches ** (['all']).
+game/images/constitution.png matches ** (['all']).
+game/images/Disorientation Bar Empty.png matches ** (['all']).
+game/images/Disorientation Bar Full.png matches ** (['all']).
+game/images/faces/ matches ** (['all']).
+game/images/faces/Ash Face.png matches ** (['all']).
+game/images/faces/Astaria face.png matches ** (['all']).
+game/images/faces/Esel face.png matches ** (['all']).
+game/images/faces/Felicity Face.png matches ** (['all']).
+game/images/faces/Jessie Face.png matches ** (['all']).
+game/images/faces/Lauren face.png matches ** (['all']).
+game/images/faces/Leah Face.png matches ** (['all']).
+game/images/faces/Lillianna face.png matches ** (['all']).
+game/images/faces/Lilly face.png matches ** (['all']).
+game/images/faces/Maria face.png matches ** (['all']).
+game/images/faces/Mercy Face.png matches ** (['all']).
+game/images/faces/Name_thumb.png matches ** (['all']).
+game/images/faces/S P A A C E E face.png matches ** (['all']).
+game/images/faces/Sage face.png matches ** (['all']).
+game/images/faces/Sofie face.png matches ** (['all']).
+game/images/faces/Stephanie face.png matches ** (['all']).
+game/images/faces/Tama Face.png matches ** (['all']).
+game/images/faces/Yuli face.png matches ** (['all']).
+game/images/female.png matches ** (['all']).
+game/images/HP Bar Empty left.png matches ** (['all']).
+game/images/HP Bar Empty.png matches ** (['all']).
+game/images/HP Bar Full left.png matches ** (['all']).
+game/images/HP Bar Full.png matches ** (['all']).
+game/images/HP.png matches ** (['all']).
+game/images/Locked Bar Empty.png matches ** (['all']).
+game/images/Locked Bar Full.png matches ** (['all']).
+game/images/Love Bar Empty left.png matches ** (['all']).
+game/images/Love Bar Empty.png matches ** (['all']).
+game/images/Love Bar Full left.png matches ** (['all']).
+game/images/Love Bar Full.png matches ** (['all']).
+game/images/Love.png matches ** (['all']).
+game/images/male.png matches ** (['all']).
+game/images/Nausea Bar Empty.png matches ** (['all']).
+game/images/Nausea Bar Full.png matches ** (['all']).
+game/images/size.png matches ** (['all']).
+game/images/Stamina Bar Empty left.png matches ** (['all']).
+game/images/Stamina Bar Empty.png matches ** (['all']).
+game/images/Stamina Bar Full left.png matches ** (['all']).
+game/images/Stamina Bar Full.png matches ** (['all']).
+game/images/Stamina.png matches ** (['all']).
+game/images/stomach hp.png matches ** (['all']).
+game/images/stomach size.png matches ** (['all']).
+game/images/stren.png matches ** (['all']).
 game/images/tiny/ matches ** (['all']).
 game/images/tiny/arcade.png matches ** (['all']).
 game/images/tiny/backyard.jpg matches ** (['all']).

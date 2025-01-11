@@ -111,44 +111,76 @@ screen say(who, what):
         # Display the dialogue text
         text what id "what"
 
-
     # minigame stats
     if minigame_active:
         #### Prey
-        vbox:
-            xalign 1.0
-            yalign 0.0
-            spacing 10  # Optional spacing between bars
-            bar value (prey.hp * 100) range (prey.maxHp * 100) style "prey_health_bar"
-            bar value (prey.stam * 100) range (prey.maxStam * 100) style "prey_stamina_bar"
-            if not prey.recDis:
-                bar value (prey.dis * 100) range (5 * 100) style "prey_orientation_bar"
-            else:
-                bar value (prey.dis * 100) range (5 * 100) style "prey_orientation_bar_locked"
-            bar value (prey.arousal * 10) range (500) style "prey_arousal_bar"
-        vbox:
-            spacing 10
-            xalign 1.0
-            yalign 0.0
-            text preyName color "#000000"
+        if len(preyList) > 0:
+            frame:
+                yalign 0.0
+                xalign 1.0
+                background Solid("#000000aa")
+                vbox:
+                    xalign 1.0
+                    yalign 0.0
+                    spacing 10  # Optional spacing between bars
+                    for prey in preyList:
+                        hbox:
+                            yalign 0.0
+                            xalign 1.0
+                            vbox:
+                                xalign 0.0
+                                yalign 0.0
+                                spacing 10
+                                add prey.face xsize 150 ysize 150
+                                frame:
+                                    xalign 0.0
+                                    yalign 0.0
+                                    xsize 150
+                                    background Solid("#FFFFFF")
+                                    text prey.name size 15 color "#000000" xmaximum  150 xalign 0.5
+                            vbox:
+                                spacing 10
+                                xalign 1.0
+                                yalign 0.0
+                                bar value (prey.hp * 100) range (prey.maxHp * 100) left_bar "HP Bar Empty.png" right_bar "HP Bar Full.png" style "statBarRev"
+                                bar value (prey.stam * 100) range (prey.maxStam * 100) left_bar "Stamina Bar Empty.png" right_bar "Stamina Bar Full.png" style "statBarRev"
+                                if not prey.recDis:
+                                    bar value (prey.dis * 100) range (prey.con * 100) left_bar "Disorientation Bar Empty.png" right_bar "Disorientation Bar Full.png" style "statBarRev"
+                                else:
+                                    bar value (prey.dis * 100) range (prey.con * 100) left_bar "Locked Bar Empty.png" right_bar "Locked Bar Full.png" style "statBarRev"
+                                bar value (prey.arousal * 100) range (prey.arousalMax * 100) left_bar "Love Bar Empty.png" right_bar "Love Bar Full.png" style "statBarRev"
 
         #### Pred
-        vbox:
+        frame:
             xalign 0.0
             yalign 0.0
-            spacing 10  # Optional spacing between bars
-            bar value (pred.shp * 100) range (pred.maxShp * 100) style "pred_health_bar"
-            bar value (pred.stam * 100) range (pred.maxStam * 100) style "pred_stamina_bar"
-            if not prey.recDis:
-                bar value (pred.dis * 100) range (5 * 100) style "pred_nausea_bar"
-            else:
-                bar value (pred.dis * 100) range (5 * 100) style "pred_nausea_bar_locked"
-            bar value (pred.arousal * 10) range (500) style "pred_arousal_bar"
-        vbox:
-            spacing 10
-            xalign 0.0
-            yalign 0.0
-            text predName color "#000000"
+            background Solid("#000000aa")
+            hbox:
+                xalign 0.0
+                yalign 0.0
+                vbox:
+                    xalign 0.0
+                    yalign 0.0
+                    spacing 0
+                    bar value (pred.shp * 100) range (pred.maxShp * 100) right_bar "HP Bar Empty left.png" left_bar "HP Bar Full left.png" style "statBar"
+                    bar value (pred.stam * 100) range (pred.maxStam * 100) right_bar "Stamina Bar Empty left.png" left_bar "Stamina Bar Full left.png" style "statBar"
+                    if not pred.recDis:
+                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Nausea Bar Empty.png" left_bar "Nausea Bar Full.png" style "statBar"
+                    else:
+                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Locked Bar Empty.png" left_bar "Locked Bar Full.png" style "statBar"
+                    bar value (pred.arousal * 100) range (pred.arousalMax * 100) right_bar "Love Bar Empty left.png" left_bar "Love Bar Full left.png" style "statBar"
+                    bar value (pred.aLev * 100) range (100) right_bar "Acid Bar Empty.png" left_bar "Acid Bar Full.png" style "statBar"
+                vbox:
+                    xalign 0.0
+                    yalign 0.0
+                    spacing 10
+                    add pred.face xsize 150 ysize 150
+                    frame:
+                        xalign 0.0
+                        yalign 0.0
+                        xsize 150
+                        background Solid("#FFFFFF")
+                        text predName size 15 color "#000000" xmaximum  150 xalign 0.5
         #### Stomach
         frame:
             xalign 0.5
@@ -157,9 +189,7 @@ screen say(who, what):
                 xalign 0.5
                 yalign 0.0
                 spacing 10
-                text f"Oxygen      | {pred.oxy:.2f}"
-                text f"Acid Level  | {pred.aLev:.2f}"
-                text f"Compression | {pred.sComp:.2f}"
+                text f"Compression | {pred.comp:.2f}"
 
 
 
@@ -217,73 +247,14 @@ style say_dialogue:
 
     adjust_spacing False
 
-style prey_health_bar:
-    xalign 1.0
-    left_bar Solid("#550000")
-    right_bar Solid("#ff0000")
+style statBarRev:
     bar_invert True  # Fill from right to left
-    xsize 800  # Width of the bar
+    xsize 300  # Width of the bar
+    ysize 40   # Height of the bar
+style statBar:
+    xsize 300  # Width of the bar
     ysize 40   # Height of the bar
 
-style prey_stamina_bar:
-    xalign 1.0
-    left_bar Solid("#000055")
-    right_bar Solid("#0000ff")
-    bar_invert True  # Fill from right to left
-    xsize 600  # Width of the bar
-    ysize 20   # Height of the bar
-
-style prey_orientation_bar:
-    xalign 1.0
-    left_bar Solid("#005500")
-    right_bar Solid("#00ff00")
-    bar_invert True  # Fill from right to left
-    xsize 600  # Width of the bar
-    ysize 20   # Height of the bar
-style prey_orientation_bar_locked:
-    xalign 1.0
-    left_bar Solid("#555555")
-    right_bar Solid("#aaaaaa")
-    bar_invert True  # Fill from right to left
-    xsize 600  # Width of the bar
-    ysize 20   # Height of the bar
-
-style prey_arousal_bar:
-    xalign 1.0
-    left_bar Solid("#8b008b")
-    right_bar Solid("#ff69b4")
-    bar_invert True  # Fill from right to left
-    xsize 600  # Width of the bar
-    ysize 20   # Height of the bar
-
-style pred_health_bar:
-    left_bar Solid("#ff0000")  # Red for health
-    right_bar Solid("#550000")  # Dark red for health background
-    xsize 800  # Width of the bar
-    ysize 40   # Height of the bar
-
-style pred_stamina_bar:
-    left_bar Solid("#0000ff")  # Blue for stamina
-    right_bar Solid("#000055")  # Dark blue for stamina background
-    xsize 600  # Width of the bar
-    ysize 20   # Height of the bar
-
-style pred_nausea_bar:
-    left_bar Solid("#00ff00")  # Green for nausea
-    right_bar Solid("#005500")
-    xsize 600  # Width of the bar
-    ysize 20   # Height of the bar
-style pred_nausea_bar_locked:
-    left_bar Solid("#555555")
-    right_bar Solid("#aaaaaa")
-    xsize 600  # Width of the bar
-    ysize 20   # Height of the bar
-
-style pred_arousal_bar:
-    left_bar Solid("#ff69b4")  # Pink for arousal
-    right_bar Solid("#8b008b")
-    xsize 600  # Width of the bar
-    ysize 20   # Height of the bar
 
 
 
@@ -315,34 +286,72 @@ screen input(prompt):
     # minigame stats
     if minigame_active:
         #### Prey
-        vbox:
-            xalign 1.0
+        frame:
             yalign 0.0
-            spacing 10  # Optional spacing between bars
-            bar value (prey.hp * 100) range (prey.maxHp * 100) style "prey_health_bar"
-            bar value (prey.stam * 100) range (prey.maxStam * 100) style "prey_stamina_bar"
-            bar value (prey.dis * 100) range (5 * 100) style "prey_orientation_bar"
-            bar value (prey.arousal * 10) range (500) style "prey_arousal_bar"
-        vbox:
-            spacing 10
             xalign 1.0
-            yalign 0.0
-            text preyName color "#000000"
+            background Solid("#000000aa")
+            vbox:
+                xalign 1.0
+                yalign 0.0
+                spacing 10  # Optional spacing between bars
+                for prey in preyList:
+                    hbox:
+                        yalign 0.0
+                        xalign 1.0
+                        vbox:
+                            xalign 0.0
+                            yalign 0.0
+                            spacing 10
+                            add prey.face xsize 150 ysize 150
+                            frame:
+                                xalign 0.0
+                                yalign 0.0
+                                xsize 150
+                                background Solid("#FFFFFF")
+                                text prey.name size 15 color "#000000" xmaximum  150 xalign 0.5
+                        vbox:
+                            spacing 10
+                            xalign 1.0
+                            yalign 0.0
+                            bar value (prey.hp * 100) range (prey.maxHp * 100) left_bar "HP Bar Empty.png" right_bar "HP Bar Full.png" style "statBarRev"
+                            bar value (prey.stam * 100) range (prey.maxStam * 100) left_bar "Stamina Bar Empty.png" right_bar "Stamina Bar Full.png" style "statBarRev"
+                            if not prey.recDis:
+                                bar value (prey.dis * 100) range (prey.con * 100) left_bar "Disorientation Bar Empty.png" right_bar "Disorientation Bar Full.png" style "statBarRev"
+                            else:
+                                bar value (prey.dis * 100) range (prey.con * 100) left_bar "Locked Bar Empty.png" right_bar "Locked Bar Full.png" style "statBarRev"
+                            bar value (prey.arousal * 100) range (prey.arousalMax * 100) left_bar "Love Bar Empty.png" right_bar "Love Bar Full.png" style "statBarRev"
 
         #### Pred
-        vbox:
+        frame:
             xalign 0.0
             yalign 0.0
-            spacing 10  # Optional spacing between bars
-            bar value (pred.shp * 100) range (pred.maxShp * 100) style "pred_health_bar"
-            bar value (pred.stam * 100) range (pred.maxStam * 100) style "pred_stamina_bar"
-            bar value (pred.dis * 100) range (5 * 100) style "pred_nausea_bar"
-            bar value (pred.arousal * 10) range (500) style "pred_arousal_bar"
-        vbox:
-            spacing 10
-            xalign 0.0
-            yalign 0.0
-            text predName color "#000000"
+            background Solid("#000000aa")
+            hbox:
+                xalign 0.0
+                yalign 0.0
+                vbox:
+                    xalign 0.0
+                    yalign 0.0
+                    spacing 0
+                    bar value (pred.shp * 100) range (pred.maxShp * 100) right_bar "HP Bar Empty left.png" left_bar "HP Bar Full left.png" style "statBar"
+                    bar value (pred.stam * 100) range (pred.maxStam * 100) right_bar "Stamina Bar Empty left.png" left_bar "Stamina Bar Full left.png" style "statBar"
+                    if not pred.recDis:
+                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Nausea Bar Empty.png" left_bar "Nausea Bar Full.png" style "statBar"
+                    else:
+                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Locked Bar Empty.png" left_bar "Locked Bar Full.png" style "statBar"
+                    bar value (pred.arousal * 100) range (pred.arousalMax * 100) right_bar "Love Bar Empty left.png" left_bar "Love Bar Full left.png" style "statBar"
+                    bar value (pred.aLev * 100) range (100) right_bar "Acid Bar Empty.png" left_bar "Acid Bar Full.png" style "statBar"
+                vbox:
+                    xalign 0.0
+                    yalign 0.0
+                    spacing 10
+                    add pred.face xsize 150 ysize 150
+                    frame:
+                        xalign 0.0
+                        yalign 0.0
+                        xsize 150
+                        background Solid("#FFFFFF")
+                        text predName size 15 color "#000000" xmaximum  150 xalign 0.5
         #### Stomach
         frame:
             xalign 0.5
@@ -351,9 +360,7 @@ screen input(prompt):
                 xalign 0.5
                 yalign 0.0
                 spacing 10
-                text f"Oxygen      | {pred.oxy:.2f}"
-                text f"Acid Level  | {pred.aLev:.2f}"
-                text f"Compression | {pred.sComp:.2f}"
+                text f"Compression | {pred.comp:.2f}"
 
 
 
@@ -390,34 +397,72 @@ screen choice(items):
     # minigame stats
     if minigame_active:
         #### Prey
-        vbox:
-            xalign 1.0
+        frame:
             yalign 0.0
-            spacing 10  # Optional spacing between bars
-            bar value (prey.hp * 100) range (prey.maxHp * 100) style "prey_health_bar"
-            bar value (prey.stam * 100) range (prey.maxStam * 100) style "prey_stamina_bar"
-            bar value (prey.dis * 100) range (5 * 100) style "prey_orientation_bar"
-            bar value (prey.arousal * 10) range (500) style "prey_arousal_bar"
-        vbox:
-            spacing 10
             xalign 1.0
-            yalign 0.0
-            text preyName color "#000000"
+            background Solid("#000000aa")
+            vbox:
+                xalign 1.0
+                yalign 0.0
+                spacing 10  # Optional spacing between bars
+                for prey in preyList:
+                    hbox:
+                        yalign 0.0
+                        xalign 1.0
+                        vbox:
+                            xalign 0.0
+                            yalign 0.0
+                            spacing 10
+                            add prey.face xsize 150 ysize 150
+                            frame:
+                                xalign 0.0
+                                yalign 0.0
+                                xsize 150
+                                background Solid("#FFFFFF")
+                                text prey.name size 15 color "#000000" xmaximum  150 xalign 0.5
+                        vbox:
+                            spacing 10
+                            xalign 1.0
+                            yalign 0.0
+                            bar value (prey.hp * 100) range (prey.maxHp * 100) left_bar "HP Bar Empty.png" right_bar "HP Bar Full.png" style "statBarRev"
+                            bar value (prey.stam * 100) range (prey.maxStam * 100) left_bar "Stamina Bar Empty.png" right_bar "Stamina Bar Full.png" style "statBarRev"
+                            if not prey.recDis:
+                                bar value (prey.dis * 100) range (prey.con * 100) left_bar "Disorientation Bar Empty.png" right_bar "Disorientation Bar Full.png" style "statBarRev"
+                            else:
+                                bar value (prey.dis * 100) range (prey.con * 100) left_bar "Locked Bar Empty.png" right_bar "Locked Bar Full.png" style "statBarRev"
+                            bar value (prey.arousal * 100) range (prey.arousalMax * 100) left_bar "Love Bar Empty.png" right_bar "Love Bar Full.png" style "statBarRev"
 
         #### Pred
-        vbox:
+        frame:
             xalign 0.0
             yalign 0.0
-            spacing 10  # Optional spacing between bars
-            bar value (pred.shp * 100) range (pred.maxShp * 100) style "pred_health_bar"
-            bar value (pred.stam * 100) range (pred.maxStam * 100) style "pred_stamina_bar"
-            bar value (pred.dis * 100) range (5 * 100) style "pred_nausea_bar"
-            bar value (pred.arousal * 10) range (500) style "pred_arousal_bar"
-        vbox:
-            spacing 10
-            xalign 0.0
-            yalign 0.0
-            text predName color "#000000"
+            background Solid("#000000aa")
+            hbox:
+                xalign 0.0
+                yalign 0.0
+                vbox:
+                    xalign 0.0
+                    yalign 0.0
+                    spacing 0
+                    bar value (pred.shp * 100) range (pred.maxShp * 100) right_bar "HP Bar Empty left.png" left_bar "HP Bar Full left.png" style "statBar"
+                    bar value (pred.stam * 100) range (pred.maxStam * 100) right_bar "Stamina Bar Empty left.png" left_bar "Stamina Bar Full left.png" style "statBar"
+                    if not pred.recDis:
+                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Nausea Bar Empty.png" left_bar "Nausea Bar Full.png" style "statBar"
+                    else:
+                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Locked Bar Empty.png" left_bar "Locked Bar Full.png" style "statBar"
+                    bar value (pred.arousal * 100) range (pred.arousalMax * 100) right_bar "Love Bar Empty left.png" left_bar "Love Bar Full left.png" style "statBar"
+                    bar value (pred.aLev * 100) range (100) right_bar "Acid Bar Empty.png" left_bar "Acid Bar Full.png" style "statBar"
+                vbox:
+                    xalign 0.0
+                    yalign 0.0
+                    spacing 10
+                    add pred.face xsize 150 ysize 150
+                    frame:
+                        xalign 0.0
+                        yalign 0.0
+                        xsize 150
+                        background Solid("#FFFFFF")
+                        text predName size 15 color "#000000" xmaximum  150 xalign 0.5
         #### Stomach
         frame:
             xalign 0.5
@@ -426,9 +471,7 @@ screen choice(items):
                 xalign 0.5
                 yalign 0.0
                 spacing 10
-                text f"Oxygen      | {pred.oxy:.2f}"
-                text f"Acid Level  | {pred.aLev:.2f}"
-                text f"Compression | {pred.sComp:.2f}"
+                text f"Compression | {pred.comp:.2f}"
 
 
 style choice_vbox is vbox
@@ -539,6 +582,7 @@ screen navigation():
         textbutton _("Load") action ShowMenu("load")
 
         textbutton _("Preferences") action ShowMenu("preferences")
+        textbutton _("Characters") action ShowMenu("characters")
 
         if _in_replay:
 
@@ -1636,6 +1680,54 @@ style nvl_button_text:
     properties gui.button_text_properties("nvl_button")
 
 
+## Characters screen ############################################################
+##
+## This screen is used to view the characters in the game and manipulate their stats
+##
+####################################################################
+screen characters():
+    use game_menu(_("characters"), scroll="viewport"):
+        vbox:
+            for char in characters:
+                frame:
+                    xsize 1800
+                    hbox:
+                        add char.face xsize 400 ysize 400
+                        vbox:
+                            spacing 20
+                            hbox:
+                                text char.name size 75 color char.color
+                                add f"images/{char.sex}.png" xsize 75 ysize 60
+                            hbox:
+                                hbox:
+                                    hbox:
+                                        add "images/size.png" xsize 75 ysize 75
+                                        text f"{char.size}"  style "StatVal"
+                                    hbox:
+                                        add "images/HP.png" xsize 75 ysize 75
+                                        text f"{char.maxHp}"  style "StatVal"
+                                    hbox:
+                                        add "images/Stamina.png" xsize 75 ysize 75
+                                        text f"{char.maxStam}"  style "StatVal"
+                                    hbox:
+                                        add "images/stren.png" xsize 75 ysize 75
+                                        text f"{char.stren}"  style "StatVal"
+                            hbox:
+                                hbox:
+                                    add f"images/stomach size.png" xsize 60 ysize 60
+                                    text f"{char.sSize}"  style "StatVal"
+                                hbox:
+                                    add "images/stomach hp.png" xsize 75 ysize 75
+                                    text f"{char.maxShp}"  style "StatVal"
+                                hbox:
+                                    add "images/acid fill.png" xsize 75 ysize 75
+                                    text f"{char.aFill}" style "StatVal"
+                                hbox:
+                                    add "images/acid stren.png" xsize 75 ysize 75
+                                    text f"{char.aStren}" style "StatVal"
+style StatVal:
+    xminimum 50
+    size 45 
 
 ################################################################################
 ## Mobile Variants

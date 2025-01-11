@@ -1,23 +1,27 @@
-﻿# The script of the game goes in this file.
+﻿
 
-# Declare characters used by this game. The color argument colorizes the
-# name of the character.
 
-define sof = Character("Sofie")
-define jes = Char("Jessie")
-define mer = Character("Merry")
-define yul = Character("yuli")
-define ash = Character("Ash")
-define fel = Character("Felicity")
+
+######## Character AI weights ##########################################################################
+#init -9999 python:
+    #merAI =
+
+
+
+
+
+
+######## Character Definitions ########################################################################
 
 init python:
     # Define Jessie and Merry using the Char class
     jes = Char(
         name=["Jessie Avatar"],
-        color="#ff0000",
+        sex="male",
+        color="#2F78CA",
         health=200,
         stam=150,
-        strength=3,
+        strength=4,
         stomachHealth=0,
         acidStrength=0,
         stomachSize=0,
@@ -26,64 +30,14 @@ init python:
         acidFillRate=0,
         dexterity=8,
         constitution=5,
-        oxygen=50,
-        lewdness=4
-    )
-    mer = Char(
-        name=["Merry Avatar"],
-        color="#00ff00",
-        health=250,
-        stam=120,
-        strength=5,
-        stomachHealth=250,
-        acidStrength=20,
-        stomachSize=3,
-        size=1,
-        acidResistance=3,
-        acidFillRate=0.05,
-        dexterity=6,
-        constitution=7,
-        oxygen=50,
-        lewdness=6
-    )
-    fel = Char(
-        name=["Felicity Ferocity"],
-        color="#99ff99",
-        health=300,
-        stam=170,
-        strength=7,
-        stomachHealth=400,
-        acidStrength=15,
-        stomachSize=3,
-        size=0.85,
-        acidResistance=1,
-        acidFillRate=0.1,
-        dexterity=10,
-        constitution=12,
-        oxygen=50,
-        lewdness=1
-    )
-    ash = Char(
-        name=["Ash Grigori"],
-        color="#ff0000",
-        health=300,
-        stam=170,
-        strength=7,
-        stomachHealth=800,
-        acidStrength=30,
-        stomachSize=10,
-        size=60,
-        acidResistance=1,
-        acidFillRate=0.5,
-        dexterity=1,
-        constitution=40,
-        oxygen=300,
-        lewdness=1
+        lewdness=4,
+        face="images/faces/Jessie Face.png"
     )
     sof = Char(
         name=["Sofie Moon"],
-        color="#9999ff",
-        health=100,
+        sex="female",
+        color="#12C8EC",
+        health=1000,
         stam=170,
         strength=700,
         stomachHealth=150,
@@ -94,23 +48,370 @@ init python:
         acidFillRate=0.07,
         dexterity=6,
         constitution=4,
-        oxygen=50,
-        lewdness=3
+        lewdness=3,
+        face="images/faces/Sofie Face.png"
+    )
+    lea = Char(
+        name=["Leah Anagro"],
+        sex="female",
+        color="#00ff00",
+        health=250,
+        stam=125,
+        strength=4,
+        stomachHealth=250,
+        acidStrength=25,
+        stomachSize=2.6,
+        size=0.85,
+        acidResistance=4,
+        acidFillRate=0.06,
+        dexterity=6,
+        constitution=5,
+        lewdness=6,
+        face="images/faces/Leah Face.png"
+    )
+    fel = Char(
+        name=["Felicity Ferocity"],
+        sex="female",
+        color="#99ff99",
+        health=300,
+        stam=170,
+        strength=7,
+        stomachHealth=400,
+        acidStrength=15,
+        stomachSize=3,
+        size=0.95,
+        acidResistance=5,
+        acidFillRate=0.1,
+        dexterity=10,
+        constitution=12,
+        lewdness=1,
+        face="images/faces/Felicity Face.png"
+    )
+    mer = Char(
+        name=["Merry Avatar"],
+        sex="female",
+        color="#00ff00",
+        health=250,
+        stam=120,
+        strength=3,
+        stomachHealth=250,
+        acidStrength=20,
+        stomachSize=3,
+        size=1,
+        acidResistance=3,
+        acidFillRate=0.05,
+        dexterity=6,
+        constitution=7,
+        lewdness=6,
+        face="images/faces/name_thumb.png"
+    )
+    ash = Char(
+        name=["Ash Grigori"],
+        sex="female",
+        color="#ff0000",
+        health=1700,
+        stam=1000,
+        strength=100,
+        stomachHealth=1800,
+        acidStrength=50,
+        stomachSize=100,
+        size=60,
+        acidResistance=1000,
+        acidFillRate=0.5,
+        dexterity=1,
+        constitution=40,
+        lewdness=1,
+        face="images/faces/Ash Face.png"
+    )
+    yul = Char(
+        name=["Yuliana Gomez"],
+        sex="female",
+        color="#9999ff",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=300,
+        acidStrength=30,
+        stomachSize=3,
+        size=0.7,
+        acidResistance=3,
+        acidFillRate=0.09,
+        dexterity=6,
+        constitution=7,
+        lewdness=6,
+        face="images/faces/Yuli Face.png"
+    )
+    ste = Char(
+        name=["Stephanie Avianna"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=360,
+        acidStrength=3,
+        stomachSize=3,
+        size=0.7,
+        acidResistance=3,
+        acidFillRate=0.08,
+        dexterity=6,
+        constitution=7,
+        lewdness=6,
+        face="images/faces/Stephanie face.png"
+    )
+    ast = Char(
+        name=["Astaria Oz Blair"],
+        sex="female",
+        color="#00ff00",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=225,
+        acidStrength=17,
+        stomachSize=3,
+        size=1,
+        acidResistance=3,
+        acidFillRate=0.06,
+        dexterity=6,
+        constitution=7,
+        lewdness=6,
+        face="images/faces/Astaria face.png"
+    )
+    sag = Char(
+        name=["Sage Oz Blair"],
+        sex="female",
+        color="#00ff00",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=180,
+        acidStrength=5,
+        stomachSize=3,
+        size=1,
+        acidResistance=3,
+        acidFillRate=0.04,
+        dexterity=6,
+        constitution=7,
+        lewdness=6,
+        face="images/faces/Sage face.png"
+    )
+    lil = Char(
+        name=["Lilly Oak"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=500,
+        acidStrength=50,
+        stomachSize=2,
+        size=0.8,
+        acidResistance=3,
+        acidFillRate=0.3,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Lilly face.png"
+    )
+    esl = Char(
+        name=["Esel Granger"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=600,
+        acidStrength=17,
+        stomachSize=2,
+        size=0.8,
+        acidResistance=3,
+        acidFillRate=0.08,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Esel face.png"
+    )
+    pen = Char(
+        name=["Penelope Danse"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=900,
+        acidStrength=10,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.05,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Name_thumb.png"
+    )
+    bth = Char(
+        name=["Beth Dista"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=255,
+        acidStrength=17,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.03,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Name_thumb.png"
+    )
+    lau = Char(
+        name=["Lauren Smith"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=400,
+        acidStrength=35,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.3,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Lauren face.png"
+    )
+    glo = Char(
+        name=["Gloria Marques"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=300,
+        acidStrength=15,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.05,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Name_thumb.png"
+    )
+    rei = Char(
+        name=["Reiss Juno"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=150,
+        acidStrength=4,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.01,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Name_thumb.png"
+    )
+    rox = Char(
+        name=["Roxy Mercury"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=250,
+        acidStrength=22,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.05,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Name_thumb.png"
+    )
+    jet = Char(
+        name=["Jett Vespa"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=315,
+        acidStrength=20,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.05,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Name_thumb.png"
+    )
+    jetBee = Char(
+        name=["Jett Vespa"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=600,
+        acidStrength=25,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.05,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Name_thumb.png"
+    )
+    gaia = Char(
+        name=["Gaia Nepenthes"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=200,
+        acidStrength=17,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.06,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Name_thumb.png"
+    )
+    lilana = Char(
+        name=["Lillianna Sylphann"],
+        sex="female",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=275,
+        acidStrength=17,
+        stomachSize=2,
+        size=0.05,
+        acidResistance=3,
+        acidFillRate=0.05,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="images/faces/Lillianna face.png"
     )
 
+default characters = [jes,sof,lea,fel,mer,ash,yul,ste,ast,sag,lil,esl,pen,bth,lau,glo,rei,rox,jet,jetBee,gaia,lilana]
+
+#### variables ###########################################################
 
 default loop = 0
 default minigame_active = False
-default digestion_active = False
-default containment_active = False
-default pleasure_active = False
 default view = "outer"
-default prey = None
-default preyName = ""
+default preyList = []
 default pred = None
 default predName = ""
 default pred_action = "rest"
 default prey_action = "rest"
+default maxComp = 50
 
 image room = "images/base/bedroomday.jpg"
 image stomach = "images/base/stomach.jpg"
@@ -159,84 +460,158 @@ label start:
 
     return
 label digestionTesting:
+    $ round = 1
+    $ stomachPartners = [jes]
+    $ mealSize = jes.size
     "Starting the digestion minigame test."
     "pick your pred"
     menu:
-        "Merry Avatar":
-            call digestion_start(jes, mer)
         "Felicity Ferocity":
-            call digestion_start(jes, fel)
+            $ pred = fel
+            $ pred.reset()
+            call stomachPartnerSelect
+            call digestion_start(_return, fel)
         "Ash Grigori":
-            call digestion_start(jes, ash)
+            $ pred = ash
+            $ pred.reset()
+            call stomachPartnerSelect
+            call digestion_start(_return, ash)
         "Sofie Moon":
-            call digestion_start(jes, sof)
+            $ pred = sof
+            $ pred.reset()
+            call stomachPartnerSelect
+            call digestion_start(_return, sof)
+        "Leah Anagro":
+            $ pred = lea
+            $ pred.reset()
+            call stomachPartnerSelect
+            call digestion_start(_return, lea)
+        "Lilly Oak":
+            $ pred = lil
+            $ pred.reset()
+            call stomachPartnerSelect
+            call digestion_start(_return, lil)
+        "Astaria Oz Blair":
+            $ pred = ast
+            $ pred.reset()
+            call stomachPartnerSelect
+            call digestion_start(_return, ast)
+        "Sage Oz Blair":
+            $ pred = sag
+            $ pred.reset()
+            call stomachPartnerSelect
+            call digestion_start(_return, sag)
         "quit":
             return
-    jump initializeMinigameStats
-label initializeMinigameStats:
-    # Reset states for the test
-    $ prey.alive = True
-    $ prey.inStomach = True
-    $ prey.hp = prey.maxHp
-    $ prey.stam = prey.maxStam
-    $ prey.dis = 0
-    $ prey.arousal = 0
+    jump digestionRound
 
-    $ pred.shp = pred.maxShp
-    $ pred.stam = pred.maxStam
-    $ pred.sComp = 0.01
-    $ pred.aLev = 0
-    $ pred.arousal = 0
+label stomachPartnerSelect:
+    "Chose stomach partners"
+    menu:
+        "Felicity Ferocity" if (pred != fel) and not fel in stomachPartners and pred.sSize >= mealSize + fel.size:
+            $ stomachPartners.append(fel)
+            $ mealSize += fel.size
+            $ fel.reset()
+            jump stomachPartnerSelect
+        "Lilly Oak" if (pred != lil) and not lil in stomachPartners and pred.sSize >= mealSize + lil.size:
+            $ stomachPartners.append(lil)
+            $ mealSize += lil.size
+            $ lil.reset()
+            jump stomachPartnerSelect
+        "Sofie Moon" if (pred != sof) and not sof in stomachPartners and pred.sSize >= mealSize + sof.size:
+            $ stomachPartners.append(sof)
+            $ mealSize += sof.size
+            $ sof.reset()
+            jump stomachPartnerSelect
+        "Leah Anagro" if (pred != lea) and not lea in stomachPartners and pred.sSize >= mealSize + lea.size:
+            $ mealSize += lea.size
+            $ lea.reset()
+            $ stomachPartners.append(lea)
+            jump stomachPartnerSelect
+        "That's all":
+            return stomachPartners
 
-    $ round = 1
+
 label digestionRound:
-
-
     # Test loop
-    while jes.alive and jes.inStomach:
+    while GameCheck():
         "Round [round]:"
         $ round += 1
         # Prey action selection
-        "Choose Jessie's action:"
-        menu:
-            "Light struggle":
-                call prey_vore_action("light struggle")
-            "Moderate struggle":
-                call prey_vore_action("moderate struggle")
-            "Aggressive struggle" if prey.arousal < 35:
-                call prey_vore_action("aggressive struggle")
-            "Rest":
-                call prey_vore_action("rest")
-            "Massage":
-                call prey_vore_action("massage")
-            "quit":
-                return
+        #for prey in preyList:
+        $ preyNum = 0
+        while preyNum < len(preyList):
+            $ prey = preyList[preyNum]
+            $ preyName = prey.name
+            call preyMoveSelection(prey, preyName)
+            $ preyNum += 1
         jump predActionSelect
 
+label preyMoveSelection(prey, preyName):
+    "Choose [preyName]'s action:"
+    menu:
+        "Struggle":
+            menu:
+                "Light":
+                    call prey_vore_action(prey, "light struggle")
+                    return
+                "Moderate":
+                    call prey_vore_action(prey, "moderate struggle")
+                    return
+                "Aggressive":
+                    call prey_vore_action(prey, "aggressive struggle")
+                    return
+        "Rest":
+            call prey_vore_action(prey, "rest")
+            return
+        "Massage":
+            call prey_vore_action(prey, "massage")
+            return
+        "Brace":
+            call prey_vore_action(prey, "brace")
+            return
+        "Pleasure Self":
+            call prey_vore_action(prey, "Pleasure Self")
+            return
+        "Pleasure Pred":
+            call prey_vore_action(prey, "Try to pleasure pred")
+            return
+        "Interact With Stomach Partner" if len(preyList) > 1:
+            menu:
+                "Pleasure [preyList[0].name]" if not prey == preyList[0]:
+                    call prey_vore_action(prey, "Pleasure Fellow Prey", preyList[0])
+                    return
+                "Pleasure [preyList[1].name]" if not prey == preyList[1]:
+                    call prey_vore_action(prey, "Pleasure Fellow Prey", preyList[1])
+                    return
+                "Pleasure [preyList[2].name]" if (len(preyList) >= 3) and not (prey == preyList[2]):
+                    call prey_vore_action(prey, "Pleasure Fellow Prey", preyList[2])
+                    return
+                "Pleasure [preyList[3].name]" if (len(preyList) >= 4) and not (prey == preyList[3]):
+                    call prey_vore_action(prey, "Pleasure Fellow Prey", preyList[3])
+                    return
 label predActionSelect:
-    if not jes.inStomach:
-        "Jessie has escaped!"
-        jump digestionTesting
-    $ predAct = renpy.random.randint(1,5)
-    $ predAct = 4
-    if predAct == 1:
-        call pred_vore_action("squeeze")
-    elif predAct == 2:
-        if pred.arousal < 35:
-            call pred_vore_action("crush")
-        else:
-            call pred_vore_action("squeeze")
-    elif predAct == 3:
-        call pred_vore_action("massage")
-    elif predAct == 4:
-        call pred_vore_action("rest")
-    elif predAct == 5:
-        call pred_vore_action("shake")
+    #$ predAct = renpy.random.randint(1,5)
+    #$ predAct = 5
+    #if predAct == 1:
+    #    call pred_vore_action("squeeze", "digest")
+    #elif predAct == 2:
+    #    if pred.arousal < 35:
+    #        call pred_vore_action("crush", "digest")
+    #    else:
+    #        call pred_vore_action("squeeze", "digest")
+    #elif predAct == 3:
+    #    call pred_vore_action("massage", "digest")
+    #elif predAct == 4:
+    #    call pred_vore_action("rest", "digest")
+    #elif predAct == 5:
+    #    call pred_vore_action("shake", "digest")
 
+    call pred_vore_action(pred.chooseAction(), "digest")
 
     # Check for end conditions
-    if not jes.alive:
-        "Jessie has been digested!"
+    if len(preyList) == 0:
+        "Game Over"
         jump digestionTesting
 
     # Increment round counter and loop
