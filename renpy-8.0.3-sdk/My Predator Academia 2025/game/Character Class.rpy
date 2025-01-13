@@ -5,7 +5,7 @@
     class Char:
         def __init__(self, name, sex, abrev="", altName="", color="#ffffff", health=15, stam=10, strength=1,stomachHealth=0,
             acidStrength=0, stomachSize=0, size=1, acidResistance=1, acidFillRate=0,dexterity=1, constitution=1, lewdness=1,
-            arousalMax = 50, choiceWeights = 0, face = "images/faces/Name_thumb.png"):
+            arousalMax = 50, choiceWeights = 0, face = "images/faces/Name_thumb.png", profile = None):
 # Name fields ----------------------------------------------------------------------------------------------------------
             if name == "EMPTY CHAR":
                 self.name = name
@@ -13,16 +13,16 @@
                 self.sex = sex
                 return
             self.sex = sex
-            self.name = name[0]
+            Name = name.split(' ')
+            self.name = Name[0]
             self.abrev = abrev
-            self.spritenam = name[0].lower()
-            self.NameHold = name[0]
-            if len(name) == 1:
-                self.fullName = name[0]
-            elif len(name) == 2:
-                self.fullName = name[0] + " " + name[1]
-            elif len(name) == 3:
-                self.fullName = name[0] + " " + name[1] + " " + name[2]
+            self.NameHold = Name[0]
+            if len(Name) == 1:
+                self.fullName = Name[0]
+            elif len(Name) == 2:
+                self.fullName = Name[0] + " " + Name[1]
+            elif len(Name) == 3:
+                self.fullName = Name[0] + " " + Name[1] + " " + Name[2]
 # Misc fields ----------------------------------------------------------------------------------------------------------
             self.boobs = 0
             self.belly = 0
@@ -30,6 +30,12 @@
             self.c = Character(self.name, who_color = color, what_color = color, image = face)
             self.exampts = 0
             self.face = face
+            if self.face == "images/faces/Name_thumb.png":
+                self.hover = "images/faces/Name_thumb.png"
+            else:
+                self.hover = f"images/faces/{self.name} face hover.png"
+
+            self.profile = profile
 # Stat Fields ----------------------------------------------------------------------------------------------------------
             self.maxHp = health
             self.maxStam = stam

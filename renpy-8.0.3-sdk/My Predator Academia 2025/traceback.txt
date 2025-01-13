@@ -1,42 +1,113 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "renpy/common/00start.rpy", line 215, in script call
-    call _load_reload_game from _call__load_reload_game_1
-  File "renpy/common/00keymap.rpy", line 517, in script
-    python hide:
-  File "renpy/common/00keymap.rpy", line 517, in <module>
-    python hide:
-  File "renpy/common/00keymap.rpy", line 528, in _execute_python_hide
-    renpy.load(renpy.session["_reload_slot"])
-Exception: Couldn't find a place to stop rolling back. Perhaps the script changed in an incompatible way?
+  File "game/screens.rpy", line 1690, in execute
+    screen characters():
+  File "game/screens.rpy", line 1690, in execute
+    screen characters():
+  File "game/screens.rpy", line 1691, in execute
+    use game_menu(_("Characters")):
+  File "game/screens.rpy", line 691, in execute
+    screen game_menu(title, scroll=None, yinitial=0.0):
+  File "game/screens.rpy", line 691, in execute
+    screen game_menu(title, scroll=None, yinitial=0.0):
+  File "game/screens.rpy", line 700, in execute
+    frame:
+  File "game/screens.rpy", line 703, in execute
+    hbox:
+  File "game/screens.rpy", line 709, in execute
+    frame:
+  File "game/screens.rpy", line 712, in execute
+    if scroll == "viewport":
+  File "game/screens.rpy", line 743, in execute
+    transclude
+  File "game/screens.rpy", line 1691, in execute
+    use game_menu(_("Characters")):
+  File "game/screens.rpy", line 1693, in execute
+    hbox:
+  File "game/screens.rpy", line 1713, in execute
+    if selected_char:
+  File "game/screens.rpy", line 1714, in execute
+    frame:
+  File "game/screens.rpy", line 1717, in execute
+    vbox:
+  File "game/screens.rpy", line 1720, in execute
+    if char.profile:
+  File "game/screens.rpy", line 1720, in <module>
+    if char.profile:
+AttributeError: 'Char' object has no attribute 'profile'
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "renpy/common/00start.rpy", line 215, in script call
-    call _load_reload_game from _call__load_reload_game_1
-  File "renpy/common/00keymap.rpy", line 517, in script
+  File "renpy/common/_layout/screen_main_menu.rpym", line 28, in script
     python hide:
   File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1131, in execute
     renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
   File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\python.py", line 1061, in py_exec_bytecode
     exec(bytecode, globals, locals)
-  File "renpy/common/00keymap.rpy", line 517, in <module>
+  File "renpy/common/_layout/screen_main_menu.rpym", line 28, in <module>
     python hide:
-  File "renpy/common/00keymap.rpy", line 528, in _execute_python_hide
-    renpy.load(renpy.session["_reload_slot"])
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\loadsave.py", line 769, in load
-    log.unfreeze(roots, label="_after_load")
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\rollback.py", line 1078, in unfreeze
-    self.rollback(0, force=True, label=label, greedy=greedy, on_load=True)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\rollback.py", line 889, in rollback
-    self.load_failed()
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\rollback.py", line 807, in load_failed
-    raise Exception("Couldn't find a place to stop rolling back. Perhaps the script changed in an incompatible way?")
-Exception: Couldn't find a place to stop rolling back. Perhaps the script changed in an incompatible way?
+  File "renpy/common/_layout/screen_main_menu.rpym", line 35, in _execute_python_hide
+    ui.interact()
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ui.py", line 299, in interact
+    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 3377, in interact
+    repeat, rv = self.interact_core(preloads=preloads, trans_pause=trans_pause, pause=pause, pause_start=pause_start, pause_modal=pause_modal, **kwargs) # type: ignore
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 3810, in interact_core
+    root_widget.visit_all(lambda i : i.per_interact())
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 582, in visit_all
+    d.visit_all(callback, seen)
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 582, in visit_all
+    d.visit_all(callback, seen)
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 582, in visit_all
+    d.visit_all(callback, seen)
+  [Previous line repeated 1 more time]
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\screen.py", line 451, in visit_all
+    callback(self)
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 3810, in <lambda>
+    root_widget.visit_all(lambda i : i.per_interact())
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\screen.py", line 462, in per_interact
+    self.update()
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\screen.py", line 653, in update
+    self.screen.function(**self.scope)
+  File "game/screens.rpy", line 1690, in execute
+    screen characters():
+  File "game/screens.rpy", line 1690, in execute
+    screen characters():
+  File "game/screens.rpy", line 1691, in execute
+    use game_menu(_("Characters")):
+  File "game/screens.rpy", line 691, in execute
+    screen game_menu(title, scroll=None, yinitial=0.0):
+  File "game/screens.rpy", line 691, in execute
+    screen game_menu(title, scroll=None, yinitial=0.0):
+  File "game/screens.rpy", line 700, in execute
+    frame:
+  File "game/screens.rpy", line 703, in execute
+    hbox:
+  File "game/screens.rpy", line 709, in execute
+    frame:
+  File "game/screens.rpy", line 712, in execute
+    if scroll == "viewport":
+  File "game/screens.rpy", line 743, in execute
+    transclude
+  File "game/screens.rpy", line 1691, in execute
+    use game_menu(_("Characters")):
+  File "game/screens.rpy", line 1693, in execute
+    hbox:
+  File "game/screens.rpy", line 1713, in execute
+    if selected_char:
+  File "game/screens.rpy", line 1714, in execute
+    frame:
+  File "game/screens.rpy", line 1717, in execute
+    vbox:
+  File "game/screens.rpy", line 1720, in execute
+    if char.profile:
+  File "game/screens.rpy", line 1720, in <module>
+    if char.profile:
+AttributeError: 'Char' object has no attribute 'profile'
 
 Windows-10-10.0.22631 AMD64
 Ren'Py 8.0.3.22090809
 My Predator Academia 2025 1.0
-Sat Jan 11 09:57:49 2025
+Sat Jan 11 20:07:26 2025

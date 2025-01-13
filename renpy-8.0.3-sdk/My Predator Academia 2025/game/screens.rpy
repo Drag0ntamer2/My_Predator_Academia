@@ -1685,46 +1685,80 @@ style nvl_button_text:
 ## This screen is used to view the characters in the game and manipulate their stats
 ##
 ####################################################################
+default selected_char = None  # Tracks the currently selected character
+
 screen characters():
-    use game_menu(_("characters"), scroll="viewport"):
-        vbox:
-            for char in characters:
+    use game_menu(_("Characters")):
+
+        hbox:
+            spacing 20
+
+            # Sidebar with character list (scrollable)
+            viewport:
+                mousewheel True  # Enable scrolling with the mouse wheel
+                draggable True   # Allow dragging to scroll (optional)
+                xsize 300
+
+                vbox:
+                    spacing 10
+                    xalign 1.0
+                    for char in characters:
+                        imagebutton:
+                            xalign 1.0
+                            idle Image(char.face)
+                            hover Image(char.hover)
+                            action SetVariable("selected_char", char)  # Update selected_char
+
+            # Main section with character details
+            if selected_char:
                 frame:
-                    xsize 1800
-                    hbox:
-                        add char.face xsize 400 ysize 400
-                        vbox:
-                            spacing 20
-                            hbox:
-                                text char.name size 75 color char.color
-                                add f"images/{char.sex}.png" xsize 75 ysize 60
-                            hbox:
+                    xsize 1000  # Width of the frame
+
+                    vbox:
+                        spacing 10
+                        hbox:
+                            vbox:
+                                text f"{selected_char.fullName}" size 70 color selected_char.color
+                                spacing 10
+
                                 hbox:
-                                    hbox:
-                                        add "images/size.png" xsize 75 ysize 75
-                                        text f"{char.size}"  style "StatVal"
-                                    hbox:
-                                        add "images/HP.png" xsize 75 ysize 75
-                                        text f"{char.maxHp}"  style "StatVal"
-                                    hbox:
-                                        add "images/Stamina.png" xsize 75 ysize 75
-                                        text f"{char.maxStam}"  style "StatVal"
-                                    hbox:
-                                        add "images/stren.png" xsize 75 ysize 75
-                                        text f"{char.stren}"  style "StatVal"
-                            hbox:
+                                    add "images/size.png" xsize 75 ysize 75
+                                    text f"{selected_char.size}" style "StatVal"
+
                                 hbox:
-                                    add f"images/stomach size.png" xsize 60 ysize 60
-                                    text f"{char.sSize}"  style "StatVal"
+                                    add "images/HP.png" xsize 75 ysize 75
+                                    text f"{selected_char.maxHp}" style "StatVal"
+
+                                hbox:
+                                    add "images/Stamina.png" xsize 75 ysize 75
+                                    text f"{selected_char.maxStam}" style "StatVal"
+
+                                hbox:
+                                    add "images/stren.png" xsize 75 ysize 75
+                                    text f"{selected_char.stren}" style "StatVal"
+
+                                hbox:
+                                    add "images/stomach size.png" xsize 60 ysize 60
+                                    text f"{selected_char.sSize}" style "StatVal"
+
                                 hbox:
                                     add "images/stomach hp.png" xsize 75 ysize 75
-                                    text f"{char.maxShp}"  style "StatVal"
+                                    text f"{selected_char.maxShp}" style "StatVal"
+
                                 hbox:
                                     add "images/acid fill.png" xsize 75 ysize 75
-                                    text f"{char.aFill}" style "StatVal"
+                                    text f"{selected_char.aFill}" style "StatVal"
+
                                 hbox:
                                     add "images/acid stren.png" xsize 75 ysize 75
-                                    text f"{char.aStren}" style "StatVal"
+                                    text f"{selected_char.aStren}" style "StatVal"
+
+                            if selected_char.profile:
+                                add selected_char.profile
+
+
+
+
 style StatVal:
     xminimum 50
     size 45 
