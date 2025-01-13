@@ -17,6 +17,7 @@
             self.name = Name[0]
             self.abrev = abrev
             self.NameHold = Name[0]
+            characters[abrev] = self
             if len(Name) == 1:
                 self.fullName = Name[0]
             elif len(Name) == 2:
@@ -24,10 +25,8 @@
             elif len(Name) == 3:
                 self.fullName = Name[0] + " " + Name[1] + " " + Name[2]
 # Misc fields ----------------------------------------------------------------------------------------------------------
-            self.boobs = 0
-            self.belly = 0
+            self.c = Character(self.name, who_color = color, what_color = color, image = self.name.lower())
             self.color = color
-            self.c = Character(self.name, who_color = color, what_color = color, image = face)
             self.exampts = 0
             self.face = face
             if self.face == "images/faces/Name_thumb.png":
@@ -36,6 +35,8 @@
                 self.hover = f"images/faces/{self.name} face hover.png"
 
             self.profile = profile
+            self.boobs = 0
+            self.belly = 0
 # Stat Fields ----------------------------------------------------------------------------------------------------------
             self.maxHp = health
             self.maxStam = stam

@@ -15,9 +15,6 @@ default maxComp = 50
 
 
 
-# Images
-image room = "images/base/bedroomday.jpg"
-
 
 
 # Image style templates
@@ -39,6 +36,11 @@ label start:
     # add a file (named either "bg room.png" or "bg room.jpg") to the
     # images directory to show it.
     scene room at fill_screen with dissolve
+    show sofie neutral
+    sof "testing"
+    show jessie neutral
+    jes "testing"
+
 
     menu:
         "start game":

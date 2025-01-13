@@ -4,6 +4,7 @@ init -9997 python:
     # Define Jessie and Merry using the Char class
     jes = Char(
         name="Jessie Avatar",
+        abrev="jes",
         sex="male",
         color="#2F78CA",
         health=200,
@@ -23,6 +24,7 @@ init -9997 python:
     )
     sof = Char(
         name="Sofie Moon",
+        abrev="sof",
         sex="female",
         color="#12C8EC",
         health=1000,
@@ -41,6 +43,7 @@ init -9997 python:
     )
     lea = Char(
         name="Leah Anagro",
+        abrev="lea",
         sex="female",
         color="#00ff00",
         health=250,
@@ -60,6 +63,7 @@ init -9997 python:
     fel = Char(
         name="Felicity Ferocity",
         sex="female",
+        abrev="fel",
         color="#99ff99",
         health=300,
         stam=170,
@@ -77,6 +81,7 @@ init -9997 python:
     )
     mer = Char(
         name="Merry Avatar",
+        abrev="mer",
         sex="female",
         color="#00ff00",
         health=250,
@@ -94,6 +99,7 @@ init -9997 python:
     )
     ash = Char(
         name="Ash Grigori",
+        abrev="ash",
         sex="female",
         color="#ff0000",
         health=1700,
@@ -112,6 +118,7 @@ init -9997 python:
     )
     yul = Char(
         name="Yuliana Gomez",
+        abrev="yul",
         sex="female",
         color="#9999ff",
         health=250,
@@ -130,6 +137,7 @@ init -9997 python:
     )
     ste = Char(
         name="Stephanie Avianna",
+        abrev="ste",
         sex="female",
         health=250,
         stam=120,
@@ -147,6 +155,7 @@ init -9997 python:
     )
     ast = Char(
         name="Astaria Oz Blair",
+        abrev="ast",
         sex="female",
         color="#00ff00",
         health=250,
@@ -165,6 +174,7 @@ init -9997 python:
     )
     sag = Char(
         name="Sage Oz Blair",
+        abrev="sag",
         sex="female",
         color="#00ff00",
         health=250,
@@ -183,6 +193,7 @@ init -9997 python:
     )
     lil = Char(
         name="Lilly Oak",
+        abrev="lil",
         sex="female",
         health=250,
         stam=120,
@@ -200,6 +211,7 @@ init -9997 python:
     )
     esl = Char(
         name="Esel Granger",
+        abrev="esl",
         sex="female",
         health=250,
         stam=120,
@@ -217,6 +229,7 @@ init -9997 python:
     )
     pen = Char(
         name="Penelope Danse",
+        abrev="pen",
         sex="female",
         health=250,
         stam=120,
@@ -234,6 +247,7 @@ init -9997 python:
     )
     bth = Char(
         name="Beth Dista",
+        abrev="bth",
         sex="female",
         health=250,
         stam=120,
@@ -251,6 +265,7 @@ init -9997 python:
     )
     lau = Char(
         name="Lauren Smith",
+        abrev="lau",
         sex="female",
         health=250,
         stam=120,
@@ -268,6 +283,7 @@ init -9997 python:
     )
     glo = Char(
         name="Gloria Marques",
+        abrev="glo",
         sex="female",
         health=250,
         stam=120,
@@ -285,6 +301,7 @@ init -9997 python:
     )
     rei = Char(
         name="Reiss Juno",
+        abrev="rei",
         sex="female",
         health=250,
         stam=120,
@@ -302,6 +319,7 @@ init -9997 python:
     )
     rox = Char(
         name="Roxy Mercury",
+        abrev="rox",
         sex="female",
         health=250,
         stam=120,
@@ -319,6 +337,7 @@ init -9997 python:
     )
     jet = Char(
         name="Jett Vespa",
+        abrev="jet",
         sex="female",
         health=250,
         stam=120,
@@ -336,6 +355,7 @@ init -9997 python:
     )
     jetBee = Char(
         name="Jett Vespa",
+        abrev="jetBee",
         sex="female",
         health=250,
         stam=120,
@@ -353,6 +373,7 @@ init -9997 python:
     )
     gaia = Char(
         name="Gaia Nepenthes",
+        abrev="gaia",
         sex="female",
         health=250,
         stam=120,
@@ -370,6 +391,7 @@ init -9997 python:
     )
     lilana = Char(
         name="Lillianna Sylphann",
+        abrev="lilana",
         sex="female",
         health=250,
         stam=120,
@@ -385,4 +407,3 @@ init -9997 python:
         lewdness=2,
         face="images/faces/Lillianna face.png"
     )
-    characters = [jes,sof,lea,fel,mer,ash,yul,ste,ast,sag,lil,esl,pen,bth,lau,glo,rei,rox,jet,jetBee,gaia,lilana]

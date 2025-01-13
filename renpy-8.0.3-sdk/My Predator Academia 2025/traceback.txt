@@ -1,113 +1,20 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/screens.rpy", line 1690, in execute
-    screen characters():
-  File "game/screens.rpy", line 1690, in execute
-    screen characters():
-  File "game/screens.rpy", line 1691, in execute
-    use game_menu(_("Characters")):
-  File "game/screens.rpy", line 691, in execute
-    screen game_menu(title, scroll=None, yinitial=0.0):
-  File "game/screens.rpy", line 691, in execute
-    screen game_menu(title, scroll=None, yinitial=0.0):
-  File "game/screens.rpy", line 700, in execute
-    frame:
-  File "game/screens.rpy", line 703, in execute
-    hbox:
-  File "game/screens.rpy", line 709, in execute
-    frame:
-  File "game/screens.rpy", line 712, in execute
-    if scroll == "viewport":
-  File "game/screens.rpy", line 743, in execute
-    transclude
-  File "game/screens.rpy", line 1691, in execute
-    use game_menu(_("Characters")):
-  File "game/screens.rpy", line 1693, in execute
-    hbox:
-  File "game/screens.rpy", line 1713, in execute
-    if selected_char:
-  File "game/screens.rpy", line 1714, in execute
-    frame:
-  File "game/screens.rpy", line 1717, in execute
-    vbox:
-  File "game/screens.rpy", line 1720, in execute
-    if char.profile:
-  File "game/screens.rpy", line 1720, in <module>
-    if char.profile:
-AttributeError: 'Char' object has no attribute 'profile'
+  File "game/script.rpy", line 80, in script
+    sof "testing"
+Exception: Sayer b'sof' is not a function or string.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "renpy/common/_layout/screen_main_menu.rpym", line 28, in script
-    python hide:
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1131, in execute
-    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\python.py", line 1061, in py_exec_bytecode
-    exec(bytecode, globals, locals)
-  File "renpy/common/_layout/screen_main_menu.rpym", line 28, in <module>
-    python hide:
-  File "renpy/common/_layout/screen_main_menu.rpym", line 35, in _execute_python_hide
-    ui.interact()
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ui.py", line 299, in interact
-    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 3377, in interact
-    repeat, rv = self.interact_core(preloads=preloads, trans_pause=trans_pause, pause=pause, pause_start=pause_start, pause_modal=pause_modal, **kwargs) # type: ignore
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 3810, in interact_core
-    root_widget.visit_all(lambda i : i.per_interact())
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 582, in visit_all
-    d.visit_all(callback, seen)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 582, in visit_all
-    d.visit_all(callback, seen)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 582, in visit_all
-    d.visit_all(callback, seen)
-  [Previous line repeated 1 more time]
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\screen.py", line 451, in visit_all
-    callback(self)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 3810, in <lambda>
-    root_widget.visit_all(lambda i : i.per_interact())
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\screen.py", line 462, in per_interact
-    self.update()
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\screen.py", line 653, in update
-    self.screen.function(**self.scope)
-  File "game/screens.rpy", line 1690, in execute
-    screen characters():
-  File "game/screens.rpy", line 1690, in execute
-    screen characters():
-  File "game/screens.rpy", line 1691, in execute
-    use game_menu(_("Characters")):
-  File "game/screens.rpy", line 691, in execute
-    screen game_menu(title, scroll=None, yinitial=0.0):
-  File "game/screens.rpy", line 691, in execute
-    screen game_menu(title, scroll=None, yinitial=0.0):
-  File "game/screens.rpy", line 700, in execute
-    frame:
-  File "game/screens.rpy", line 703, in execute
-    hbox:
-  File "game/screens.rpy", line 709, in execute
-    frame:
-  File "game/screens.rpy", line 712, in execute
-    if scroll == "viewport":
-  File "game/screens.rpy", line 743, in execute
-    transclude
-  File "game/screens.rpy", line 1691, in execute
-    use game_menu(_("Characters")):
-  File "game/screens.rpy", line 1693, in execute
-    hbox:
-  File "game/screens.rpy", line 1713, in execute
-    if selected_char:
-  File "game/screens.rpy", line 1714, in execute
-    frame:
-  File "game/screens.rpy", line 1717, in execute
-    vbox:
-  File "game/screens.rpy", line 1720, in execute
-    if char.profile:
-  File "game/screens.rpy", line 1720, in <module>
-    if char.profile:
-AttributeError: 'Char' object has no attribute 'profile'
+  File "game/script.rpy", line 80, in script
+    sof "testing"
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 898, in execute
+    raise Exception("Sayer %s is not a function or string." % self.who.encode("utf-8"))
+Exception: Sayer b'sof' is not a function or string.
 
 Windows-10-10.0.22631 AMD64
 Ren'Py 8.0.3.22090809
 My Predator Academia 2025 1.0
-Sat Jan 11 20:07:26 2025
+Mon Jan 13 15:07:11 2025
