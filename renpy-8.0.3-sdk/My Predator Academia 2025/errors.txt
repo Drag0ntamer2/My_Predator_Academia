@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/layered images.rpy", line 5: end of line expected.
-    image side sofie default: 
-    ^
+File "game/screens.rpy", line 1717: 'idle_selected' is not a keyword argument or valid child for the imagebutton statement.
+    idle_selected "gui/Face frame mask.png"
+                 ^
 
 Ren'Py Version: Ren'Py 8.0.3.22090809
-Mon Jan 13 15:04:59 2025
+Tue Jan 14 12:55:28 2025

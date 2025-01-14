@@ -19,8 +19,8 @@ init -9997 python:
         dexterity=8,
         constitution=5,
         lewdness=4,
-        face="images/faces/Jessie Face.png",
-        profile="images/sprites/Jessie profile.png"
+        face="smile",
+        profile="smile"
     )
     sof = Char(
         name="Sofie Moon",
@@ -39,7 +39,8 @@ init -9997 python:
         dexterity=6,
         constitution=4,
         lewdness=3,
-        face="images/faces/Sofie Face.png"
+        face="smile",
+        profile="smile"
     )
     lea = Char(
         name="Leah Anagro",
@@ -58,7 +59,7 @@ init -9997 python:
         dexterity=6,
         constitution=5,
         lewdness=6,
-        face="images/faces/Leah Face.png"
+        face="thinking"
     )
     fel = Char(
         name="Felicity Ferocity",
@@ -77,7 +78,7 @@ init -9997 python:
         dexterity=10,
         constitution=12,
         lewdness=1,
-        face="images/faces/Felicity Face.png"
+        face="smile chill"
     )
     mer = Char(
         name="Merry Avatar",
@@ -114,7 +115,7 @@ init -9997 python:
         dexterity=1,
         constitution=40,
         lewdness=1,
-        face="images/faces/Ash Face.png"
+        face="smile"
     )
     yul = Char(
         name="Yuliana Gomez",
@@ -133,7 +134,6 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=6,
-        face="images/faces/Yuliana Face.png"
     )
     ste = Char(
         name="Stephanie Avianna",
@@ -151,7 +151,6 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=6,
-        face="images/faces/Stephanie face.png"
     )
     ast = Char(
         name="Astaria Oz Blair",
@@ -170,7 +169,6 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=6,
-        face="images/faces/Astaria face.png"
     )
     sag = Char(
         name="Sage Oz Blair",
@@ -189,7 +187,6 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=6,
-        face="images/faces/Sage face.png"
     )
     lil = Char(
         name="Lilly Oak",
@@ -207,7 +204,7 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Lilly face.png"
+        face="determined"
     )
     esl = Char(
         name="Esel Granger",
@@ -225,7 +222,7 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Esel face.png"
+        face="smile"
     )
     pen = Char(
         name="Penelope Danse",
@@ -243,7 +240,6 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Name_thumb.png"
     )
     bth = Char(
         name="Beth Dista",
@@ -261,7 +257,6 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Name_thumb.png"
     )
     lau = Char(
         name="Lauren Smith",
@@ -279,7 +274,6 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Lauren face.png"
     )
     glo = Char(
         name="Gloria Marques",
@@ -297,7 +291,6 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Name_thumb.png"
     )
     rei = Char(
         name="Reiss Juno",
@@ -315,7 +308,6 @@ init -9997 python:
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Name_thumb.png"
     )
     rox = Char(
         name="Roxy Mercury",
@@ -327,13 +319,12 @@ init -9997 python:
         stomachHealth=250,
         acidStrength=22,
         stomachSize=2,
-        size=0.05,
+        size=1,
         acidResistance=3,
         acidFillRate=0.05,
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Name_thumb.png"
     )
     jet = Char(
         name="Jett Vespa",
@@ -345,13 +336,12 @@ init -9997 python:
         stomachHealth=315,
         acidStrength=20,
         stomachSize=2,
-        size=0.05,
+        size=4,
         acidResistance=3,
         acidFillRate=0.05,
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Name_thumb.png"
     )
     jetBee = Char(
         name="Jett Vespa",
@@ -363,13 +353,12 @@ init -9997 python:
         stomachHealth=600,
         acidStrength=25,
         stomachSize=2,
-        size=0.05,
+        size=3,
         acidResistance=3,
         acidFillRate=0.05,
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Name_thumb.png"
     )
     gaia = Char(
         name="Gaia Nepenthes",
@@ -381,13 +370,12 @@ init -9997 python:
         stomachHealth=200,
         acidStrength=17,
         stomachSize=2,
-        size=0.05,
+        size=1,
         acidResistance=3,
         acidFillRate=0.06,
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Name_thumb.png"
     )
     lilana = Char(
         name="Lillianna Sylphann",
@@ -399,11 +387,28 @@ init -9997 python:
         stomachHealth=275,
         acidStrength=17,
         stomachSize=2,
-        size=0.05,
+        size=1,
         acidResistance=3,
         acidFillRate=0.05,
         dexterity=6,
         constitution=7,
         lewdness=2,
-        face="images/faces/Lillianna face.png"
+    )
+    kor = Char(
+        name="Korbin Moon",
+        abrev="kor",
+        sex="male",
+        health=250,
+        stam=120,
+        strength=5,
+        stomachHealth=0,
+        acidStrength=0,
+        stomachSize=0,
+        size=1,
+        acidResistance=3,
+        acidFillRate=0,
+        dexterity=6,
+        constitution=7,
+        lewdness=2,
+        face="smug"
     )

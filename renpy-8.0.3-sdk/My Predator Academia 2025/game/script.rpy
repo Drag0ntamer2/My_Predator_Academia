@@ -21,6 +21,15 @@ default maxComp = 50
 transform fill_screen:
     xsize config.screen_width
     ysize config.screen_height
+transform center:
+    xpos 0.5
+    ypos 0.0
+transform left:
+    xpos 0.0
+    ypos 0.0
+transform right:
+    xpos 0.75
+    ypos 0.0
 
 
 
@@ -36,9 +45,9 @@ label start:
     # add a file (named either "bg room.png" or "bg room.jpg") to the
     # images directory to show it.
     scene room at fill_screen with dissolve
-    show sofie neutral
+    show sofie smile at left
     sof "testing"
-    show jessie neutral
+    show jessie smile at right
     jes "testing"
 
 

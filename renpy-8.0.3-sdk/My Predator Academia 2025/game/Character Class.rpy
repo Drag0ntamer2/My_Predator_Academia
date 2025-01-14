@@ -5,7 +5,7 @@
     class Char:
         def __init__(self, name, sex, abrev="", altName="", color="#ffffff", health=15, stam=10, strength=1,stomachHealth=0,
             acidStrength=0, stomachSize=0, size=1, acidResistance=1, acidFillRate=0,dexterity=1, constitution=1, lewdness=1,
-            arousalMax = 50, choiceWeights = 0, face = "images/faces/Name_thumb.png", profile = None):
+            arousalMax = 50, choiceWeights = 0, face = "Default", profile = None):
 # Name fields ----------------------------------------------------------------------------------------------------------
             if name == "EMPTY CHAR":
                 self.name = name
@@ -28,13 +28,9 @@
             self.c = Character(self.name, who_color = color, what_color = color, image = self.name.lower())
             self.color = color
             self.exampts = 0
-            self.face = face
-            if self.face == "images/faces/Name_thumb.png":
-                self.hover = "images/faces/Name_thumb.png"
-            else:
-                self.hover = f"images/faces/{self.name} face hover.png"
-
-            self.profile = profile
+            self.face = f"{self.name.lower()} {face}" if face != "Default" else face 
+            self.profileFace = face
+            self.profile = f"{self.name.lower()} {profile}" if profile else None
             self.boobs = 0
             self.belly = 0
 # Stat Fields ----------------------------------------------------------------------------------------------------------
@@ -185,3 +181,10 @@
                     return "rest"
                 else:
                     return "try to pleasure prey"
+        
+        def faceProfile(self):
+            personalFace = f"images/faces/{self.name}/{self.profileFace}.png" 
+            defaultFace = "images/faces/Name_thumb.png"
+            if self.profileFace == "Default":
+                return defaultFace
+            return personalFace

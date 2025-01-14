@@ -1,54 +1,107 @@
 # Scenes
 image room = "images/base/bedroomday.jpg"
 
+###### GUI ################################################################################################
+image frame = im.Composite((500, 500), (0, 0), "images/base_image.png", (0, 0), "colored_frame(color=color)")
+image Default = "images/faces/Name_thumb.png"
+image blank = "gui/blank.png"
+image hover = "gui/hover.png"
 
 ###### Jessie ##############################################################################################
 # Base images
-image jessie neutral = "images/Sprites/Jessie profile.png"
+image jessie smile = "images/Sprites/Jessie profile.png"
 # Side Images
-image side jessie neutral = "images/faces/Jessie/Jessie neutral.png"
+image side jessie smile = "images/faces/Jessie/smile.png"
 
 
 ###### Sofie ##############################################################################################
 # Base images
-image sofie neutral = "images/Sprites/old/Sofie.png"
+image sofie smile = "images/Sprites/old/Sofie.png"
 # Side Images
-image side sofie sad = "images/faces/Sofie/sofie face sad.png"
-image side sofie hurt = "images/faces/Sofie/sofie face hurt.png"
-image side sofie sigh = "images/faces/Sofie/sofie face sigh.png"
-image side sofie bored = "images/faces/Sofie/sofie face bored.png"
-image side sofie smile = "images/faces/Sofie/sofie face smile.png"
-image side sofie ignore = "images/faces/Sofie/sofie face ignore.png"
-image side sofie afraid = "images/faces/Sofie/sofie face afraid.png"
-image side sofie enraged = "images/faces/Sofie/sofie face enraged.png"
-image side sofie swallow = "images/faces/Sofie/sofie face swallow.png"
-image side sofie neutral = "images/faces/Sofie/sofie face neutral.png"
-image side sofie excited = "images/faces/Sofie/sofie face excited.png"
-image side sofie shocked = "images/faces/Sofie/sofie face shocked.png"
-image side sofie offended = "images/faces/Sofie/sofie face offended.png"
-image side sofie confused = "images/faces/Sofie/sofie face confused.png"
-image side sofie enraged2 = "images/faces/Sofie/sofie face enraged2.png"
-image side sofie shut_up = "images/faces/Sofie/sofie face s-shut up.png"
-image side sofie swallow2 = "images/faces/Sofie/sofie face swallow2.png"
-image side sofie ugh_fine = "images/faces/Sofie/sofie face ugh fine.png"
-image side sofie shocked2 = "images/faces/Sofie/sofie face shocked 2.png"
-image side sofie no_tears = "images/faces/Sofie/sofie face no (tears).png"
-image side sofie seriously = "images/faces/Sofie/sofie face seriously.png"
-image side sofie empathetic = "images/faces/Sofie/sofie face empathetic.png"
-image side sofie heart_eyes = "images/faces/Sofie/sofie face heart eyes.png"
-image side sofie determined = "images/faces/Sofie/sofie face determined.png"
-image side sofie sad_tears = "images/faces/Sofie/sofie face sad (tears).png"
-image side sofie embarrassed = "images/faces/Sofie/sofie face embarassed.png"
-image side sofie swallow2_alt = "images/faces/Sofie/sofie face swallow2 (2).png"
-image side sofie ignore_blush = "images/faces/Sofie/sofie face ignore blush.png"
-image side sofie predatory_grin = "images/faces/Sofie/sofie face predatory grin.png"
-image side sofie enamoured_hungry = "images/faces/Sofie/sofie face enamoured (hungry).png"
-image side sofie sad_contemplative = "images/faces/Sofie/sofie face sad contemplative.png"
-image side sofie embarrassed_explaining = "images/faces/Sofie/sofie face embarassed explaining.png"
-image side sofie smile_space_explaining_sparkle = "images/faces/Sofie/sofie face smile space stare explaining (sparkle).png"
-image side sofie smile_space_stare_sweatdrop = "images/faces/Sofie/sofie face smile space stare explaining (sweat drop).png"
-image side sofie smile_space_stare_explaining = "images/faces/Sofie/sofie face smile space stare explaining.png"
+image side sofie smile = "images/faces/Sofie/Casual/smile.png"
+image side sofie smile bored = "images/faces/Sofie/Casual/bored.png"
+image side sofie smile excited = "images/faces/Sofie/Casual/excited.png"
+image side sofie smile neutral = "images/faces/Sofie/Casual/neutral.png"
+image side sofie smile hungry = "images/faces/Sofie/Casual/predatory grin.png"
+image side sofie smile space explaining = "images/faces/Sofie/Casual/smile space stare explaining.png"
+image side sofie smile space sweatdrop = "images/faces/Sofie/Casual/smile space stare explaining (sweat drop).png"
+image side sofie smile space explainingsparkle = "images/faces/Sofie/Casual/smile space stare explaining (sparkle).png"
+
+image side sofie sad = "images/faces/Sofie/Casual/sad.png"
+image side sofie sad hurt = "images/faces/Sofie/Casual/hurt.png"
+image side sofie sad tears = "images/faces/Sofie/Casual/sad (tears).png"
+image side sofie sad tears beg = "images/faces/Sofie/Casual/no (tears).png"
+image side sofie sad contemplative = "images/faces/Sofie/Casual/sad contemplative.png"
+
+image side sofie swallow = "images/faces/Sofie/Casual/swallow.png"
+image side sofie swallow2 = "images/faces/Sofie/Casual/swallow2 (2).png"
+image side sofie swallow3 = "images/faces/Sofie/Casual/swallow2.png"
+
+image side sofie sigh = "images/faces/Sofie/Casual/sigh.png"
+image side sofie sigh relent = "images/faces/Sofie/Casual/ugh fine.png"
+
+image side sofie angry hurt = "images/faces/Sofie/Casual/offended.png"
+image side sofie angry wrath = "images/faces/Sofie/Casual/enraged2.png"
+image side sofie angry wrath speaking = "images/faces/Sofie/Casual/enraged.png"
+
+image side sofie shocked = "images/faces/Sofie/Casual/shocked.png"
+image side sofie shocked closed = "images/faces/Sofie/Casual/shocked 2.png"
 
 
+image side sofie enamoured = "images/faces/Sofie/Casual/heart eyes.png"
+image side sofie enamoured hungry = "images/faces/Sofie/Casual/enamoured (hungry).png"
+
+
+image side sofie embarrassed = "images/faces/Sofie/Casual/embarassed.png"
+image side sofie embarrassed confess = "images/faces/Sofie/Casual/s-shut up.png"
+image side sofie embarrassed explaining = "images/faces/Sofie/Casual/embarassed explaining.png"
+
+image side sofie ignore = "images/faces/Sofie/Casual/ignore.png"
+image side sofie ignore blush = "images/faces/Sofie/Casual/ignore blush.png"
+
+image side sofie afraid = "images/faces/Sofie/Casual/afraid.png"
+image side sofie confused = "images/faces/Sofie/Casual/confused.png"
+image side sofie seriously = "images/faces/Sofie/Casual/seriously.png"
+image side sofie empathetic = "images/faces/Sofie/Casual/empathetic.png"
+image side sofie determined = "images/faces/Sofie/Casual/determined.png"
+
+
+
+###### Leah ##############################################################################################
+# Base images
+# image leah thinking = "images/Sprites/Leah/thinking.png"
+# Side Images
+image side leah thinking = "images/faces/Leah/thinking.png"
+image side leah thinking = "images/faces/Leah/pumped.png"
+
+###### Felicity ##############################################################################################
+# Base images
+# image leah thinking = "images/Sprites/Felicity/chill smile.png"
+# Side Images
+image side felicity smile chill = "images/faces/Felicity/smile chill.png"
+
+###### Ash ##############################################################################################
+# Base images
+# image ash smile = "images/Sprites/Ash/smile.png"
+# Side Images
+image side ash smile = "images/faces/Ash/smile.png"
+
+###### Lilly ##############################################################################################
+# Base images
+# image lilly thinking = "images/Sprites/Lilly/determined.png"
+# Side Images
+image side lilly smile chill = "images/faces/Lilly/determined.png"
+
+###### Esel ##############################################################################################
+# Base images
+# image esel thinking = "images/Sprites/Esel/smile.png"
+# Side Images
+image side esel smile chill = "images/faces/Esel/smile.png"
+
+###### Esel ##############################################################################################
+# Base images
+# image esel thinking = "images/Sprites/Esel/smile.png"
+# Side Images
+image side esel smile chill = "images/faces/Esel/smile.png"
 
 

@@ -1702,13 +1702,22 @@ screen characters():
 
                 vbox:
                     spacing 10
-                    xalign 1.0
-                    for char in characters:
-                        imagebutton:
-                            xalign 1.0
-                            idle Image(char.face)
-                            hover Image(char.hover)
-                            action SetVariable("selected_char", char)  # Update selected_char
+                    xalign 1.0 
+                    for char in characters.values():
+                        window:
+                            style "character_face"
+                            add char.faceProfile() xsize 300 ysize 300
+                            
+                            imagebutton:
+                                at transform:
+                                    xsize 300
+                                    ysize 300
+                                idle char.faceProfile()
+                                hover "gui/hover 300.png"
+                                selected_idle "gui/Face frame mask.png"
+                                selected_hover "gui/Face frame mask hover.png"
+                                action SetVariable("selected_char", char)  # Update selected_char with the Char object
+
 
             # Main section with character details
             if selected_char:
@@ -1763,6 +1772,11 @@ screen characters():
 style StatVal:
     xminimum 50
     size 45 
+style character_face:
+    xsize 300
+    ysize 300
+    background "#00000000"
+    
 
 ################################################################################
 ## Mobile Variants
