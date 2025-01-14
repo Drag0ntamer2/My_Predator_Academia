@@ -2,8 +2,7 @@
 
 init -9997 python:
     # Define Jessie and Merry using the Char class
-    jes = Char(
-        name="Jessie Avatar",
+    jes = Char( name="Jessie Avatar",
         abrev="jes",
         sex="male",
         color="#2F78CA",
@@ -22,8 +21,7 @@ init -9997 python:
         face="smile",
         profile="smile"
     )
-    sof = Char(
-        name="Sofie Moon",
+    sof = Char( name="Sofie Moon",
         abrev="sof",
         sex="female",
         color="#12C8EC",
@@ -42,8 +40,7 @@ init -9997 python:
         face="smile",
         profile="smile"
     )
-    lea = Char(
-        name="Leah Anagro",
+    lea = Char( name="Leah Anagro",
         abrev="lea",
         sex="female",
         color="#00ff00",
@@ -61,8 +58,7 @@ init -9997 python:
         lewdness=6,
         face="thinking"
     )
-    fel = Char(
-        name="Felicity Ferocity",
+    fel = Char( name="Felicity Ferocity",
         sex="female",
         abrev="fel",
         color="#99ff99",
@@ -80,8 +76,7 @@ init -9997 python:
         lewdness=1,
         face="smile chill"
     )
-    mer = Char(
-        name="Merry Avatar",
+    mer = Char( name="Merry Avatar",
         abrev="mer",
         sex="female",
         color="#00ff00",
@@ -98,8 +93,7 @@ init -9997 python:
         constitution=7,
         lewdness=6
     )
-    ash = Char(
-        name="Ash Grigori",
+    ash = Char( name="Ash Grigori",
         abrev="ash",
         sex="female",
         color="#ff0000",
@@ -117,8 +111,7 @@ init -9997 python:
         lewdness=1,
         face="smile"
     )
-    yul = Char(
-        name="Yuliana Gomez",
+    yul = Char( name="Yuliana Gomez",
         abrev="yul",
         sex="female",
         color="#9999ff",
@@ -135,8 +128,7 @@ init -9997 python:
         constitution=7,
         lewdness=6,
     )
-    ste = Char(
-        name="Stephanie Avianna",
+    ste = Char( name="Stephanie Avianna",
         abrev="ste",
         sex="female",
         health=250,
@@ -152,8 +144,7 @@ init -9997 python:
         constitution=7,
         lewdness=6,
     )
-    ast = Char(
-        name="Astaria Oz Blair",
+    ast = Char( name="Astaria Oz Blair",
         abrev="ast",
         sex="female",
         color="#00ff00",
@@ -170,8 +161,7 @@ init -9997 python:
         constitution=7,
         lewdness=6,
     )
-    sag = Char(
-        name="Sage Oz Blair",
+    sag = Char( name="Sage Oz Blair",
         abrev="sag",
         sex="female",
         color="#00ff00",
@@ -188,8 +178,7 @@ init -9997 python:
         constitution=7,
         lewdness=6,
     )
-    lil = Char(
-        name="Lilly Oak",
+    lil = Char( name="Lilly Oak",
         abrev="lil",
         sex="female",
         health=250,
@@ -206,8 +195,7 @@ init -9997 python:
         lewdness=2,
         face="determined"
     )
-    esl = Char(
-        name="Esel Granger",
+    esl = Char( name="Esel Granger",
         abrev="esl",
         sex="female",
         health=250,
@@ -224,8 +212,7 @@ init -9997 python:
         lewdness=2,
         face="smile"
     )
-    pen = Char(
-        name="Penelope Danse",
+    pen = Char( name="Penelope Danse",
         abrev="pen",
         sex="female",
         health=250,
@@ -241,8 +228,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    bth = Char(
-        name="Beth Dista",
+    bth = Char( name="Beth Dista",
         abrev="bth",
         sex="female",
         health=250,
@@ -258,8 +244,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    lau = Char(
-        name="Lauren Smith",
+    lau = Char( name="Lauren Smith",
         abrev="lau",
         sex="female",
         health=250,
@@ -275,8 +260,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    glo = Char(
-        name="Gloria Marques",
+    glo = Char( name="Gloria Marques",
         abrev="glo",
         sex="female",
         health=250,
@@ -292,8 +276,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    rei = Char(
-        name="Reiss Juno",
+    rei = Char( name="Reiss Juno",
         abrev="rei",
         sex="female",
         health=250,
@@ -309,8 +292,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    rox = Char(
-        name="Roxy Mercury",
+    rox = Char( name="Roxy Mercury",
         abrev="rox",
         sex="female",
         health=250,
@@ -326,8 +308,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    jet = Char(
-        name="Jett Vespa",
+    jet = Char( name="Jett Vespa",
         abrev="jet",
         sex="female",
         health=250,
@@ -343,8 +324,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    jetBee = Char(
-        name="Jett Vespa",
+    jetBee = Char( name="Jett Vespa",
         abrev="jetBee",
         sex="female",
         health=250,
@@ -360,8 +340,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    gaia = Char(
-        name="Gaia Nepenthes",
+    gaia = Char( name="Gaia Nepenthes",
         abrev="gaia",
         sex="female",
         health=250,
@@ -377,8 +356,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    lilana = Char(
-        name="Lillianna Sylphann",
+    lilana = Char( name="Lillianna Sylphann",
         abrev="lilana",
         sex="female",
         health=250,
@@ -394,8 +372,7 @@ init -9997 python:
         constitution=7,
         lewdness=2,
     )
-    kor = Char(
-        name="Korbin Moon",
+    kor = Char( name="Korbin Moon",
         abrev="kor",
         sex="male",
         health=250,
