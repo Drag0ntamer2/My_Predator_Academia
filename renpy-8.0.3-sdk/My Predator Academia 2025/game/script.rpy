@@ -2,6 +2,7 @@
 #### variables ###########################################################
 
 default loop = 0
+default Jessie_Has_His_Wallet = False
 
 # Vore Minigame
 default minigame_active = False
@@ -41,10 +42,10 @@ transform right:
 # The game starts here.
 
 label start:
+    jump Day1_start
     # Show a background. This uses a placeholder by default, but you can
     # add a file (named either "bg room.png" or "bg room.jpg") to the
     # images directory to show it.
-    scene room at fill_screen with dissolve
     show sofie smile at left
     sof "testing"
     show jessie smile at right

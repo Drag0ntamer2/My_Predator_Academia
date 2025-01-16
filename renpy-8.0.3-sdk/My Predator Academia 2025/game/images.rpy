@@ -1,5 +1,15 @@
 # Scenes
-image room = "images/base/bedroomday.jpg"
+image room day = "images/base/bedroomday.jpg"
+image room night = "images/base/bedroomnight.jpg"
+image room night lit = "images/base/bedroomnighton.jpg"
+image mouth = "images/base/mouth.jpg"
+image stomach = "images/base/stomach.jpg"
+image kitchen day = "images/base/kitchenday.jpg"
+image kitchen night = "images/base/kitchennight.jpg"
+image kitchen night lit = "images/base/kitchennighton.jpg"
+image living room day = "images/base/livingroomday.jpg"
+image living room night = "images/base/livingroomnight.jpg"
+image living room night lit = "images/base/livingroomnighton.jpg"
 
 ###### GUI ################################################################################################
 image frame = im.Composite((500, 500), (0, 0), "images/base_image.png", (0, 0), "colored_frame(color=color)")
