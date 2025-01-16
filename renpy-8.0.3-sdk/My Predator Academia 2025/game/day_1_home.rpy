@@ -40,7 +40,9 @@ label Day1_get_up:
     scene kitchen day at fill_screen with dissolve
     "You make your way into the kitchen, which is connected to the living room on the right side by an arched entryway (one of those door-shaped openings without doors in them), and slip some toast into the toaster."
     "While it's toasting, your sister walks into the room, pajamas on, and hair in a mess."
-    # show merry tired with dissolve ## commented out until image is generated
+    show merry sass:
+        zoom 5 
+    with dissolve
     "Merry, despite being a rather energetic girl, was certainly not a morning person, and generally was never fully functional 'till an hour or two after waking up."
     "Her hair being a mess wasn't exactly anything new either, she never really took remotely as much care in looking pristine as a typical girl might, she was something of a tomboy in that sense."
     "Groggily waltzing in, and still half asleep, Merry drops like a pillow at the kitchen table, slumped over with her upper body lain against the tabletop."
@@ -120,8 +122,13 @@ label Day1_accept_merrys_offer_to_eat_you:
     "Her big tits were enough of a warning to her experience with vore."
     "She stops in front of you with her hand thrust against the wall, pinning you against it." 
     "She brings a hand up to your chin, lifting it up to straighten your gaze into her maw as it opens wide."
+    hide merry with dissolve
     scene mouth at fill_screen with dissolve
     "As she leans in, you see nothing but an abyss before you."
+    scene kitchen day at fill_screen with dissolve
+    show merry sass:
+        zoom 50 
+    with dissolve
     "Just before you begin your journey to your sister's waistline, however, her lips snap shut less than an inch in front of your face."
     "She kisses you on the forehead before letting off you with a impish smile,"
     mer "Gosh that 5 dollars might be sooner in my future than I thought~" 
@@ -168,6 +175,8 @@ label Day1_fight_dirty_to_get_wallet:
     "As you're about to reach in and grab it, you trip."
     "Whether it was your own mistake, or something she did to you, you don't know, but the result is the same."
     "Instead of grabbing your wallet with your hands, you end up slamming your face directly into her cleavage!"
+    $ Tit_Fishing_Item_Depth = 5
+    call minigame_start([jes], mer, [False, True, False, True, False ], [False, True, False, True] )
     jes change arousal 0.5    # add 0.5 to Jessie's arousal
     "Merry could have stepped out of the way, she chose not to."
     "You fall right smack into Merry's fat rack, and before you can pull out your head, she puts her hand over it to hold it down, thus you find it difficult to retreat from her soft canyon."
@@ -178,14 +187,53 @@ label Day1_fight_dirty_to_get_wallet:
     "She jiggles her chest a little, which only serves to sink your face in more."
     jes change arousal 0.5
     menu:
-        "Commit (Search, %chance of success)":
+        "Commit (Search, %%chance of success)":
             random:
+                jump Day1_tit_fishing_for_wallet_with_merry_success
                 weight 5
                 jump Day1_tit_fishing_for_wallet_with_merry_fail
-                weight 1
+        "Screw it, I'll just let her have it (Try to break free, higher %%chance of success)":
+            random:
+                jump Day1_escape_tit_fishing_for_wallet_with_merry_success
+                weight 3
+                jump Day1_escape_tit_fishing_for_wallet_with_merry_fail
+
+
+
+label Day1_tit_fishing_for_wallet_with_merry_fail:
+    "You fumble in your attempt to fish for your wallet with your mouth."
+    "In response, Merry jiggles her chest, causing you to sink in even deeper."
+    "She clearly is enjoying herself as she makes motorboat noises and teasing you,"
+    mer "I think you nearly got it that time~ Keep it up you might just get it back~" 
+    mer change arousal 0.5
+    jes change arousal 1
+    "The jiggling pushes the wallet up a little more into view, you can see it more clearly."
+    $ Tit_Fishing_Item_Depth -= 1
+    menu:
+        "Commit":
+            random:
                 jump Day1_tit_fishing_for_wallet_with_merry_success
+                weight 5
+                jump Day1_tit_fishing_for_wallet_with_merry_fail
+        "Go Back":
+            random:
+                jump Day1_escape_tit_fishing_for_wallet_with_merry_success
+                weight 3
+                jump Day1_escape_tit_fishing_for_wallet_with_merry_fail
+        "Play With Her Tits" if jes.arousal >= 3:
+            jump Day1_tit_fishing_for_wallet_with_merry_play_with_boobs
 
 
-2) Fuck, go back (Try to break free, higher %chance of success)
+label Day1_tit_fishing_for_wallet_with_merry_success:
+    
 
-
+label Day1_tit_fishing_for_wallet_with_merry_play_with_boobs:
+    "Even though she's your sister, few guys could resist being turned on in a situation like this."
+    "And, since she was basically asking for it at this point, you decide to let yourself have some fun."
+    "Of course, you still try to get your wallet back, but with less focus."
+    "You push your face slightly deeper and playfully snappe your mouth for your wallet, however, you miss, ending up with nothing but skin"
+    jes change arousal 0.6
+    jes change stamina -10
+    mer change arousal 0.4
+    "As you begin to have some fun with your sister you begin to slowly sweat a little as your growing thirst and lust begin to take hold."
+    "A small shiver runs down your back and you feel some sweat forming as well…"

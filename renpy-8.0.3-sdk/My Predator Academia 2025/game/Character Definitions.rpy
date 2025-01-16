@@ -91,7 +91,9 @@ init -9997 python:
         acidFillRate=0.05,
         dexterity=6,
         constitution=7,
-        lewdness=6
+        lewdness=6,
+        face="sass",
+        profile="sass"
     )
     ash = Char( name="Ash Grigori",
         abrev="ash",

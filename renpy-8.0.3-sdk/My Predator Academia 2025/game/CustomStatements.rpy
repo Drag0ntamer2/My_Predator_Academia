@@ -91,12 +91,19 @@ python early:
         dialogue = None
 
         # Check for the keyword "change arousal" and parse accordingly
-        if lexer.keyword("change arousal"):
-            amt = float(lexer.float())  # Parse the float value
-            if amt < 0:
-                dialogue = "arousalDecay"  # Negative values correspond to decay
-            else:
-                dialogue = "addArousal"   # Positive values correspond to addition
+        if lexer.keyword("change"):
+            if lexer.keyword("arousal"):
+                amt = float(lexer.float())  # Parse the float value
+                if amt < 0:
+                    dialogue = "arousalDecay"  # Negative values correspond to decay
+                else:
+                    dialogue = "addArousal"   # Positive values correspond to addition
+            elif lexer.keyword("stamina"):
+                amt = float(lexer.float())  # Parse the float value
+                if amt < 0:
+                    dialogue = "loseStam"  # Negative values correspond to decay
+                else:
+                    dialogue = "addStam"   # Positive values correspond to addition
         else:
             dialogue = lexer.rest()  # Parse the rest as standard dialogue
 

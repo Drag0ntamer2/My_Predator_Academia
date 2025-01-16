@@ -2,9 +2,13 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 1717: 'idle_selected' is not a keyword argument or valid child for the imagebutton statement.
-    idle_selected "gui/Face frame mask.png"
-                 ^
+File "game/day_1_home.rpy", line 45: expected 'comma or end of line' not found.
+    with dissolve
+    ^
+
+File "game/day_1_home.rpy", line 131: expected 'comma or end of line' not found.
+    with dissolve
+    ^
 
 Ren'Py Version: Ren'Py 8.0.3.22090809
-Tue Jan 14 12:55:28 2025
+Thu Jan 16 14:02:39 2025

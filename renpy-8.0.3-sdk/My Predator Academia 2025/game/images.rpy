@@ -108,10 +108,10 @@ image side lilly smile chill = "images/faces/Lilly/determined.png"
 # Side Images
 image side esel smile chill = "images/faces/Esel/smile.png"
 
-###### Esel ##############################################################################################
+###### Merry ##############################################################################################
 # Base images
-# image esel thinking = "images/Sprites/Esel/smile.png"
+image merry sass = "images/Sprites/Merry/sass.png"
 # Side Images
-image side esel smile chill = "images/faces/Esel/smile.png"
+image side merry sass = "images/faces/Merry/sass.png"
 
 

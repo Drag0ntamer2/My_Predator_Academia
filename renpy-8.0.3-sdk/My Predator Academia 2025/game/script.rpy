@@ -2,6 +2,7 @@
 #### variables ###########################################################
 
 default loop = 0
+default Tit_Fishing_Item_Depth = 0
 default Jessie_Has_His_Wallet = False
 
 # Vore Minigame
@@ -13,6 +14,8 @@ default predName = ""
 default pred_action = "rest"
 default prey_action = "rest"
 default maxComp = 50
+default predBars = [True, True, True, True, True]
+default preyBars = [True, True, True, True]
 
 
 

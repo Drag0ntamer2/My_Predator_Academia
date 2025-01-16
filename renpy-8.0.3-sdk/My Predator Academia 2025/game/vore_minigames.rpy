@@ -1,9 +1,13 @@
-﻿label digestion_start(prey_list, Pred):
+﻿label digestion_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], PreyBars = predBars = [ True, True, True, True ]):
+label minigame_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], PreyBars = predBars = [ True, True, True, True ]):
     python:
         preyList = prey_list                                        # List of prey involved in the minigame
         pred = Pred                                                 # Single pred participating in the minigame
         predName = pred.name                                        # Store pred's name for display
         minigame_active = True                                      # Flag to indicate minigame is active
+
+        predBars = PredBars
+        preyBars = PreyBars
 
         for prey in preyList:
             prey.inStomach = True

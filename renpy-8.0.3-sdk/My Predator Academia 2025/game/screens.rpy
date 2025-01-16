@@ -135,7 +135,7 @@ screen say(who, what):
                                 xalign 0.0
                                 yalign 0.0
                                 spacing 10
-                                add prey.face xsize 150 ysize 150
+                                add prey.faceProfile() xsize 150 ysize 150
                                 frame:
                                     xalign 0.0
                                     yalign 0.0
@@ -146,13 +146,17 @@ screen say(who, what):
                                 spacing 10
                                 xalign 1.0
                                 yalign 0.0
-                                bar value (prey.hp * 100) range (prey.maxHp * 100) left_bar "HP Bar Empty.png" right_bar "HP Bar Full.png" style "statBarRev"
-                                bar value (prey.stam * 100) range (prey.maxStam * 100) left_bar "Stamina Bar Empty.png" right_bar "Stamina Bar Full.png" style "statBarRev"
-                                if not prey.recDis:
-                                    bar value (prey.dis * 100) range (prey.con * 100) left_bar "Disorientation Bar Empty.png" right_bar "Disorientation Bar Full.png" style "statBarRev"
-                                else:
-                                    bar value (prey.dis * 100) range (prey.con * 100) left_bar "Locked Bar Empty.png" right_bar "Locked Bar Full.png" style "statBarRev"
-                                bar value (prey.arousal * 100) range (prey.arousalMax * 100) left_bar "Love Bar Empty.png" right_bar "Love Bar Full.png" style "statBarRev"
+                                if preyBars[0]:
+                                    bar value (prey.hp * 100) range (prey.maxHp * 100) left_bar "HP Bar Empty.png" right_bar "HP Bar Full.png" style "statBarRev"
+                                if preyBars[1]:
+                                    bar value (prey.stam * 100) range (prey.maxStam * 100) left_bar "Stamina Bar Empty.png" right_bar "Stamina Bar Full.png" style "statBarRev"
+                                if preyBars[2]:
+                                    if not prey.recDis:
+                                        bar value (prey.dis * 100) range (prey.con * 100) left_bar "Disorientation Bar Empty.png" right_bar "Disorientation Bar Full.png" style "statBarRev"
+                                    else:
+                                        bar value (prey.dis * 100) range (prey.con * 100) left_bar "Locked Bar Empty.png" right_bar "Locked Bar Full.png" style "statBarRev"
+                                if preyBars[3]:
+                                    bar value (prey.arousal * 100) range (prey.arousalMax * 100) left_bar "Love Bar Empty.png" right_bar "Love Bar Full.png" style "statBarRev"
 
         #### Pred
         frame:
@@ -166,19 +170,24 @@ screen say(who, what):
                     xalign 0.0
                     yalign 0.0
                     spacing 0
-                    bar value (pred.shp * 100) range (pred.maxShp * 100) right_bar "HP Bar Empty left.png" left_bar "HP Bar Full left.png" style "statBar"
-                    bar value (pred.stam * 100) range (pred.maxStam * 100) right_bar "Stamina Bar Empty left.png" left_bar "Stamina Bar Full left.png" style "statBar"
-                    if not pred.recDis:
-                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Nausea Bar Empty.png" left_bar "Nausea Bar Full.png" style "statBar"
-                    else:
-                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Locked Bar Empty.png" left_bar "Locked Bar Full.png" style "statBar"
-                    bar value (pred.arousal * 100) range (pred.arousalMax * 100) right_bar "Love Bar Empty left.png" left_bar "Love Bar Full left.png" style "statBar"
-                    bar value (pred.aLev * 100) range (100) right_bar "Acid Bar Empty.png" left_bar "Acid Bar Full.png" style "statBar"
+                    if predBars[0]:
+                        bar value (pred.shp * 100) range (pred.maxShp * 100) right_bar "HP Bar Empty left.png" left_bar "HP Bar Full left.png" style "statBar"
+                    if predBars[1]:
+                        bar value (pred.stam * 100) range (pred.maxStam * 100) right_bar "Stamina Bar Empty left.png" left_bar "Stamina Bar Full left.png" style "statBar"
+                    if predBars[2]:
+                        if not pred.recDis:
+                            bar value (pred.dis * 100) range (pred.con * 100) right_bar "Nausea Bar Empty.png" left_bar "Nausea Bar Full.png" style "statBar"
+                        else:
+                            bar value (pred.dis * 100) range (pred.con * 100) right_bar "Locked Bar Empty.png" left_bar "Locked Bar Full.png" style "statBar"
+                    if predBars[3]:
+                        bar value (pred.arousal * 100) range (pred.arousalMax * 100) right_bar "Love Bar Empty left.png" left_bar "Love Bar Full left.png" style "statBar"
+                    if predBars[4]:
+                        bar value (pred.aLev * 100) range (100) right_bar "Acid Bar Empty.png" left_bar "Acid Bar Full.png" style "statBar"
                 vbox:
                     xalign 0.0
                     yalign 0.0
                     spacing 10
-                    add pred.face xsize 150 ysize 150
+                    add pred.faceProfile() xsize 150 ysize 150
                     frame:
                         xalign 0.0
                         yalign 0.0
@@ -287,40 +296,45 @@ screen input(prompt):
     # minigame stats
     if minigame_active:
         #### Prey
-        frame:
-            yalign 0.0
-            xalign 1.0
-            background Solid("#000000aa")
-            vbox:
-                xalign 1.0
+        if len(preyList) > 0:
+            frame:
                 yalign 0.0
-                spacing 10  # Optional spacing between bars
-                for prey in preyList:
-                    hbox:
-                        yalign 0.0
-                        xalign 1.0
-                        vbox:
-                            xalign 0.0
+                xalign 1.0
+                background Solid("#000000aa")
+                vbox:
+                    xalign 1.0
+                    yalign 0.0
+                    spacing 10  # Optional spacing between bars
+                    for prey in preyList:
+                        hbox:
                             yalign 0.0
-                            spacing 10
-                            add prey.face xsize 150 ysize 150
-                            frame:
+                            xalign 1.0
+                            vbox:
                                 xalign 0.0
                                 yalign 0.0
-                                xsize 150
-                                background Solid("#FFFFFF")
-                                text prey.name size 15 color "#000000" xmaximum  150 xalign 0.5
-                        vbox:
-                            spacing 10
-                            xalign 1.0
-                            yalign 0.0
-                            bar value (prey.hp * 100) range (prey.maxHp * 100) left_bar "HP Bar Empty.png" right_bar "HP Bar Full.png" style "statBarRev"
-                            bar value (prey.stam * 100) range (prey.maxStam * 100) left_bar "Stamina Bar Empty.png" right_bar "Stamina Bar Full.png" style "statBarRev"
-                            if not prey.recDis:
-                                bar value (prey.dis * 100) range (prey.con * 100) left_bar "Disorientation Bar Empty.png" right_bar "Disorientation Bar Full.png" style "statBarRev"
-                            else:
-                                bar value (prey.dis * 100) range (prey.con * 100) left_bar "Locked Bar Empty.png" right_bar "Locked Bar Full.png" style "statBarRev"
-                            bar value (prey.arousal * 100) range (prey.arousalMax * 100) left_bar "Love Bar Empty.png" right_bar "Love Bar Full.png" style "statBarRev"
+                                spacing 10
+                                add prey.faceProfile() xsize 150 ysize 150
+                                frame:
+                                    xalign 0.0
+                                    yalign 0.0
+                                    xsize 150
+                                    background Solid("#FFFFFF")
+                                    text prey.name size 15 color "#000000" xmaximum  150 xalign 0.5
+                            vbox:
+                                spacing 10
+                                xalign 1.0
+                                yalign 0.0
+                                if preyBars[0]:
+                                    bar value (prey.hp * 100) range (prey.maxHp * 100) left_bar "HP Bar Empty.png" right_bar "HP Bar Full.png" style "statBarRev"
+                                if preyBars[1]:
+                                    bar value (prey.stam * 100) range (prey.maxStam * 100) left_bar "Stamina Bar Empty.png" right_bar "Stamina Bar Full.png" style "statBarRev"
+                                if preyBars[2]:
+                                    if not prey.recDis:
+                                        bar value (prey.dis * 100) range (prey.con * 100) left_bar "Disorientation Bar Empty.png" right_bar "Disorientation Bar Full.png" style "statBarRev"
+                                    else:
+                                        bar value (prey.dis * 100) range (prey.con * 100) left_bar "Locked Bar Empty.png" right_bar "Locked Bar Full.png" style "statBarRev"
+                                if preyBars[3]:
+                                    bar value (prey.arousal * 100) range (prey.arousalMax * 100) left_bar "Love Bar Empty.png" right_bar "Love Bar Full.png" style "statBarRev"
 
         #### Pred
         frame:
@@ -334,19 +348,24 @@ screen input(prompt):
                     xalign 0.0
                     yalign 0.0
                     spacing 0
-                    bar value (pred.shp * 100) range (pred.maxShp * 100) right_bar "HP Bar Empty left.png" left_bar "HP Bar Full left.png" style "statBar"
-                    bar value (pred.stam * 100) range (pred.maxStam * 100) right_bar "Stamina Bar Empty left.png" left_bar "Stamina Bar Full left.png" style "statBar"
-                    if not pred.recDis:
-                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Nausea Bar Empty.png" left_bar "Nausea Bar Full.png" style "statBar"
-                    else:
-                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Locked Bar Empty.png" left_bar "Locked Bar Full.png" style "statBar"
-                    bar value (pred.arousal * 100) range (pred.arousalMax * 100) right_bar "Love Bar Empty left.png" left_bar "Love Bar Full left.png" style "statBar"
-                    bar value (pred.aLev * 100) range (100) right_bar "Acid Bar Empty.png" left_bar "Acid Bar Full.png" style "statBar"
+                    if predBars[0]:
+                        bar value (pred.shp * 100) range (pred.maxShp * 100) right_bar "HP Bar Empty left.png" left_bar "HP Bar Full left.png" style "statBar"
+                    if predBars[1]:
+                        bar value (pred.stam * 100) range (pred.maxStam * 100) right_bar "Stamina Bar Empty left.png" left_bar "Stamina Bar Full left.png" style "statBar"
+                    if predBars[2]:
+                        if not pred.recDis:
+                            bar value (pred.dis * 100) range (pred.con * 100) right_bar "Nausea Bar Empty.png" left_bar "Nausea Bar Full.png" style "statBar"
+                        else:
+                            bar value (pred.dis * 100) range (pred.con * 100) right_bar "Locked Bar Empty.png" left_bar "Locked Bar Full.png" style "statBar"
+                    if predBars[3]:
+                        bar value (pred.arousal * 100) range (pred.arousalMax * 100) right_bar "Love Bar Empty left.png" left_bar "Love Bar Full left.png" style "statBar"
+                    if predBars[4]:
+                        bar value (pred.aLev * 100) range (100) right_bar "Acid Bar Empty.png" left_bar "Acid Bar Full.png" style "statBar"
                 vbox:
                     xalign 0.0
                     yalign 0.0
                     spacing 10
-                    add pred.face xsize 150 ysize 150
+                    add pred.faceProfile() xsize 150 ysize 150
                     frame:
                         xalign 0.0
                         yalign 0.0
@@ -398,40 +417,45 @@ screen choice(items):
     # minigame stats
     if minigame_active:
         #### Prey
-        frame:
-            yalign 0.0
-            xalign 1.0
-            background Solid("#000000aa")
-            vbox:
-                xalign 1.0
+        if len(preyList) > 0:
+            frame:
                 yalign 0.0
-                spacing 10  # Optional spacing between bars
-                for prey in preyList:
-                    hbox:
-                        yalign 0.0
-                        xalign 1.0
-                        vbox:
-                            xalign 0.0
+                xalign 1.0
+                background Solid("#000000aa")
+                vbox:
+                    xalign 1.0
+                    yalign 0.0
+                    spacing 10  # Optional spacing between bars
+                    for prey in preyList:
+                        hbox:
                             yalign 0.0
-                            spacing 10
-                            add prey.face xsize 150 ysize 150
-                            frame:
+                            xalign 1.0
+                            vbox:
                                 xalign 0.0
                                 yalign 0.0
-                                xsize 150
-                                background Solid("#FFFFFF")
-                                text prey.name size 15 color "#000000" xmaximum  150 xalign 0.5
-                        vbox:
-                            spacing 10
-                            xalign 1.0
-                            yalign 0.0
-                            bar value (prey.hp * 100) range (prey.maxHp * 100) left_bar "HP Bar Empty.png" right_bar "HP Bar Full.png" style "statBarRev"
-                            bar value (prey.stam * 100) range (prey.maxStam * 100) left_bar "Stamina Bar Empty.png" right_bar "Stamina Bar Full.png" style "statBarRev"
-                            if not prey.recDis:
-                                bar value (prey.dis * 100) range (prey.con * 100) left_bar "Disorientation Bar Empty.png" right_bar "Disorientation Bar Full.png" style "statBarRev"
-                            else:
-                                bar value (prey.dis * 100) range (prey.con * 100) left_bar "Locked Bar Empty.png" right_bar "Locked Bar Full.png" style "statBarRev"
-                            bar value (prey.arousal * 100) range (prey.arousalMax * 100) left_bar "Love Bar Empty.png" right_bar "Love Bar Full.png" style "statBarRev"
+                                spacing 10
+                                add prey.faceProfile() xsize 150 ysize 150
+                                frame:
+                                    xalign 0.0
+                                    yalign 0.0
+                                    xsize 150
+                                    background Solid("#FFFFFF")
+                                    text prey.name size 15 color "#000000" xmaximum  150 xalign 0.5
+                            vbox:
+                                spacing 10
+                                xalign 1.0
+                                yalign 0.0
+                                if preyBars[0]:
+                                    bar value (prey.hp * 100) range (prey.maxHp * 100) left_bar "HP Bar Empty.png" right_bar "HP Bar Full.png" style "statBarRev"
+                                if preyBars[1]:
+                                    bar value (prey.stam * 100) range (prey.maxStam * 100) left_bar "Stamina Bar Empty.png" right_bar "Stamina Bar Full.png" style "statBarRev"
+                                if preyBars[2]:
+                                    if not prey.recDis:
+                                        bar value (prey.dis * 100) range (prey.con * 100) left_bar "Disorientation Bar Empty.png" right_bar "Disorientation Bar Full.png" style "statBarRev"
+                                    else:
+                                        bar value (prey.dis * 100) range (prey.con * 100) left_bar "Locked Bar Empty.png" right_bar "Locked Bar Full.png" style "statBarRev"
+                                if preyBars[3]:
+                                    bar value (prey.arousal * 100) range (prey.arousalMax * 100) left_bar "Love Bar Empty.png" right_bar "Love Bar Full.png" style "statBarRev"
 
         #### Pred
         frame:
@@ -445,19 +469,24 @@ screen choice(items):
                     xalign 0.0
                     yalign 0.0
                     spacing 0
-                    bar value (pred.shp * 100) range (pred.maxShp * 100) right_bar "HP Bar Empty left.png" left_bar "HP Bar Full left.png" style "statBar"
-                    bar value (pred.stam * 100) range (pred.maxStam * 100) right_bar "Stamina Bar Empty left.png" left_bar "Stamina Bar Full left.png" style "statBar"
-                    if not pred.recDis:
-                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Nausea Bar Empty.png" left_bar "Nausea Bar Full.png" style "statBar"
-                    else:
-                        bar value (pred.dis * 100) range (pred.con * 100) right_bar "Locked Bar Empty.png" left_bar "Locked Bar Full.png" style "statBar"
-                    bar value (pred.arousal * 100) range (pred.arousalMax * 100) right_bar "Love Bar Empty left.png" left_bar "Love Bar Full left.png" style "statBar"
-                    bar value (pred.aLev * 100) range (100) right_bar "Acid Bar Empty.png" left_bar "Acid Bar Full.png" style "statBar"
+                    if predBars[0]:
+                        bar value (pred.shp * 100) range (pred.maxShp * 100) right_bar "HP Bar Empty left.png" left_bar "HP Bar Full left.png" style "statBar"
+                    if predBars[1]:
+                        bar value (pred.stam * 100) range (pred.maxStam * 100) right_bar "Stamina Bar Empty left.png" left_bar "Stamina Bar Full left.png" style "statBar"
+                    if predBars[2]:
+                        if not pred.recDis:
+                            bar value (pred.dis * 100) range (pred.con * 100) right_bar "Nausea Bar Empty.png" left_bar "Nausea Bar Full.png" style "statBar"
+                        else:
+                            bar value (pred.dis * 100) range (pred.con * 100) right_bar "Locked Bar Empty.png" left_bar "Locked Bar Full.png" style "statBar"
+                    if predBars[3]:
+                        bar value (pred.arousal * 100) range (pred.arousalMax * 100) right_bar "Love Bar Empty left.png" left_bar "Love Bar Full left.png" style "statBar"
+                    if predBars[4]:
+                        bar value (pred.aLev * 100) range (100) right_bar "Acid Bar Empty.png" left_bar "Acid Bar Full.png" style "statBar"
                 vbox:
                     xalign 0.0
                     yalign 0.0
                     spacing 10
-                    add pred.face xsize 150 ysize 150
+                    add pred.faceProfile() xsize 150 ysize 150
                     frame:
                         xalign 0.0
                         yalign 0.0

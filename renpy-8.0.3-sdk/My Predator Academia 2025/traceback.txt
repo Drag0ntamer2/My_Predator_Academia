@@ -1,42 +1,30 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "renpy/common/00start.rpy", line 215, in script call
-    call _load_reload_game from _call__load_reload_game_1
-  File "renpy/common/00keymap.rpy", line 517, in script
-    python hide:
-  File "renpy/common/00keymap.rpy", line 517, in <module>
-    python hide:
-  File "renpy/common/00keymap.rpy", line 528, in _execute_python_hide
-    renpy.load(renpy.session["_reload_slot"])
-Exception: Couldn't find a place to stop rolling back. Perhaps the script changed in an incompatible way?
+  File "game/day_1_home.rpy", line 43, in script
+    show merry sass zoom 50 dissolve
+Exception: Image 'merry sass' does not accept attributes 'zoom 50 dissolve'.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "renpy/common/00start.rpy", line 215, in script call
-    call _load_reload_game from _call__load_reload_game_1
-  File "renpy/common/00keymap.rpy", line 517, in script
-    python hide:
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1131, in execute
-    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\python.py", line 1061, in py_exec_bytecode
-    exec(bytecode, globals, locals)
-  File "renpy/common/00keymap.rpy", line 517, in <module>
-    python hide:
-  File "renpy/common/00keymap.rpy", line 528, in _execute_python_hide
-    renpy.load(renpy.session["_reload_slot"])
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\loadsave.py", line 769, in load
-    log.unfreeze(roots, label="_after_load")
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\rollback.py", line 1078, in unfreeze
-    self.rollback(0, force=True, label=label, greedy=greedy, on_load=True)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\rollback.py", line 889, in rollback
-    self.load_failed()
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\rollback.py", line 807, in load_failed
-    raise Exception("Couldn't find a place to stop rolling back. Perhaps the script changed in an incompatible way?")
-Exception: Couldn't find a place to stop rolling back. Perhaps the script changed in an incompatible way?
+  File "game/day_1_home.rpy", line 43, in script
+    show merry sass zoom 50 dissolve
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1408, in execute
+    show_imspec(self.imspec, atl=getattr(self, "atl", None))
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1371, in show_imspec
+    renpy.config.show(name,
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\exports.py", line 686, in show
+    if not base.find_target() and renpy.config.missing_show:
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\image.py", line 414, in find_target
+    self.target = target._duplicate(a)
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 397, in _duplicate
+    args.extraneous()
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 265, in extraneous
+    raise Exception("Image '{}' does not accept attributes '{}'.".format(
+Exception: Image 'merry sass' does not accept attributes 'zoom 50 dissolve'.
 
 Windows-10-10.0.22631 AMD64
 Ren'Py 8.0.3.22090809
 My Predator Academia 2025 1.0
-Tue Jan 14 12:51:56 2025
+Thu Jan 16 14:01:43 2025
