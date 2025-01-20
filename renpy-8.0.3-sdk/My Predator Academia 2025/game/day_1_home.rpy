@@ -47,7 +47,7 @@ label Day1_get_up:
     "She speaks up with a hint of a whine,"
     mer morning tired "Jessieee... Gimme some toast and OJ..."
     "She lifts both arms up, making grabby motions with her hands in the air at you, clearly accentuating her desire for food and fruit juice."
-    mer "Cmoonnn, hurry up already or I'll settle for you..."
+    mer morning tired question "Cmoonnn, hurry up already or I'll settle for you..."
     menu:
         "Give In & Feed The Brat.":
             jump Day1_make_merry_breakfast
