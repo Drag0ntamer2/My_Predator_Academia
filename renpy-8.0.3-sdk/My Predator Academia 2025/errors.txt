@@ -2,13 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/day_1_home.rpy", line 45: expected 'comma or end of line' not found.
-    with dissolve
-    ^
-
-File "game/day_1_home.rpy", line 131: expected 'comma or end of line' not found.
-    with dissolve
-    ^
+File "game/day_1_home.rpy", line 239: expected statement.
+    mer change arousal 0.4
+                        ^
 
 Ren'Py Version: Ren'Py 8.0.3.22090809
-Thu Jan 16 14:02:39 2025
+Mon Jan 20 10:26:10 2025

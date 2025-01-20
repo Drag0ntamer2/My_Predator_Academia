@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -22,7 +22,9 @@
 from __future__ import print_function
 
 from libc.string cimport memset
-from libc.math cimport sin, cos, M_PI as pi
+from libc.math cimport sin, cos
+
+DEF pi = 3.14159265358979323846
 
 cdef float *aligned_1 = [ 1, 0, 0, 0, 0, 1, 0, 0,  0, 0, 1, 0, 0, 0, 0, 1 ]
 cdef float *aligned_2 = [ 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ]
@@ -98,6 +100,8 @@ cdef class Matrix:
 
     _types = "".join(["{} : float\n".format(i) for i in fields])
 
+    def __cinit__(self):
+        self.m = &self.xdx
 
     def __init__(Matrix self, l):
 
@@ -178,6 +182,18 @@ cdef class Matrix:
         rv.wdw = other.wdw*self.wdw + other.xdw*self.wdx + other.ydw*self.wdy + other.zdw*self.wdz
 
         return rv
+
+    def is_2d_null(self):
+        """
+        Returns true if a 2D matrix always projects to 0 in the x or y directions.
+        """
+
+        if self.xdx == 0.0 and self.xdy == 0.0:
+            return True
+        if self.ydx == 0.0 and self.ydy == 0.0:
+            return True
+
+        return False
 
     def __repr__(Matrix self):
         cdef int x, y

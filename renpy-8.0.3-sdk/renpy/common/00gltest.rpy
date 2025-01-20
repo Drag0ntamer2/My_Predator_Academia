@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -48,6 +48,7 @@ init -1500:
     # This screen can be customized by the creator, provided the actions
     # remain available.
     screen _choose_renderer:
+        layer config.interface_layer
 
         $ gl = False
         $ gles = False
@@ -233,6 +234,7 @@ init -1500:
     #
     # `allow_continue` controls whether this error can be ignored.
     screen _performance_warning:
+        layer config.interface_layer
 
         frame:
             style_group ""
@@ -335,8 +337,6 @@ init -1500 python:
         if renpy.mobile:
             return
 
-        renpy.renpy.display.log.write("Performance test:")
-
         # This will cause the screen to start displaying.
         ui.pausebehavior(0)
         ui.interact(suppress_underlay=True, suppress_overlay=True)
@@ -383,14 +383,14 @@ label _gl_test:
         return
 
     # Show the test image.
-    scene black
+    scene black zorder 0
     show expression config.gl_test_image
     with None
 
     $ __gl_test()
 
     # Hide the test image.
-    scene black
+    scene black zorder 0
 
     return
 

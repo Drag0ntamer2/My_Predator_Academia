@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -33,14 +33,14 @@ import renpy
 from renpy.display.render import render
 
 
-class Transition(renpy.display.core.Displayable):
+class Transition(renpy.display.displayable.Displayable):
     """
     This is the base class of most transitions. It takes care of event
     dispatching.
     """
 
-    new_widget = None # type:renpy.display.core.Displayable|None
-    old_widget = None # type:renpy.display.core.Displayable|None
+    new_widget = None # type:renpy.display.displayable.Displayable|None
+    old_widget = None # type:renpy.display.displayable.Displayable|None
 
     def __init__(self, delay, **properties):
         super(Transition, self).__init__(**properties)
@@ -56,6 +56,12 @@ class Transition(renpy.display.core.Displayable):
 
     def visit(self):
         return [ self.new_widget, self.old_widget ] # E1101
+
+    def get_placement(self):
+        if renpy.config.transitions_use_child_placement:
+            return self.new_widget.get_placement()
+        else:
+            return super(Transition, self).get_placement()
 
 
 def null_render(d, width, height, st, at):
@@ -102,7 +108,7 @@ class MultipleTransition(Transition):
     after the other.
 
     `args`
-        A *list* containing an odd number of items. The first, third, and
+        A **list** containing an odd number of items. The first, third, and
         other odd-numbered items must be scenes, and the even items
         must be transitions. A scene can be one of:
 
@@ -111,6 +117,8 @@ class MultipleTransition(Transition):
         * True, to use the new scene.
 
         Almost always, the first argument will be False and the last True.
+
+        Note that this is a single parameter taking a list, this is not ``*args``.
 
     The transitions in `args` are applied in order. For each transition,
     the old scene is the screen preceding it, and the new scene is the
@@ -129,7 +137,7 @@ class MultipleTransition(Transition):
     def __init__(self, args, old_widget=None, new_widget=None, **properties):
 
         if len(args) % 2 != 1 or len(args) < 3:
-            raise Exception("MultipleTransition requires an odd number of arguments, and at least 3 arguments.")
+            raise Exception("MultipleTransition requires an odd number of items, and at least 3 items.")
 
         self.transitions = [ ]
 
@@ -150,13 +158,13 @@ class MultipleTransition(Transition):
 
             self.transitions.append(trans(old_widget=old, new_widget=new))
 
-        super(MultipleTransition, self).__init__(sum([i.delay for i in self.transitions]), **properties)
+        super(MultipleTransition, self).__init__(sum(i.delay for i in self.transitions), **properties)
 
         self.new_widget = self.transitions[-1]
         self.events = False
 
     def visit(self):
-        return [ i for i in self.screens if isinstance(i, renpy.display.core.Displayable)] + self.transitions
+        return [ i for i in self.screens if isinstance(i, renpy.display.displayable.Displayable)] + self.transitions
 
     def event(self, ev, x, y, st):
 
@@ -320,7 +328,7 @@ class Pixellate(Transition):
 class Dissolve(Transition):
     """
     :doc: transition function
-    :args: (time, alpha=False, time_warp=None, **properties)
+    :args: (time, *, time_warp=None, mipmap=None)
     :name: Dissolve
 
     Returns a transition that dissolves from the old scene to the new scene.
@@ -328,18 +336,16 @@ class Dissolve(Transition):
     `time`
         The time the dissolve will take.
 
-    `alpha`
-        Ignored.
-
     `time_warp`
-        A function that adjusts the timeline. If not None, this should be a
-        function that takes a fractional time between 0.0 and 1.0, and returns
-        a number in the same range.
+        A :ref:`function that adjusts the timeline <warpers>`. If not None, this
+        should be a function that takes a fractional time between 0.0 and 1.0,
+        and returns a number in the same range.
 
-    When the dissolve will be scaled to less than half its natural size, the
-    :propref:`mipmap` style property can be set to True. This will cause mipmaps
-    to be generated, which will make the dissolve consume more GPU resources,
-    but will reduce artifacts.
+    `mipmap`
+        When the dissolve will be scaled to less than half its natural size,
+        this can be set to True. This will cause mipmaps to be generated,
+        which will make the dissolve consume more GPU resources, but will
+        reduce artifacts. See :propref:`mipmap` for more information.
     """
 
     __version__ = 1
@@ -377,8 +383,12 @@ class Dissolve(Transition):
         bottom = render(self.old_widget, width, height, st, at)
         top = render(self.new_widget, width, height, st, at)
 
-        width = min(top.width, bottom.width)
-        height = min(top.height, bottom.height)
+        if renpy.config.dissolve_shrink:
+            width = min(top.width, bottom.width)
+            height = min(top.height, bottom.height)
+        else:
+            width = max(top.width, bottom.width)
+            height = max(top.height, bottom.height)
 
         rv = renpy.display.render.Render(width, height)
 
@@ -411,7 +421,7 @@ class Dissolve(Transition):
 class ImageDissolve(Transition):
     """
     :doc: transition function
-    :args: (image, time, ramplen=8, reverse=False, alpha=True, time_warp=None, **properties)
+    :args: (image, time, ramplen=8, *, reverse=False, time_warp=None, mipmap=None)
     :name: ImageDissolve
 
     Returns a transition that dissolves the old scene into the new scene, using
@@ -419,8 +429,7 @@ class ImageDissolve(Transition):
     dissolve in first, and black pixels will dissolve in last.
 
     `image`
-        A control image to use. If `config.gl2` is True, then this can be any displayable,
-        else it needs to be either an image file or an image manipulator. The control image
+        The control image. This can be any displayable. It
         should be the size of the scenes being dissolved, and if `reverse=True`,
         it should be fully opaque.
 
@@ -436,24 +445,22 @@ class ImageDissolve(Transition):
     `reverse`
         If True, black pixels will dissolve in before white pixels.
 
-    `alpha`
-        Ignored.
-
     `time_warp`
-        A function that adjusts the timeline. If not None, this should be a
-        function that takes a fractional time between 0.0 and 1.0, and returns
-        a number in the same range.
+        A :ref:`function that adjusts the timeline <warpers>`. If not None, this
+        should be a function that takes a fractional time between 0.0 and 1.0,
+        and returns a number in the same range.
+
+    `mipmap`
+        When the dissolve will be scaled to less than half its natural size,
+        this can be set to True. This will cause mipmaps to be generated,
+        which will make the dissolve consume more GPU resources, but will
+        reduce artifacts. See :propref:`mipmap` for more information.
 
     ::
 
-        define circirisout = ImageDissolve("circiris.png", 1.0)
-        define circirisin = ImageDissolve("circiris.png", 1.0, reverse=True)
+        define circirisout = ImageDissolve("circiris.png", 1.0, time_warp=_warper.easeout)
+        define circirisin = ImageDissolve("circiris.png", 1.0, reverse=True, time_warp=_warper.easein)
         define circiristbigramp = ImageDissolve("circiris.png", 1.0, ramplen=256)
-
-    When the dissolve will be scaled to less than half its natural size, the
-    :propref:`mipmap` style property can be set to True. This will cause mipmaps
-    to be generated, which will make the dissolve consume more GPU resources,
-    but will reduce artifacts.
     """
 
     __version__ = 1
@@ -478,7 +485,7 @@ class ImageDissolve(Transition):
             time_warp=None,
             **properties):
 
-        # ramptype and ramp are now unused, but are kept for compatbility with
+        # ramptype and ramp are now unused, but are kept for compatibility with
         # older code.
 
         super(ImageDissolve, self).__init__(time, **properties)
@@ -545,8 +552,12 @@ class ImageDissolve(Transition):
         bottom = render(self.old_widget, width, height, st, at)
         top = render(self.new_widget, width, height, st, at)
 
-        width = min(bottom.width, top.width, image.width)
-        height = min(bottom.height, top.height, image.height)
+        if renpy.config.dissolve_shrink:
+            width = min(bottom.width, top.width, image.width)
+            height = min(bottom.height, top.height, image.height)
+        else:
+            width = max(bottom.width, top.width, image.width)
+            height = max(bottom.height, top.height, image.height)
 
         rv = renpy.display.render.Render(width, height)
 
@@ -601,7 +612,7 @@ class ImageDissolve(Transition):
 class AlphaDissolve(Transition):
     """
     :doc: transition function
-    :args: (control, delay=0.0, alpha=False, reverse=False, **properties)
+    :args: (control, delay=0.0, *, reverse=False, mipmap=None)
 
     Returns a transition that uses a control displayable (almost always some
     sort of animated transform) to transition from one screen to another. The
@@ -614,19 +625,17 @@ class AlphaDissolve(Transition):
     `delay`
         The time the transition takes, before ending.
 
-    `alpha`
-        Ignored.
-
     `reverse`
         If true, the alpha channel is reversed. Opaque areas are taken
         from the old image, while transparent areas are taken from the
         new image.
 
-    When the dissolve will be scaled to less than half its natural size, the
-    :propref:`mipmap` style property can be set to True. This will cause mipmaps
-    to be generated, which will make the dissolve consume more GPU resources,
-    but will reduce artifacts.
-     """
+    `mipmap`
+        When the dissolve will be scaled to less than half its natural size,
+        this can be set to True. This will cause mipmaps to be generated,
+        which will make the dissolve consume more GPU resources, but will
+        reduce artifacts. See :propref:`mipmap` for more information.
+    """
 
     mipmap = None
 
@@ -643,6 +652,11 @@ class AlphaDissolve(Transition):
         super(AlphaDissolve, self).__init__(delay, **properties)
 
         self.control = renpy.display.layout.Fixed()
+
+        control = renpy.easy.displayable(control)
+        if control._duplicatable:
+            control = control._duplicate(self._args)
+
         self.control.add(control)
 
         self.old_widget = renpy.easy.displayable(old_widget)
@@ -666,8 +680,12 @@ class AlphaDissolve(Transition):
         bottom = render(self.old_widget, width, height, st, at)
         top = render(self.new_widget, width, height, st, at)
 
-        width = min(bottom.width, top.width)
-        height = min(bottom.height, top.height)
+        if renpy.config.dissolve_shrink:
+            width = min(bottom.width, top.width, image.width)
+            height = min(bottom.height, top.height, image.height)
+        else:
+            width = max(bottom.width, top.width)
+            height = max(bottom.height, top.height)
 
         control = render(self.control, width, height, st, at)
 
@@ -698,8 +716,8 @@ class AlphaDissolve(Transition):
 
 
 def interpolate_tuple(t0, t1, time, scales):
-    return tuple([ round(s * (a * (1.0 - time) + b * time))
-                    for a, b, s in zip(t0, t1, scales) ])
+    return tuple(round(s * (a * (1.0 - time) + b * time))
+                    for a, b, s in zip(t0, t1, scales))
 
 class CropMove(Transition):
     """
@@ -784,15 +802,15 @@ class CropMove(Transition):
     """
 
     def __init__(self, time,
-                 mode="slideright",
-                 startcrop=(0.0, 0.0, 0.0, 1.0),
-                 startpos=(0.0, 0.0),
-                 endcrop=(0.0, 0.0, 1.0, 1.0),
-                 endpos=(0.0, 0.0),
-                 topnew=True,
-                 old_widget=None,
-                 new_widget=None,
-                 **properties):
+                       mode="slideright",
+                       startcrop=(0.0, 0.0, 0.0, 1.0),
+                       startpos=(0.0, 0.0),
+                       endcrop=(0.0, 0.0, 1.0, 1.0),
+                       endpos=(0.0, 0.0),
+                       topnew=True,
+                       old_widget=None,
+                       new_widget=None,
+                       **properties):
 
         super(CropMove, self).__init__(time, **properties)
         self.time = time

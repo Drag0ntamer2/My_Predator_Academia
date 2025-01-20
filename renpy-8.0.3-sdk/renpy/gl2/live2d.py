@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -28,6 +28,7 @@ from typing import Any
 import renpy
 import renpy.gl2.live2dmotion
 from renpy.gl2.gl2shadercache import register_shader
+from renpy.display.core import absolute
 
 try:
     import renpy.gl2.live2dmodel as live2dmodel
@@ -38,6 +39,7 @@ import sys
 import os
 import json
 import collections
+import re
 
 did_onetime_init = False
 
@@ -52,6 +54,8 @@ def onetime_init():
         dll = "Live2DCubismCore.dll"
     elif renpy.macintosh:
         dll = "libLive2DCubismCore.dylib"
+    elif renpy.ios:
+        dll = sys.executable
     else:
         dll = "libLive2DCubismCore.so"
 
@@ -62,7 +66,7 @@ def onetime_init():
     if not PY2:
         dll = dll.encode("utf-8")
 
-    if not renpy.gl2.live2dmodel.load(dll):
+    if not renpy.gl2.live2dmodel.load(dll): # type: ignore
         raise Exception("Could not load Live2D. {} was not found.".format(dll))
 
     did_onetime_init = True
@@ -86,6 +90,9 @@ def init():
 
     if not renpy.config.gl2:
         raise Exception("Live2D requires that config.gl2 be True.")
+
+    if renpy.emscripten:
+        raise Exception("Live2D is not supported the web platform.")
 
     onetime_init()
 
@@ -119,6 +126,14 @@ def init():
         vec4 color = texture2D(tex0, v_tex_coord);
         vec4 mask = texture2D(tex1, v_mask_coord);
         gl_FragColor = color * (1.0 - mask.a);
+    """)
+
+    register_shader("live2d.colors", variables="""
+        uniform vec4 u_multiply;
+        uniform vec4 u_screen;
+    """, fragment_250="""
+        gl_FragColor.rgb = gl_FragColor.rgb * u_multiply.rgb;
+        gl_FragColor.rgb = (gl_FragColor.rgb + u_screen.rgb * gl_FragColor.a) - (gl_FragColor.rgb * u_screen.rgb);
     """)
 
     register_shader("live2d.flip_texture", variables="""
@@ -182,7 +197,7 @@ class Live2DCommon(object):
         if renpy.config.log_live2d_loading:
             renpy.display.log.write("Loading Live2D from %r.", filename)
 
-        if not renpy.loader.loadable(filename):
+        if not renpy.loader.loadable(filename, directory="images"):
             raise Exception("Live2D model {} does not exist.".format(filename))
 
         # A short name for the model.
@@ -195,17 +210,28 @@ class Live2DCommon(object):
             self.base += "/"
 
         # The contents of the .model3.json file.
-        with renpy.loader.load(filename) as f:
+        with renpy.loader.load(filename, directory="images") as f:
             self.model_json = json.load(f)
 
         # The model created from the moc3 file.
-        self.model = renpy.gl2.live2dmodel.Live2DModel(self.base + self.model_json["FileReferences"]["Moc"])
+        self.model = renpy.gl2.live2dmodel.Live2DModel(self.base + self.model_json["FileReferences"]["Moc"]) # type: ignore
 
         # The texture images.
         self.textures = [ ]
 
         for i in self.model_json["FileReferences"]["Textures"]:
-            self.textures.append(renpy.easy.displayable(self.base + i))
+
+            m = re.search(r'\.(\d+)/', i)
+            if m:
+                size = int(m.group(1))
+                renpy.config.max_texture_size = (
+                    max(renpy.config.max_texture_size[0], size),
+                    max(renpy.config.max_texture_size[1], size),
+                )
+
+            im = renpy.easy.displayable(self.base + i)
+            im = renpy.display.im.unoptimized_texture(im)
+            self.textures.append(im)
 
         # A map from the motion file name to the information about it.
         motion_files = { }
@@ -255,7 +281,7 @@ class Live2DCommon(object):
             if prefix == model_name:
                 name = suffix
 
-            if renpy.loader.loadable(self.base + i["File"]):
+            if renpy.loader.loadable(self.base + i["File"], directory="images"):
                 if renpy.config.log_live2d_loading:
                     renpy.display.log.write(" - motion %s -> %s", name, i["File"])
 
@@ -277,14 +303,14 @@ class Live2DCommon(object):
             if prefix == model_name:
                 name = suffix
 
-            if renpy.loader.loadable(self.base + i["File"]):
+            if renpy.loader.loadable(self.base + i["File"], directory="images"):
                 if renpy.config.log_live2d_loading:
                     renpy.display.log.write(" - expression %s -> %s", name, i["File"])
 
                 if name in self.attributes:
                     raise Exception("Name {!r} is already specified as a motion.".format(name))
 
-                with renpy.loader.load(self.base + i["File"]) as f:
+                with renpy.loader.load(self.base + i["File"], directory="images") as f:
                     expression_json = json.load(f)
 
                 self.expressions[name] = Live2DExpression(
@@ -470,7 +496,7 @@ def update_states():
 
         state.cycle_new = True
 
-    sls = renpy.display.core.scene_lists()
+    sls = renpy.display.scenelists.scene_lists()
 
     for d in sls.get_all_displayables(current=True):
         if d is not None:
@@ -483,21 +509,24 @@ def update_states():
         s.mark = False
 
 
-class Live2D(renpy.display.core.Displayable):
+class Live2D(renpy.display.displayable.Displayable):
 
     nosave = [ "common_cache" ]
 
     common_cache = None
     _duplicatable = True
     used_nonexclusive = None
+    properties = {}
 
-    def create_common(self, default_fade=1.0):
+    default_fade = 1.0
 
-        rv = common_cache.get(self.filename, None)
+    def create_common(self):
+        key = (self.filename, self.default_fade)
+        rv = common_cache.get(key, None)
 
         if rv is None:
-            rv = Live2DCommon(self.filename, default_fade)
-            common_cache[self.filename] = rv
+            rv = Live2DCommon(self.filename, self.default_fade)
+            common_cache[key] = rv
 
         self.common_cache = rv
 
@@ -508,7 +537,7 @@ class Live2D(renpy.display.core.Displayable):
         if self.common_cache is not None:
             return self.common_cache
 
-        return self.create_common(self.filename)
+        return self.create_common()
 
     # Note: When adding new parameters, make sure to add them to _duplicate, too.
     def __init__(
@@ -533,6 +562,7 @@ class Live2D(renpy.display.core.Displayable):
             default_fade=1.0,
             **properties):
 
+
         super(Live2D, self).__init__(**properties)
 
         self.filename = filename
@@ -551,8 +581,12 @@ class Live2D(renpy.display.core.Displayable):
         # The name of this displayable.
         self.name = None
 
+        self.default_fade = default_fade
+
+        self.properties = properties
+
         # Load the common data. Needed!
-        common = self.create_common(default_fade)
+        common = self.common
 
         if nonexclusive:
             common.apply_nonexclusive(nonexclusive)
@@ -593,6 +627,12 @@ class Live2D(renpy.display.core.Displayable):
         else:
             attributes = args.args
 
+
+        if common.attribute_filter:
+            attributes = common.attribute_filter(attributes)
+            if not isinstance(attributes, tuple):
+                attributes = tuple(attributes)
+
         if common.attribute_function is not None:
             attributes = common.attribute_function(attributes)
 
@@ -626,7 +666,9 @@ class Live2D(renpy.display.core.Displayable):
             fade=self.fade,
             expression=expression,
             used_nonexclusive=used_nonexclusive,
-            sustain=sustain)
+            sustain=sustain,
+            default_fade=self.default_fade,
+            **self.properties)
 
         rv.name = args.name
         rv._duplicatable = False
@@ -649,17 +691,13 @@ class Live2D(renpy.display.core.Displayable):
 
     def _choose_attributes(self, tag, attributes, optional):
 
+        # Filter out _sustain.
+        attributes = [ i for i in attributes if i != "_sustain" ]
+
         common = self.common
 
         # Chose all motions.
         rv = [ i for i in attributes if i in common.motions ]
-
-        # If there are no motions, choose the last one from the optional attributes.
-        if not rv:
-            sustain = True
-            rv = [ i for i in optional if i in common.motions ]
-        else:
-            sustain = False
 
         # Choose the first expression.
         for i in list(attributes) + list(optional):
@@ -668,9 +706,16 @@ class Live2D(renpy.display.core.Displayable):
                 break
 
         # Choose all possible nonexclusive attributes.
-        for i in list(attributes) + list(optional):
+        for i in sorted(list(attributes)):
             if i in common.nonexclusive:
                 rv.append(i)
+
+        for i in sorted(list(optional)):
+            if i in common.nonexclusive:
+                rv.append(i)
+
+        if set(attributes) - set(rv):
+            return None
 
         rv = tuple(rv)
 
@@ -679,8 +724,9 @@ class Live2D(renpy.display.core.Displayable):
             if not isinstance(rv, tuple):
                 rv = tuple(rv)
 
-        if sustain:
-            rv = ("_sustain",) + rv
+        # If there are no motions, take the optional motions and sustain those.
+        if not any(i in common.motions for i in rv):
+            rv = ( "_sustain", ) + tuple(i for i in optional if i in common.motions) + rv
 
         return rv
 
@@ -817,7 +863,11 @@ class Live2D(renpy.display.core.Displayable):
         state.old_expressions = [ (name, shown, hidden) for (name, shown, hidden) in state.old_expressions if (now - hidden) < common.all_expressions[name].fadeout ]
 
         # Determine the list of expressions that are being shown by this displayable.
-        expressions = list(self.used_nonexclusive) # type: ignore
+        if self.used_nonexclusive is None:
+            expressions = [ ]
+        else:
+            expressions = list(self.used_nonexclusive) # type: ignore
+
         if self.expression:
             expressions.append(self.expression)
 
@@ -860,6 +910,12 @@ class Live2D(renpy.display.core.Displayable):
             raise Exception("Unknown blend mode {!r}".format(blend))
 
         self.common.model.blend_parameter(name, blend, value, weight)
+
+    def blend_opacity(self, name, blend, value, weight=1.0):
+        if blend not in ("Add", "Multiply", "Overwrite"):
+            raise Exception("Unknown blend mode {!r}".format(blend))
+
+        self.common.model.blend_opacity(name, blend, value, weight)
 
     def render(self, width, height, st, at):
 
@@ -922,22 +978,16 @@ class Live2D(renpy.display.core.Displayable):
         if redraws:
             renpy.display.render.redraw(self, min(redraws))
 
-        # Render the textures.
-        textures = [ renpy.display.render.render(d, width, height, st, at) for d in common.textures ]
+        # Get the textures.
+        textures = [ renpy.display.im.render_for_texture(d, width, height, st, at) for d in common.textures ]
 
         sw, sh = model.get_size()
 
         zoom = self.zoom
 
-        def s(n):
-            if isinstance(n, float):
-                return n * sh
-            else:
-                return n
-
         if zoom is None:
-            top = s(self.top)
-            base = s(self.base)
+            top = absolute.compute_raw(self.top, sh)
+            base = absolute.compute_raw(self.base, sh)
 
             size = max(base - top, 1.0)
 

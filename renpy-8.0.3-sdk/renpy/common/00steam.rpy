@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -24,11 +24,20 @@ python early:
     # Should steam be enabled?
     config.enable_steam = True
 
+    # Should the steam timeline be automatically updated.
+    config.automatic_steam_timeline = True
+
 
 init -1499 python in _renpysteam:
+    # Do not participate in saves.
+    _constant = True
 
     import collections
     import time
+
+    from renpy.store import store, config
+
+    ticket = None
 
     def retrieve_stats():
         """
@@ -303,6 +312,8 @@ init -1499 python in _renpysteam:
         return steamapi.SteamUtils().IsOverlayEnabled()
 
 
+    last_needs_present_call = 0
+
     def overlay_needs_present():
         """
         :doc: steam_overlay
@@ -310,6 +321,17 @@ init -1499 python in _renpysteam:
         Returns true if the steam overlay is enabled. (This might take a while to
         return true once the game starts.)
         """
+
+        global last_needs_present_call
+
+        now = time.time()
+
+        # Steam docs say that BOOL BOverlayNeedsPresent() should be called
+        # at around 33 Hz. See also Ren'Py bug #3978.
+        if now < last_needs_present_call + 1 / 33.0:
+            return False
+
+        last_needs_present_call = now
 
         return steamapi.SteamUtils().BOverlayNeedsPresent()
 
@@ -347,7 +369,7 @@ init -1499 python in _renpysteam:
         Activates the Steam overlay, and opens the web page at `url`.
         """
 
-        steamapi.SteamFriends().ActivateGameOverlayToWebPage(url.encode("utf-8"))
+        steamapi.SteamFriends().ActivateGameOverlayToWebPage(url.encode("utf-8"), steamapi.k_EActivateGameOverlayToWebPageMode_Default)
 
     def activate_overlay_to_store(appid, flag=None):
         """
@@ -383,7 +405,7 @@ init -1499 python in _renpysteam:
         """
         :doc: steam_user
 
-        Returns the user's full CSteamID as a 64-bit number..
+        Returns the user's full CSteamID as a 64-bit number.
         """
 
         # Accessing methods on CSteamID was crashing on Windows, so use
@@ -402,7 +424,7 @@ init -1499 python in _renpysteam:
         return get_csteam_id() & 0xffffffff
 
 
-    def get_session_ticket():
+    def get_session_ticket(identity=None):
         """
         :doc: steam_user
 
@@ -420,10 +442,11 @@ init -1499 python in _renpysteam:
         ticket_buf = create_string_buffer(2048)
         ticket_len = c_uint()
 
-        h_ticket = steamapi.SteamUser().GetAuthSessionTicket(ticket_buf, 2048, byref(ticket_len))
+        identity = identity or steamapi.SteamNetworkingIdentity()
+        h_ticket = steamapi.SteamUser().GetAuthSessionTicket(ticket_buf, 2048, byref(ticket_len), identity)
 
         if h_ticket:
-            ticket = ticket_buf.raw[0:ticket_len]
+            ticket = ticket_buf.raw[0:ticket_len.value]
 
         return ticket
 
@@ -432,7 +455,7 @@ init -1499 python in _renpysteam:
         """
         :doc: steam_user
 
-        Cancels the ticket returned by :func:`_renpysteam.get_session_ticket`.
+        Cancels the ticket returned by :func:`achievement.steam.get_session_ticket`.
         """
 
         global h_ticket
@@ -501,6 +524,91 @@ init -1499 python in _renpysteam:
 
         return renpy.exports.fsdecode(path.value)
 
+    ################################################################### Timeline.
+
+    def set_timeline_state_description(description, time_delta=0.0):
+        """
+        :doc: steam_timeline
+
+        Sets the description of the current state in the timeline.
+
+        `description`
+            A string giving the description of the current state.
+
+        `time_delta`
+            The time since the last state change.
+        """
+
+        steamapi.SteamTimeline().SetTimelineStateDescription(description.encode("utf-8"), time_delta)
+
+    def clear_timeline_state_description(time_delta):
+        """
+        :doc: steam_timeline
+
+        Clears the description of the current state in the timeline.
+        """
+
+        steamapi.SteamTimeline().ClearTimelineStateDescription(time_delta)
+
+    def add_timeline_event(icon, title, description, priority=0, start_offset=0.0, duration=0.0, possible_clip=None):
+        """
+        :doc: steam_timeline
+
+        Adds an event to the timeline.
+
+        `icon`
+            The icon to display for the event. This should be a string giving one of the standard steam icons,
+            or one you uploaded to Steam.
+
+        `title`
+            The title of the event.
+
+        `description`
+            The description of the event.
+
+        `priority`
+            The priority of the event, used to resolve conflicts. This should be an interger between 0 and 1000.
+
+        `start_offset`
+            The offset of the start of the event from the current time, in seconds.
+
+        `duration`
+            The duration of the event, in seconds.
+
+        `possible_clip`
+            This determines if the event can be clipped. This should be one of the achievement.steam.CLIP_PRIORITY...
+            constants: CLIP_PRIORITY_NONE, CLIP_PRIORITY_STANDARD, or CLIP_PRIORITY_FEATURED.
+        """
+
+        if possible_clip is None:
+            possible_clip = CLIP_PRIORITY_STANDARD
+
+        steamapi.SteamTimeline().AddTimelineEvent(
+            icon.encode("utf-8"),
+            title.encode("utf-8"),
+            description.encode("utf-8"),
+            priority,
+            start_offset,
+            duration,
+            possible_clip)
+
+
+    def set_timeline_game_mode(mode):
+        """
+        Sets the Steam Timeline Game Mode to the specified mode.
+
+        `mode`
+            Must be one of:
+
+            * achievement.steam.TIMELINE_GAME_MODE_PLAYING
+            * achievement.steam.TIMELINE_GAME_MODE_STAGING
+            * achievement.steam.TIMELINE_GAME_MODE_MENUS
+            * achievement.steam.TIMELINE_GAME_MODE_LOADING_SCREEN
+        """
+
+        steamapi.SteamTimeline().SetTimelineGameMode(mode)
+
+
     ############################################ Import API after steam is found.
     def import_api():
 
@@ -520,6 +628,20 @@ init -1499 python in _renpysteam:
         STORE_ADD_TO_CART = steamapi.k_EOverlayToStoreFlag_AddToCart
         STORE_ADD_TO_CART_AND_SHOW = steamapi.k_EOverlayToStoreFlag_AddToCartAndShow
 
+        global CLIP_PRIORITY_NONE, CLIP_PRIORITY_STANDARD, CLIP_PRIORITY_FEATURED
+
+        CLIP_PRIORITY_NONE = steamapi.k_ETimelineEventClipPriority_None
+        CLIP_PRIORITY_STANDARD = steamapi.k_ETimelineEventClipPriority_Standard
+        CLIP_PRIORITY_FEATURED = steamapi.k_ETimelineEventClipPriority_Featured
+
+        global TIMELINE_GAME_MODE_PLAYING, TIMELINE_GAME_MODE_STAGING, TIMELINE_GAME_MODE_MENUS, TIMELINE_GAME_MODE_LOADING_SCREEN
+
+        TIMELINE_GAME_MODE_PLAYING = steamapi.k_ETimelineGameMode_Playing
+        TIMELINE_GAME_MODE_STAGING = steamapi.k_ETimelineGameMode_Staging
+        TIMELINE_GAME_MODE_MENUS = steamapi.k_ETimelineGameMode_Menus
+        TIMELINE_GAME_MODE_LOADING_SCREEN = steamapi.k_ETimelineGameMode_LoadingScreen
+
+
     ################################################################## Callbacks
 
     # A map from callback class name to a list of callables that will be called
@@ -528,10 +650,16 @@ init -1499 python in _renpysteam:
 
     callback_handlers = collections.defaultdict(list)
 
+    old_menu = None
+    old_save_name = None
+
     def periodic():
         """
         Called periodically to run Steam callbacks.
         """
+
+        global old_menu
+        global old_save_name
 
         for cb in steamapi.generate_callbacks():
             # print(type(cb).__name__, {k : getattr(cb, k) for k in dir(cb) if not k.startswith("_")})
@@ -542,10 +670,30 @@ init -1499 python in _renpysteam:
         if renpy.variant("steam_deck"):
             keyboard_periodic()
 
+        if renpy.config.automatic_steam_timeline:
+            if store._menu:
+                new_menu = TIMELINE_GAME_MODE_MENUS
+            else:
+                new_menu = TIMELINE_GAME_MODE_PLAYING
+
+            if old_menu != new_menu:
+                set_timeline_game_mode(new_menu)
+                old_menu = new_menu
+
+        if store.save_name != old_save_name:
+            if not store.save_name:
+                clear_timeline_state_description(0.0)
+            else:
+                set_timeline_state_description(store.save_name, 0.0)
+
+            old_save_name = store.save_name
+
+
+
     ################################################################## Keyboard
 
     # True to show the keyboard once, False otherwise.
-    keyboard_mode = "always"
+    keyboard_mode = "once"
 
     # True if this is the start of a new interaction, and so the keyboard
     # should be shown if a text box appears.
@@ -555,11 +703,15 @@ init -1499 python in _renpysteam:
     keyboard_showing = None
 
     # Should the layers be shifted so the baseline is in view?
-    keyboard_shift = True
+    keyboard_shift = False
 
-    # Where the basline is shifted to on the screen. This is a floating point number,
+    # Where the baseline is shifted to on the screen. This is a floating point number,
     # with 0.0 being the top of the screen and 1.0 being the bottom.
     keyboard_baseline = 0.5
+
+    # The textarea given to steam. This is scaled using the usual
+    # position rules.
+    keyboard_text_area = (0.0, 0.5, 1.0, 0.5)
 
     def prime_keyboard():
         global keyboard_primed
@@ -569,15 +721,17 @@ init -1499 python in _renpysteam:
 
     def keyboard_periodic():
 
+        global keyboard_mode
         global keyboard_showing
         global keyboard_primed
         global keyboard_shift
         global keyboard_baseline
 
+        if keyboard_mode == "always":
+            keyboard_mode = "once"
+
         if keyboard_mode == "never":
             return
-        elif keyboard_mode == "always":
-            keyboard_primed = True
         elif keyboard_mode != "once":
             raise Exception("Bad steam keyboard_mode.")
 
@@ -585,10 +739,19 @@ init -1499 python in _renpysteam:
         _KeyboardShift.text_rect = keyboard_text_rect
 
         if keyboard_primed and (keyboard_showing is None) and keyboard_text_rect:
-            x, y, w, h = (int(i) for i in keyboard_text_rect)
 
-            if keyboard_shift:
-                y  = int(renpy.exports.get_physical_size()[1] * keyboard_baseline) - h
+            pw, ph = renpy.exports.get_physical_size()
+
+            def scale(n, available):
+                if type(n) == float:
+                    n = n * available
+
+                return int(n)
+
+            x = scale(keyboard_text_area[0], pw)
+            y = scale(keyboard_text_area[1], ph)
+            w = scale(keyboard_text_area[2], pw)
+            h = scale(keyboard_text_area[3], ph)
 
             steamapi.SteamUtils().ShowFloatingGamepadTextInput(
                 steamapi.k_EFloatingGamepadTextInputModeModeSingleLine,
@@ -772,11 +935,17 @@ init -1499 python in achievement:
         if config.early_script_version is not None:
             return
 
-        if config.steam_appid is None:
-            return
+        steam_appid_fn = os.path.join(os.path.dirname(sys.executable), "steam_appid.txt")
 
-        with open(os.path.join(os.path.dirname(sys.executable), "steam_appid.txt"), "w") as f:
-            f.write(str(config.steam_appid) + "\n")
+        if config.steam_appid is not None:
+            with open(steam_appid_fn, "w") as f:
+                f.write(str(config.steam_appid) + "\n")
+        else:
+            try:
+                os.unlink(steam_appid_fn)
+            except Exception:
+                pass
+
 
     # The _renpysteam namespace, or None if steam isn't loaded.
     steam = None
@@ -810,6 +979,9 @@ init -1499 python in achievement:
             dll_path = os.path.join(os.path.dirname(sys.executable), dll_name)
             has_steam = os.path.exists(dll_path)
 
+            if not has_steam:
+                return
+
             if not config.enable_steam:
                 return
 
@@ -821,8 +993,11 @@ init -1499 python in achievement:
             import steamapi
             steamapi.load(dll)
 
-            if not steamapi.Init():
-                raise Exception("Init returned false.")
+            error_message = ctypes.create_string_buffer(1024)
+            init_result = steamapi.InitFlat(error_message)
+
+            if init_result.value != 0:
+                raise Exception("steamapi.InitFlat returned %r (%s)" % (init_result.value, error_message.value.decode("utf-8")))
 
             import store._renpysteam as steam
             sys.modules["_renpysteam"] = steam
@@ -850,12 +1025,13 @@ init -1499 python in achievement:
             renpy.write_log("Initialized steam.")
 
         except Exception as e:
-            renpy.write_log("Faled to initialize steam: %r", e)
+            renpy.write_log("Failed to initialize steam: %r", e)
             steam = None
             steamapi = None
 
-    steam_preinit()
-    steam_init()
+    if renpy.windows or renpy.macintosh or renpy.linux:
+        steam_preinit()
+        steam_init()
 
 
 init 1500 python in achievement:

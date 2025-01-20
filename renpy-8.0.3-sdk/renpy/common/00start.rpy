@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -94,6 +94,10 @@ label _after_load:
 
         _init_language()
 
+        # Older save games could have this set to non-None, so reset it.
+        _side_image_attributes = None
+
+
     python hide:
 
         for i in config.after_load_callbacks:
@@ -172,12 +176,9 @@ label _splashscreen:
     python:
 
         if config.splashscreen_suppress_overlay:
-            renpy.dynamic("suppress_overlay", "_confirm_quit")
-            suppress_overlay = True
-            _confirm_quit = False
+            renpy.dynamic(suppress_overlay=True, _confirm_quit=False)
 
-        renpy.dynamic("_autosave")
-        _autosave = False
+        renpy.dynamic(_autosave=False)
 
     jump expression "splashscreen"
 
@@ -297,8 +298,7 @@ label _main_menu(_main_menu_screen="_main_menu_screen"):
 
         _enter_menu()
 
-        renpy.dynamic("_load_prompt")
-        _load_prompt = False
+        renpy.dynamic(_load_prompt=False)
 
         renpy.context()._main_menu = True
         store.main_menu = True

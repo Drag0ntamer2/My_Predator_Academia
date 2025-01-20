@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -177,6 +177,7 @@ def enqueue(relpath, rtype, data):
     global queue
 
     with queue_lock:
+        voice_count = 0
         for rr in queue:
             # de-dup same .data/image_filename
             # don't de-dup same .relpath (different .data == different cache entry)
@@ -189,14 +190,17 @@ def enqueue(relpath, rtype, data):
             elif rr.rtype == rtype == 'voice':
                 if rr.relpath == relpath:
                     return
-                if len([True for rr in queue if rr.type == 'voice']) > renpy.config.predict_statements:
-                    # don't stack skipped dialogs
-                    return
+                voice_count += 1
+
+        if voice_count > renpy.config.predict_statements:
+            # don't stack skipped dialogs
+            return
+
         queue.append(ReloadRequest(relpath, rtype, data))
 
 
 def process_downloaded_resources():
-    global queue, to_unlink
+    global queue
 
     if not queue:
         return
@@ -239,8 +243,6 @@ def process_downloaded_resources():
                     fullpath = os.path.join(renpy.config.gamedir,rr.relpath)
                     to_unlink[fullpath] = time.time() + 120
 
-                # TODO: videos (when web support is implemented)
-
         # make sure the queue doesn't contain a corrupt file so we
         # don't rethrow an exception while in Ren'Py's error handler
         finally:
@@ -250,8 +252,10 @@ def process_downloaded_resources():
     # Due to search-path dups and derived images (including image-based animations)
     # files can't be removed right after actual load
     ttl = 60  # remove after 1mn - if your animation is longer than that, use a video
-    for fullpath in to_unlink.keys():
-        delta = time.time() - to_unlink[fullpath]
+    current_time = time.time()
+    for fullpath, value in tuple(to_unlink.items()):
+        # Get the number of seconds that passed since the item was pushed into the to_unlink
+        delta = current_time - value
         if delta > ttl:
             os.unlink(fullpath)
             del to_unlink[fullpath]

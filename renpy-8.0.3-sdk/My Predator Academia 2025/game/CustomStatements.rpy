@@ -38,8 +38,6 @@ python early:
 
         return choices
 
-
-
     def next_random(choices):
         """
         Select a random statement based on weights.
@@ -59,7 +57,6 @@ python early:
             if pick <= cumulative_weight:
                 return statement
 
-
     def lint_random(parsed_object):
         """
         Lint the parsed object for errors.
@@ -69,7 +66,6 @@ python early:
             check = renpy.check_text_tags(statement.block[0].what)
             if check:
                 renpy.error(check)
-
 
     # Register the statement
     renpy.register_statement(
@@ -81,109 +77,70 @@ python early:
     )
 
         
+    
 
-
-    def parse_character(abrev, lexer):
+    def parse_character(lexer):
         """
-        Parse the character abbreviation and dialogue text from the script.
+        Parse the character abbreviation, field name, and changed value from the script.
         """
-        amt = None
-        dialogue = None
+        abrev = lexer.word()  # Match a word
+        
+        # Parse the field name (e.g., stamina, hp, etc.)
+        field_name = lexer.word()  # Match a word
+        if field_name is None:
+            lexer.error("Expected a field name (e.g., stamina, hp).")
 
-        # Check for the keyword "change arousal" and parse accordingly
-        if lexer.keyword("change"):
-            if lexer.keyword("arousal"):
-                amt = float(lexer.float())  # Parse the float value
-                if amt < 0:
-                    dialogue = "arousalDecay"  # Negative values correspond to decay
-                else:
-                    dialogue = "addArousal"   # Positive values correspond to addition
-            elif lexer.keyword("stamina"):
-                amt = float(lexer.float())  # Parse the float value
-                if amt < 0:
-                    dialogue = "loseStam"  # Negative values correspond to decay
-                else:
-                    dialogue = "addStam"   # Positive values correspond to addition
-        else:
-            dialogue = lexer.rest()  # Parse the rest as standard dialogue
+        # Parse the changed value (e.g., +40, -20)
+        changed_value = lexer.float()  # Match a floating-point number
+        if changed_value is None:
+            lexer.error("Expected a numeric value (e.g., -40, +20).")
 
-        return abrev, dialogue, amt  # Return abbreviation, dialogue, and amount
+        return abrev, field_name, float(changed_value)  # Return abbreviation, field name, and value
+
+
 
     def execute_character(parsed_object):
         """
-        Execute the parsed character statement.
+        Execute the parsed character statement, handling field updates dynamically.
         """
-        abrev, dialogue, amt = parsed_object
+        abrev, field_name, changed_value = parsed_object
 
         # Resolve the character from the dictionary
         char_obj = characters.get(abrev, None)
         if not char_obj:
             raise Exception(f"Character '{abrev}' is not defined.")
 
-        if amt is not None:
-            # Dynamically call the method on the character object
-            try:
-                method = getattr(char_obj, dialogue)  # Get the method dynamically
-                method(amt)  # Call the method with the amount
-            except AttributeError:
-                raise Exception(f"Method '{dialogue}' not found on character '{abrev}'.")
-            return
+        # Map field names to methods dynamically
+        method_name = None
+        if field_name == "stamina":
+            method_name = "addStam" if changed_value > 0 else "loseStam"
+        elif field_name == "hp":
+            method_name = "addHp" if changed_value > 0 else "loseHp"
+        elif field_name == "dis":
+            method_name = "addDis" if changed_value > 0 else "disDecay"
+        elif field_name == "arousal":
+            method_name = "addArousal" if changed_value > 0 else "arousalDecay"
+        elif field_name == "compression":
+            method_name = "addComp" if changed_value > 0 else "loseComp"
+        elif field_name == "shp":
+            method_name = "addShp" if changed_value > 0 else "loseShp"
+        else:
+            raise Exception(f"Unsupported field name: '{field_name}'.")
 
-        # If no amount is provided, treat as standard dialogue
-        return renpy.exports.say(char_obj.c, dialogue)
+        # Dynamically call the method on the character object
+        try:
+            method = getattr(char_obj, method_name)  # Get the method dynamically
+            method(abs(changed_value))  # Call the method with the absolute value
+        except AttributeError:
+            raise Exception(f"Method '{method_name}' not found on character '{abrev}'.")
 
-    # Register a custom statement for a specific character (example: 'jes')
+
+
+
+    # Register the custom statement for specific characters
     renpy.register_statement(
-        name="jes",
-        parse=lambda lexer: parse_character("jes", lexer),  # Corrected parse function
+        name="data",
+        parse=parse_character,
         execute=execute_character,
-        block=False,  # No block associated with this statement
-    )
-    renpy.register_statement(
-        name="sof",
-        parse=lambda lexer: parse_character("sof", lexer),  # Corrected parse function
-        execute=execute_character,
-        block=False,  # No block associated with this statement
-    )
-    renpy.register_statement(
-        name="mer",
-        parse=lambda lexer: parse_character("mer", lexer),  # Corrected parse function
-        execute=execute_character,
-        block=False,  # No block associated with this statement
-    )
-    renpy.register_statement(
-        name="lea",
-        parse=lambda lexer: parse_character("lea", lexer),  # Corrected parse function
-        execute=execute_character,
-        block=False,  # No block associated with this statement
-    )
-    renpy.register_statement(
-        name="fel",
-        parse=lambda lexer: parse_character("fel", lexer),  # Corrected parse function
-        execute=execute_character,
-        block=False,  # No block associated with this statement
-    )
-    renpy.register_statement(
-        name="ash",
-        parse=lambda lexer: parse_character("ash", lexer),  # Corrected parse function
-        execute=execute_character,
-        block=False,  # No block associated with this statement
-    )
-    renpy.register_statement(
-        name="yul",
-        parse=lambda lexer: parse_character("yul", lexer),  # Corrected parse function
-        execute=execute_character,
-        block=False,  # No block associated with this statement
-    )
-    renpy.register_statement(
-        name="ste",
-        parse=lambda lexer: parse_character("ste", lexer),  # Corrected parse function
-        execute=execute_character,
-        block=False,  # No block associated with this statement
-    )
-    renpy.register_statement(
-        name="ast",
-        parse=lambda lexer: parse_character("ast", lexer),  # Corrected parse function
-        execute=execute_character,
-        block=False,  # No block associated with this statement
+        block=False,
     )

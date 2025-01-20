@@ -105,7 +105,6 @@ example say_screen:
             text what id "what"
 
 screen say(who, what):
-    style_prefix "say"
 
     window:
         id "window"
@@ -233,7 +232,7 @@ style choice_button is default:
     properties gui.button_properties("choice_button")
 
 style choice_button_text is default:
-    properties gui.button_text_properties("choice_button")
+    properties gui.text_properties("choice_button")
 
 
 ## Quick Menu screen ###########################################################
@@ -278,7 +277,7 @@ style quick_button:
     properties gui.button_properties("quick_button")
 
 style quick_button_text:
-    properties gui.button_text_properties("quick_button")
+    properties gui.text_properties("quick_button")
 
 
 ################################################################################
@@ -343,7 +342,7 @@ style navigation_button:
     properties gui.button_properties("navigation_button")
 
 style navigation_button_text:
-    properties gui.button_text_properties("navigation_button")
+    properties gui.text_properties("navigation_button")
 
 
 ## Main Menu screen ############################################################
@@ -663,6 +662,7 @@ screen file_slots(title):
                 spacing gui.page_spacing
 
                 textbutton _("<") action FilePagePrevious()
+                key "save_page_prev" action FilePagePrevious()
 
                 if config.has_autosave:
                     textbutton _("{#auto_page}A") action FilePage("auto")
@@ -675,6 +675,7 @@ screen file_slots(title):
                     textbutton "[page]" action FilePage(page)
 
                 textbutton _(">") action FilePageNext()
+                key "save_page_next" action FilePageNext()
 
 
 style page_label is gui_label
@@ -692,7 +693,7 @@ style page_label:
     ypadding 3
 
 style page_label_text:
-    text_align 0.5
+    textalign 0.5
     layout "subtitle"
     hover_color gui.hover_color
 
@@ -700,13 +701,13 @@ style page_button:
     properties gui.button_properties("page_button")
 
 style page_button_text:
-    properties gui.button_text_properties("page_button")
+    properties gui.text_properties("page_button")
 
 style slot_button:
     properties gui.button_properties("slot_button")
 
 style slot_button_text:
-    properties gui.button_text_properties("slot_button")
+    properties gui.text_properties("slot_button")
 
 
 ## Preferences screen ##########################################################
@@ -775,7 +776,7 @@ screen preferences():
 
                 vbox:
                     style_prefix "radio"
-                    label _(" ")
+                    label ""
 
                     textbutton "한국어" text_font "SourceHanSansLite.ttf" action Language("korean")
                     textbutton "日本語" text_font "SourceHanSansLite.ttf" action Language("japanese")
@@ -883,7 +884,7 @@ style radio_button:
     foreground "gui/button/radio_[prefix_]foreground.png"
 
 style radio_button_text:
-    properties gui.button_text_properties("radio_button")
+    properties gui.text_properties("radio_button")
 
 style check_vbox:
     spacing gui.pref_button_spacing
@@ -893,7 +894,7 @@ style check_button:
     foreground "gui/button/check_[prefix_]foreground.png"
 
 style check_button_text:
-    properties gui.button_text_properties("check_button")
+    properties gui.text_properties("check_button")
 
 style slider_slider:
     xsize 350
@@ -904,7 +905,7 @@ style slider_button:
     left_margin 10
 
 style slider_button_text:
-    properties gui.button_text_properties("slider_button")
+    properties gui.text_properties("slider_button")
 
 style slider_vbox:
     xsize 450
@@ -980,7 +981,7 @@ style history_name:
 
 style history_name_text:
     min_width gui.history_name_width
-    text_align gui.history_name_xalign
+    textalign gui.history_name_xalign
 
 style history_text:
     xpos gui.history_text_xpos
@@ -988,7 +989,7 @@ style history_text:
     xanchor gui.history_text_xalign
     xsize gui.history_text_width
     min_width gui.history_text_width
-    text_align gui.history_text_xalign
+    textalign gui.history_text_xalign
     layout ("subtitle" if gui.history_text_xalign else "tex")
 
 style history_label:
@@ -1099,7 +1100,7 @@ screen mouse_help():
         text _("Accesses the game menu.")
 
     hbox:
-        label _("Mouse Wheel Up\nClick Rollback Side")
+        label _("Mouse Wheel Up")
         text _("Rolls back to earlier dialogue.")
 
     hbox:
@@ -1147,7 +1148,7 @@ style help_button:
     xmargin 8
 
 style help_button_text:
-    properties gui.button_text_properties("help_button")
+    properties gui.text_properties("help_button")
 
 style help_label:
     xsize 250
@@ -1156,7 +1157,7 @@ style help_label:
 style help_label_text:
     size gui.text_size
     xalign 1.0
-    text_align 1.0
+    textalign 1.0
 
 
 
@@ -1218,14 +1219,14 @@ style confirm_frame:
     yalign .5
 
 style confirm_prompt_text:
-    text_align 0.5
+    textalign 0.5
     layout "subtitle"
 
 style confirm_button:
     properties gui.button_properties("confirm_button")
 
 style confirm_button_text:
-    properties gui.button_text_properties("confirm_button")
+    properties gui.text_properties("confirm_button")
 
 
 ## Skip indicator screen #######################################################
@@ -1412,7 +1413,7 @@ style nvl_label:
     yanchor 0.0
     xsize gui.nvl_name_width
     min_width gui.nvl_name_width
-    text_align gui.nvl_name_xalign
+    textalign gui.nvl_name_xalign
 
 style nvl_dialogue:
     xpos gui.nvl_text_xpos
@@ -1420,7 +1421,7 @@ style nvl_dialogue:
     ypos gui.nvl_text_ypos
     xsize gui.nvl_text_width
     min_width gui.nvl_text_width
-    text_align gui.nvl_text_xalign
+    textalign gui.nvl_text_xalign
     layout ("subtitle" if gui.nvl_text_xalign else "tex")
 
 style nvl_thought:
@@ -1429,7 +1430,7 @@ style nvl_thought:
     ypos gui.nvl_thought_ypos
     xsize gui.nvl_thought_width
     min_width gui.nvl_thought_width
-    text_align gui.nvl_thought_xalign
+    textalign gui.nvl_thought_xalign
     layout ("subtitle" if gui.nvl_text_xalign else "tex")
 
 style nvl_button:
@@ -1438,7 +1439,7 @@ style nvl_button:
     xanchor gui.nvl_button_xalign
 
 style nvl_button_text:
-    properties gui.button_text_properties("nvl_button")
+    properties gui.text_properties("nvl_button")
 
 
 

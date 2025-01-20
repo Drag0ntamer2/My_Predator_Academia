@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -27,7 +27,7 @@ from __future__ import division, absolute_import, with_statement, print_function
 from renpy.compat import PY2, basestring, bchr, bord, chr, open, pystr, range, round, str, tobytes, unicode # *
 
 from typing import Optional, Any
-
+import contextlib
 
 # Import the python ast module, not ours.
 import ast
@@ -35,6 +35,7 @@ import ast
 # Import the future module itself.
 import __future__
 
+import collections
 import marshal
 import random
 import weakref
@@ -45,6 +46,7 @@ import io
 import types
 import copyreg
 import functools
+import warnings
 
 import renpy
 
@@ -137,9 +139,12 @@ class StoreDict(dict):
         Called to mark the start of a rollback period.
         """
 
+        if self.get("_constant", False):
+            return
+
         self.old = DictItems(self)
 
-    def get_changes(self, cycle):
+    def get_changes(self, cycle, previous):
         """
         For every key that has changed since begin() was called, returns a
         dictionary mapping the key to its value when begin was called, or
@@ -151,16 +156,27 @@ class StoreDict(dict):
         `cycle`
             If true, this cycles the old changes to the new changes. If
             False, does not.
+
+        `previous`
+            The result of a call to this from a previous cycle. The result
+            from a previous run take precedence over the current run. None
+            if this is the first run.
         """
+
+        if self.get("_constant", False):
+            return
 
         new = DictItems(self)
         rv = find_changes(self.old, new, deleted)
 
+        if rv is None:
+            return None
+
         if cycle:
             self.old = new
 
-        if rv is None:
-            return None
+        if previous is not None:
+            rv.update(previous)
 
         delta_ebc = set()
 
@@ -200,6 +216,9 @@ def create_store(name):
     Creates the store with `name`.
     """
 
+    if name == "store.store":
+        raise NameError('Namespaces may not begin with "store".')
+
     parent, _, var = name.rpartition('.')
 
     if parent:
@@ -219,8 +238,7 @@ def create_store(name):
     pyname = pystr(name)
 
     # Set the name.
-    d["__name__"] = pyname
-    d["__package__"] = pyname
+    d.update(__name__=pyname, __package__=pyname)
 
     # Set up the default contents of the store.
     eval("1", d)
@@ -256,8 +274,9 @@ class StoreBackup():
         # The contents of ever_been_changed for each store.
         self.ever_been_changed = { }
 
-        for k in store_dicts:
-            self.backup_one(k)
+        for k, v in store_dicts.items():
+            if not v.get("_constant", False):
+                self.backup_one(k)
 
     def backup_one(self, name):
 
@@ -280,7 +299,7 @@ class StoreBackup():
 
     def restore(self):
 
-        for k in store_dicts:
+        for k in self.store:
             self.restore_one(k)
 
 
@@ -398,6 +417,33 @@ class StarredVariables(ast.NodeVisitor):
 # starred assignment.
 find_starred_variables = StarredVariables().find
 
+class WrapFormattedValue(ast.NodeTransformer):
+    """
+    This walks through the children of a FormattedValue, to look for
+    nodes with the __name syntax, and format those nodes.
+    """
+
+    def visit_Name(self, node):
+
+        name = node.id
+
+        if not name.startswith("__"):
+            return node
+
+        name = name[2:]
+
+        if (not name) or ("__" in name):
+            return node
+
+        prefix = renpy.lexer.munge_filename(compile_filename)
+
+        name = prefix + name
+
+        return ast.Name(id=name, ctx=node.ctx, lineno=node.lineno, col_offset=node.col_offset, end_lineno=node.end_lineno, end_col_offset=node.end_col_offset)
+
+wrap_formatted_value = WrapFormattedValue().visit
+
+
 class WrapNode(ast.NodeTransformer):
 
 
@@ -416,9 +462,9 @@ class WrapNode(ast.NodeTransformer):
         a larger scope, no cell is generated.
         """
 
-        node = self.generic_visit(node)
-
         variables = list(sorted(find_loaded_variables(node)))
+
+        node = self.generic_visit(node)
 
         lambda_args = [ ]
         call_args =[ ]
@@ -690,6 +736,10 @@ class WrapNode(ast.NodeTransformer):
             kwargs=None)
 
 
+    def visit_FormattedValue(self, n):
+        n = wrap_formatted_value(n)
+        return self.generic_visit(n)
+
 wrap_node = WrapNode()
 
 
@@ -747,6 +797,34 @@ def escape_unicode(s):
 
     return s
 
+# A list of warnings that were issued during compilation.
+compile_warnings = [ ]
+
+@contextlib.contextmanager
+def save_warnings():
+    """
+    A context manager that captures warnings issued during compilation.
+    """
+
+    pending_warnings = [ ]
+
+    def showwarning(message, category, filename, lineno, file=None, line=None):
+        pending_warnings.append((filename, lineno, warnings.formatwarning(message, category, filename, lineno, line)))
+
+    old = warnings.showwarning
+
+    try:
+
+        warnings.showwarning = showwarning
+
+        yield
+
+        compile_warnings.extend(pending_warnings)
+
+    finally:
+
+        warnings.showwarning = old
+
 
 # Flags used by py_compile.
 old_compile_flags = (__future__.nested_scopes.compiler_flag
@@ -759,15 +837,8 @@ new_compile_flags = (old_compile_flags
                       | __future__.unicode_literals.compiler_flag
                       )
 
-py3_compile_flags = (new_compile_flags |
-                      __future__.division.compiler_flag)
-
-if not PY2:
-    py3_compile_flags |= __future__.annotations.compiler_flag
-
-# The set of files that should be compiled under Python 2 with Python 3
-# semantics.
-py3_files = set()
+# A set of __future__ flag overrides for each file.
+file_compiler_flags = collections.defaultdict(int)
 
 # A cache for the results of py_compile.
 py_compile_cache = { }
@@ -776,20 +847,32 @@ py_compile_cache = { }
 old_py_compile_cache = { }
 
 
-# Duplicated from ast.py to prevent a gc cycle.
-def fix_missing_locations(node, lineno, col_offset):
-    if 'lineno' in node._attributes:
-        if not hasattr(node, 'lineno'):
-            node.lineno = lineno
-        else:
-            lineno = node.lineno
-    if 'col_offset' in node._attributes:
-        if not hasattr(node, 'col_offset'):
-            node.col_offset = col_offset
-        else:
-            col_offset = node.col_offset
+def fix_locations(node, lineno, col_offset):
+    """
+    Assigns locations to the given node, and all of its children, adding
+    any missing line numbers and column offsets.
+    """
+
+    start = max(
+        (lineno, col_offset),
+        (getattr(node, "lineno", None) or 1, getattr(node, "col_offset", None) or 0)
+    )
+
+    lineno, col_offset = start
+
+    node.lineno = lineno
+    node.col_offset = col_offset
+
+    ends = [ start, (getattr(node, "end_lineno", None) or 1, getattr(node, "end_col_offset", None) or 0) ]
+
     for child in ast.iter_child_nodes(node):
-        fix_missing_locations(child, lineno, col_offset)
+        fix_locations(child, lineno, col_offset)
+        ends.append((child.end_lineno, child.end_col_offset))
+
+    end = max(ends)
+
+    node.end_lineno = end[0]
+    node.end_col_offset = end[1]
 
 
 def quote_eval(s):
@@ -881,6 +964,10 @@ def quote_eval(s):
     return "".join(rv[:-2])
 
 
+# The filename being compiled.
+compile_filename = ""
+
+
 def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=True, py=None):
     """
     Compiles the given source code using the supplied codegenerator.
@@ -907,6 +994,9 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
         that would be used.
     """
 
+    global compile_filename
+    global compile_warnings
+
     if ast_node:
         cache = False
 
@@ -928,6 +1018,7 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
 
     if cache:
         key = (lineno, filename, str(source), mode, renpy.script.MAGIC)
+        warnings_key = ("warnings", key)
 
         rv = py_compile_cache.get(key, None)
         if rv is not None:
@@ -936,17 +1027,23 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
         rv = old_py_compile_cache.get(key, None)
         if rv is not None:
             py_compile_cache[key] = rv
+
             return rv
 
         bytecode = renpy.game.script.bytecode_oldcache.get(key, None)
         if bytecode is not None:
 
             renpy.game.script.bytecode_newcache[key] = bytecode
+
+            if warnings_key in renpy.game.script.bytecode_oldcache:
+                renpy.game.script.bytecode_newcache[warnings_key] = renpy.game.script.bytecode_oldcache[warnings_key]
+
             rv = marshal.loads(bytecode)
             py_compile_cache[key] = rv
             return rv
 
     else:
+        warnings_key = None
         key = None
 
     source = str(source)
@@ -956,6 +1053,7 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
         source = quote_eval(source)
 
     line_offset = lineno - 1
+    compile_filename = filename
 
     try:
 
@@ -964,17 +1062,21 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
         else:
             py_mode = mode
 
-        if (not PY2) or (filename in py3_files):
+        flags = file_compiler_flags.get(filename, 0)
 
-            flags = py3_compile_flags
+        if (not PY2) or flags:
+
+            flags |= new_compile_flags
 
             try:
-                tree = compile(source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
+                with save_warnings():
+                    tree = compile(source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
             except SyntaxError as orig_e:
 
                 try:
                     fixed_source = renpy.compat.fixes.fix_tokens(source)
-                    tree = compile(fixed_source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
+                    with save_warnings():
+                        tree = compile(fixed_source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
                 except Exception:
                     raise orig_e
 
@@ -982,18 +1084,20 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
 
             try:
                 flags = new_compile_flags
-                tree = compile(source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
+                with save_warnings():
+                    tree = compile(source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
             except Exception:
                 flags = old_compile_flags
                 source = escape_unicode(source)
-                tree = compile(source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
+                with save_warnings():
+                    tree = compile(source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
 
         tree = wrap_node.visit(tree)
 
         if mode == "hide":
             wrap_hide(tree)
 
-        fix_missing_locations(tree, 1, 0)
+        fix_locations(tree, 1, 0)
         ast.increment_lineno(tree, lineno - 1)
 
         line_offset = 0
@@ -1002,24 +1106,37 @@ def py_compile(source, mode, filename='<none>', lineno=1, ast_node=False, cache=
             return tree.body
 
         try:
-            rv = compile(tree, filename, py_mode, flags, 1)
+            with save_warnings():
+                rv = compile(tree, filename, py_mode, flags, 1)
         except SyntaxError as orig_e:
             try:
                 tree = renpy.compat.fixes.fix_ast(tree)
-                fix_missing_locations(tree, 1, 0)
-                rv = compile(tree, filename, py_mode, flags, 1)
-            except:
+                fix_locations(tree, 1, 0)
+                with save_warnings():
+                    rv = compile(tree, filename, py_mode, flags, 1)
+            except Exception:
                 raise orig_e
-
 
         if cache:
             py_compile_cache[key] = rv
+
             renpy.game.script.bytecode_newcache[key] = marshal.dumps(rv)
+
+            if compile_warnings:
+                renpy.game.script.bytecode_newcache[warnings_key] = compile_warnings
+                compile_warnings = [ ]
+
             renpy.game.script.bytecode_dirty = True
 
         return rv
 
     except SyntaxError as e:
+
+        try:
+            # e.text = # renpy.lexer.get_line_text(e.filename, e.lineno)
+            e.text = source.splitlines()[e.lineno - 1]
+        except Exception:
+            pass
 
         if e.lineno is not None:
             e.lineno += line_offset
@@ -1112,7 +1229,7 @@ def raise_at_location(e, loc):
 
     node = ast.parse("raise e", filename)
     ast.increment_lineno(node, line - 1)
-    code = compile(node, filename, 'exec')
+    code = compile(node, filename, 'exec') #type: ignore
 
     # PY3 - need to change to exec().
     exec(code, { "e" : e })
@@ -1165,3 +1282,11 @@ def module_unpickle(name):
 
 
 copyreg.pickle(types.ModuleType, module_pickle)
+
+# Allow weakrefs to be pickled, with the reference being broken during
+# unpickling.
+
+def construct_None(*args):
+    return None
+
+copyreg.pickle(weakref.ReferenceType, lambda r : (construct_None, tuple()))

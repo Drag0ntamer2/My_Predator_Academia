@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -63,6 +63,9 @@ init -1500 python:
         `value`
             The value that will be assigned to the style property.
         """
+
+        if isinstance(style, str):
+            style = store.style.get(style)
 
         if preference not in __preferences:
             __preferences[preference] = [ ]
@@ -130,6 +133,8 @@ init -1500 python:
 
         Sets the selected alternative for the style preference.
 
+        The `update` event is triggered when this function is called.
+
         `preference`
             A string giving the name of the style preference.
 
@@ -165,6 +170,8 @@ init -1500 python:
         :doc: style_preferences
 
         An action that causes `alternative` to become the selected alternative for the given style preference.
+
+        The `update` event is triggered when this action is called.
 
         `preference`
             A string giving the name of the style preference.

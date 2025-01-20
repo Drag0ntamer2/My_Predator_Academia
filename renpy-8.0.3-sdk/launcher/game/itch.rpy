@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -50,9 +50,9 @@ init python:
             pass
 
         with interface.error_handling(_("Downloading the itch.io butler.")):
-            url = "https://broth.itch.ovh/butler/{}/LATEST/archive/default".format(platform)
+            url = "https://broth.itch.zone/butler/{}/LATEST/archive/default".format(platform)
 
-            response = requests.get(url, headers={'User-Agent' : "Renpy"})
+            response = requests.get(url, headers={'User-Agent' : "Renpy"}, proxies=renpy.proxies)
 
             with open(zip, "wb") as f:
                 f.write(response.content)
@@ -97,32 +97,14 @@ label itch:
         files = [ ]
 
         for fn in os.listdir(destination):
-            fn = os.path.join(destination, fn)
 
-            if fn.endswith("-all.zip"):
-                channel = "win-osx-linux"
-
-            elif fn.endswith("-market.zip"):
-                channel = "win-osx-linux"
-
-            elif fn.endswith("-pc.zip"):
-                channel = "win-linux"
-
-            elif fn.endswith("-win.zip"):
-                channel = "win"
-
-            elif fn.endswith("-mac.zip"):
-                channel = "osx"
-
-            elif fn.endswith("-linux.tar.bz2"):
-                channel = "linux"
-
-            elif fn.endswith("-release.apk"):
-                channel = "android"
-
+            for pattern, channel in reversed(build['itch_channels'].items()):
+                if fnmatch.fnmatch(fn, pattern):
+                    break
             else:
                 continue
 
+            fn = os.path.join(destination, fn)
             files.append((fn, channel))
 
         if not os.path.exists(destination):

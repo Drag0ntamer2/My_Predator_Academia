@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -67,6 +67,10 @@ filename = '<screen language>'
 # A log that's used for profiling information.
 profile_log = renpy.log.open("profile_screen", developer=True, append=False, flush=False)
 
+# The names of sticky style properties. These are properties that are
+# inherited by children, unless overridden.
+STICKY_PROPERTIES = [ "group_alt", "extra_alt" ]
+
 
 def compile_expr(loc, node):
     """
@@ -74,15 +78,11 @@ def compile_expr(loc, node):
     """
 
     filename = loc[0]
-    if filename in renpy.python.py3_files:
-        flags = renpy.python.py3_compile_flags
-    else:
-        flags = renpy.python.new_compile_flags
+    flags = renpy.python.new_compile_flags | renpy.python.file_compiler_flags.get(filename, 0)
 
     expr = ast.Expression(body=node)
-    ast.fix_missing_locations(expr)
-    return compile(expr, filename, "eval", flags, 1)
-
+    renpy.python.fix_locations(expr, 1, 0)
+    return compile(expr, filename, "eval", flags, True)
 
 class SLContext(renpy.ui.Addable):
     """
@@ -106,7 +106,7 @@ class SLContext(renpy.ui.Addable):
 
         # A list of child displayables that will be added to an outer
         # displayable.
-        self.children = [ ] # type: list[renpy.display.core.Displayable]
+        self.children = [ ] # type: list[renpy.display.displayable.Displayable]
 
         # A map from keyword arguments to their values.
         self.keywords = { } # type: Optional[dict[str, Any]]
@@ -174,6 +174,10 @@ class SLContext(renpy.ui.Addable):
         # The old and new generations of the use_cache.
         self.new_use_cache = { } # type: dict[Any, Any]
         self.old_use_cache = { } # type: dict[Any, Any]
+
+        # A map from a sticky property to its value.
+        self.sticky = { } # type: dict[str, Any]
+
 
     def add(self, d, key):
         self.children.append(d)
@@ -343,6 +347,29 @@ class SLNode(object):
         profile_log.write("%s", "    {}{}{} ({}:{})".format(const_type, prefix, formatted, self.location[0], self.location[1]))
 
 
+def analyze_keywords(node, analysis, conditional=GLOBAL_CONST):
+    """
+    Analyzes the keywords that can be applied to this statement,
+    including those provided by if statements.
+    """
+
+    rv = GLOBAL_CONST
+
+    for _, expr in node.keyword:
+        rv = min(rv, analysis.is_constant_expr(expr), conditional)
+
+    for n in node.children:
+        if isinstance(n, SLIf):
+
+            for cond, block in n.entries:
+                if cond is not None:
+                    conditional = min(conditional, analysis.is_constant_expr(cond))
+
+                rv = min(rv, analyze_keywords(block, analysis, conditional))
+
+    return rv
+
+
 # A sentinel used to indicate a keyword argument was not given.
 NotGiven = renpy.object.Sentinel("NotGiven")
 
@@ -355,6 +382,9 @@ class SLBlock(SLNode):
 
     # RawBlock from parse or None if not present.
     atl_transform = None
+
+    # The actual transform created from the atl transform.
+    transform = None
 
     def __init__(self, loc):
         SLNode.__init__(self, loc)
@@ -440,6 +470,9 @@ class SLBlock(SLNode):
             const = self.atl_transform.constant
             self.constant = min(self.constant, const)
 
+            self.transform = renpy.display.transform.ATLTransform(self.atl_transform)
+            renpy.atl.compile_queue.append(self.transform)
+
         was_last_keyword = False
         for i in self.children:
             if i.has_keyword:
@@ -486,7 +519,18 @@ class SLBlock(SLNode):
 
         if self.atl_transform is not None:
             transform = ATLTransform(self.atl_transform, context=context.scope)
-            context.keywords["at"] = transform
+            transform.parent_transform = self.transform
+
+            if "at" in context.keywords:
+                try:
+                    at_list = list(context.keywords["at"])
+                except TypeError:
+                    at_list = [ context.keywords["at"] ]
+
+                at_list.append(transform)
+                context.keywords["at"] = at_list
+            else:
+                context.keywords["at"] = transform
 
         style_prefix = context.keywords.pop("style_prefix", NotGiven)
 
@@ -571,7 +615,7 @@ class SLCache(object):
     def __init__(self):
 
         # The displayable object created.
-        self.displayable = None # type: Optional[renpy.display.core.Displayable]
+        self.displayable = None # type: Optional[renpy.display.displayable.Displayable]
 
         # The positional arguments that were used to create the displayable.
         self.positional = None # type: Any
@@ -580,7 +624,7 @@ class SLCache(object):
         self.keywords = None # type: Optional[dict[str, Any]]
 
         # A list of the children that were added to self.displayable.
-        self.children = None # type: Optional[list[renpy.display.core.Displayable]]
+        self.children = None # type: Optional[list[renpy.display.displayable.Displayable]]
 
         # The outermost old transform.
         self.outer_transform = None # type: Optional[Any]
@@ -723,12 +767,7 @@ class SLDisplayable(SLBlock):
     def analyze(self, analysis):
 
         if self.imagemap:
-
-            const = GLOBAL_CONST
-
-            for _k, expr in self.keyword:
-                const = min(const, analysis.is_constant_expr(expr))
-
+            const = analyze_keywords(self, analysis)
             analysis.push_control(imagemap=(const != GLOBAL_CONST))
 
         if self.hotspot:
@@ -750,7 +789,7 @@ class SLDisplayable(SLBlock):
             for i in self.positional:
                 const = min(self.constant, analysis.is_constant_expr(i))
 
-            for k, v in self.keyword:
+            for _k, v in self.keyword:
                 const = min(self.constant, analysis.is_constant_expr(v))
 
             if self.keyword_exist("id"):
@@ -924,6 +963,16 @@ class SLDisplayable(SLBlock):
             # Get the widget id and transform, if any.
             widget_id = keywords.pop("id", None)
             transform = keywords.pop("at", None)
+            prefer_screen_to_id = keywords.pop("prefer_screen_to_id", False)
+
+            if widget_id and (widget_id in screen.widget_properties):
+
+                if prefer_screen_to_id:
+                    new_keywords = screen.widget_properties[widget_id].copy()
+                    new_keywords.update(keywords)
+                    keywords = new_keywords
+                else:
+                    keywords.update(screen.widget_properties[widget_id])
 
             # If we don't know the style, figure it out.
             style_suffix = keywords.pop("style_suffix", None) or self.style
@@ -933,8 +982,12 @@ class SLDisplayable(SLBlock):
                 else:
                     keywords["style"] = ctx.style_prefix + "_" + style_suffix
 
-            if widget_id and (widget_id in screen.widget_properties):
-                keywords.update(screen.widget_properties[widget_id])
+            for k in STICKY_PROPERTIES:
+                if k in keywords:
+                    ctx.sticky = dict(ctx.sticky)
+                    ctx.sticky[k] = keywords[k]
+
+            keywords.update(ctx.sticky)
 
             old_d = cache.displayable
             if old_d:
@@ -1088,6 +1141,7 @@ class SLDisplayable(SLBlock):
                     keywords['context'] = ctx
 
                 d = self.displayable(*positional, **keywords) # type: ignore
+                d._unique()
                 main = d._main or d
 
                 main._location = self.location
@@ -1115,6 +1169,8 @@ class SLDisplayable(SLBlock):
                 for i in ctx.children:
                     main.add(i) # type: ignore
 
+        main.id = widget_id
+
         d = d # type: ignore
         old_d = old_d # type: ignore
 
@@ -1131,7 +1187,8 @@ class SLDisplayable(SLBlock):
         cache.children = ctx.children
         cache.style_prefix = context.style_prefix
 
-        transform = transform # type: ignore
+        if not transform:
+            transform = None
 
         if (transform is not None) and (d is not NO_DISPLAYABLE):
             if reused and (transform == cache.raw_transform):
@@ -1367,13 +1424,16 @@ class SLIf(SLNode):
             if cond is not None:
                 node = ccache.ast_eval(cond)
 
-                self.constant = min(self.constant, analysis.is_constant(node))
+                cond_const = analysis.is_constant(node)
+                self.constant = min(self.constant, cond_const)
 
                 cond = compile_expr(self.location, node)
+            else:
+                cond_const = True
 
             block.prepare(analysis)
             self.constant = min(self.constant, block.constant)
-            self.prepared_entries.append((cond, block))
+            self.prepared_entries.append((cond, block, cond_const))
 
             self.has_keyword |= block.has_keyword
             self.last_keyword |= block.last_keyword
@@ -1384,7 +1444,7 @@ class SLIf(SLNode):
             self.execute_predicting(context)
             return
 
-        for cond, block in self.prepared_entries:
+        for cond, block, _cond_const in self.prepared_entries:
             if cond is None or eval(cond, context.globals, context.scope):
                 for i in block.children:
                     i.execute(context)
@@ -1397,10 +1457,13 @@ class SLIf(SLNode):
         # True if no block has been the main choice yet.
         first = True
 
-        # Other blocks that we predict if not predicted.
-        false_blocks = [ ]
 
-        for cond, block in self.prepared_entries:
+        # Should we predict false branches?
+        predict_false = self.serial not in context.predicted
+        context.predicted.add(self.serial)
+
+
+        for cond, block, const_cond in self.prepared_entries:
             try:
                 cond_value = (cond is None) or eval(cond, context.globals, context.scope)
             except Exception:
@@ -1416,34 +1479,29 @@ class SLIf(SLNode):
                     except Exception:
                         pass
 
-            else:
-                false_blocks.append(block)
+                if const_cond:
+                    break
 
-        # Has any instance of this node been predicted? We only predict
-        # once per node, for performance reasons.
-        if self.serial in context.predicted:
-            return
+            elif predict_false:
 
-        context.predicted.add(self.serial)
+                ctx = SLContext(context)
+                ctx.children = [ ]
+                ctx.unlikely = True
 
-        # Not-taken branches.
-        for block in false_blocks:
-            ctx = SLContext(context)
-            ctx.children = [ ]
-            ctx.unlikely = True
+                for i in block.children:
+                    try:
+                        i.execute(ctx)
+                    except Exception:
+                        pass
 
-            for i in block.children:
-                try:
-                    i.execute(ctx)
-                except Exception:
-                    pass
+                for i in ctx.children:
+                    predict_displayable(i)
 
-            for i in ctx.children:
-                predict_displayable(i)
+
 
     def keywords(self, context):
 
-        for cond, block in self.prepared_entries:
+        for cond, block, _cond_const in self.prepared_entries:
             if cond is None or eval(cond, context.globals, context.scope):
                 block.keywords(context)
                 return
@@ -1618,16 +1676,27 @@ class SLFor(SLBlock):
 
     def analyze(self, analysis):
 
-        if analysis.is_constant_expr(self.expression) == GLOBAL_CONST:
-            analysis.push_control(True)
-            analysis.mark_constant(self.variable)
-        else:
-            analysis.push_control(False)
-            analysis.mark_not_constant(self.variable)
+        const = analysis.is_constant_expr(self.expression) == GLOBAL_CONST
 
-        SLBlock.analyze(self, analysis)
+        while True:
 
-        analysis.pop_control()
+            if const:
+                analysis.push_control(True, loop=True)
+                analysis.mark_constant(self.variable)
+            else:
+                analysis.push_control(False, loop=True)
+                analysis.mark_not_constant(self.variable)
+
+            SLBlock.analyze(self, analysis)
+
+            new_const = analysis.control.const
+
+            analysis.pop_control()
+
+            if new_const == const:
+                break
+
+            const = new_const
 
     def prepare(self, analysis):
         node = ccache.ast_eval(self.expression)
@@ -1635,7 +1704,7 @@ class SLFor(SLBlock):
         const = analysis.is_constant(node)
 
         if const == GLOBAL_CONST:
-            self.expression_value = py_eval_bytecode(compile_expr(self.location, node))
+            self.expression_value = list(py_eval_bytecode(compile_expr(self.location, node)))
             self.expression_expr = None
         else:
             self.expression_value = None
@@ -1712,12 +1781,19 @@ class SLFor(SLBlock):
 
             # Inline of SLBlock.execute.
 
-            for i in children_i:
-                try:
-                    i.execute(ctx)
-                except Exception:
-                    if not context.predicting:
+            try:
+                for i in children_i:
+                    try:
+                        i.execute(ctx)
+                    except SLForException:
                         raise
+                    except Exception:
+                        if not context.predicting:
+                            raise
+            except SLBreakException:
+                break
+            except SLContinueException:
+                continue
 
             if context.unlikely:
                 break
@@ -1746,6 +1822,44 @@ class SLFor(SLBlock):
 
         for i in self.children:
             i.dump_const(prefix + "  ")
+
+class SLForException(Exception): pass
+
+class SLBreakException(SLForException): pass
+
+class SLContinueException(SLForException): pass
+
+class SLBreak(SLNode):
+
+    def analyze(self, analysis):
+        analysis.exit_loop()
+
+    def execute(self, context):
+        raise SLBreakException()
+
+    def copy(self, transclude):
+        rv = self.instantiate(transclude)
+
+        return rv
+
+    def dump_const(self, prefix):
+        self.dc(prefix, "break")
+
+class SLContinue(SLNode):
+
+    def analyze(self, analysis):
+        analysis.exit_loop()
+
+    def execute(self, context):
+        raise SLContinueException()
+
+    def copy(self, transclude):
+        rv = self.instantiate(transclude)
+
+        return rv
+
+    def dump_const(self, prefix):
+        self.dc(prefix, "continue")
 
 class SLPython(SLNode):
 
@@ -1946,7 +2060,7 @@ class SLUse(SLNode):
             args = [ ]
             kwargs = { }
 
-        renpy.display.screen.use_screen(self.target, _name=name, _scope=context.scope, *args, **kwargs)
+        renpy.display.screen.use_screen(self.target, *args, _name=name, _scope=context.scope, **kwargs)
 
     def execute(self, context):
 
@@ -1985,14 +2099,12 @@ class SLUse(SLNode):
 
             ctx.old_cache = context.old_use_cache.get(use_id, None) or context.old_cache.get(self.serial, None) or { }
 
-            if use_id in ctx.old_use_cache:
-                ctx.updating = True
-
             ctx.new_use_cache[use_id] = ctx.new_cache
 
         else:
 
             ctx.old_cache = context.old_cache.get(self.serial, None) or { }
+
 
         if not isinstance(ctx.old_cache, dict):
             ctx.old_cache = { }
@@ -2013,11 +2125,14 @@ class SLUse(SLNode):
             args = [ ]
             kwargs = { }
 
+        scope = ctx.old_cache.get("scope", None) or ctx.miss_cache.get("scope", None) or { }
+        if not ctx.updating:
+            scope.clear()
+
         # Apply the arguments to the parameters (if present) or to the scope of the used screen.
         if ast.parameters is not None:
             new_scope = ast.parameters.apply(args, kwargs, ignore_errors=context.predicting)
 
-            scope = ctx.old_cache.get("scope", None) or ctx.miss_cache.get("scope", None) or { }
             scope.update(new_scope)
 
         else:
@@ -2025,7 +2140,6 @@ class SLUse(SLNode):
             if args:
                 raise Exception("Screen {} does not take positional arguments. ({} given)".format(self.target, len(args)))
 
-            scope = ctx.old_cache.get("scope", None) or ctx.miss_cache.get("scope", None) or { }
             scope.clear()
             scope.update(context.scope)
             scope.update(kwargs)
@@ -2269,9 +2383,6 @@ class SLCustomUse(SLNode):
 
             ctx.old_cache = context.old_use_cache.get(use_id, None) or context.old_cache.get(self.serial, None) or { }
 
-            if use_id in ctx.old_use_cache:
-                ctx.updating = True
-
             ctx.new_use_cache[use_id] = ctx.new_cache
 
         else:
@@ -2285,11 +2396,14 @@ class SLCustomUse(SLNode):
 
         ast = self.ast
 
+        scope = ctx.old_cache.get("scope", None) or ctx.miss_cache.get("scope", None) or { }
+        if not ctx.updating:
+            scope.clear()
+
         # Apply the arguments to the parameters (if present) or to the scope of the used screen.
         if ast.parameters is not None:
             new_scope = ast.parameters.apply(args, kwargs, ignore_errors=context.predicting)
 
-            scope = ctx.old_cache.get("scope", None) or ctx.miss_cache.get("scope", None) or { }
             scope.update(new_scope)
 
         else:
@@ -2297,7 +2411,6 @@ class SLCustomUse(SLNode):
             if args:
                 raise Exception("Screen {} does not take positional arguments. ({} given)".format(self.target, len(args)))
 
-            scope = ctx.old_cache.get("scope", None) or ctx.miss_cache.get("scope", None) or { }
             scope.clear()
             scope.update(context.scope)
             scope.update(kwargs)
@@ -2312,6 +2425,8 @@ class SLCustomUse(SLNode):
         # If we have any children, pass them to (possible) transclude
         if self.block.children:
             ctx.transclude = self.block
+        else:
+            ctx.transclude = None
 
         try:
             ast.execute(ctx)

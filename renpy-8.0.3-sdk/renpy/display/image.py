@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -115,6 +115,9 @@ def check_image_attributes(tag, attributes):
     Otherwise, returns None.
     """
 
+    negative = tuple(i for i in attributes if i[:1] == "-")
+    attributes = [i for i in attributes if i[:1] != "-"]
+
     l = [ ]
 
     for attrs, d in image_attributes[tag].items():
@@ -127,22 +130,26 @@ def check_image_attributes(tag, attributes):
 
             chosen = ca(tag, remainder, None)
             if chosen is not None:
-                l.append(list(attrs) + list(chosen))
+                l.append(attrs + tuple(chosen))
 
         else:
 
             if not remainder:
                 l.append(attrs)
 
+    if negative:
+        negated = {i[1:] for i in negative}
+        l = [ i for i in l if not (negated & set(i)) ]
+
     # Check to see if there's an image that is exactly the one we want.
     for i in l:
         if len(i) == len(attributes):
-            return tuple(i)
+            return tuple(i + negative)
 
     if len(l) != 1:
         return None
 
-    return tuple(l[0])
+    return tuple(l[0] + negative)
 
 
 def get_ordered_image_attributes(tag, attributes=(), sort=None):
@@ -312,7 +319,7 @@ def wrap_render(child, w, h, st, at):
     return rv
 
 
-class ImageReference(renpy.display.core.Displayable):
+class ImageReference(renpy.display.displayable.Displayable):
     """
     ImageReference objects are used to reference images by their name,
     which is a tuple of strings corresponding to the name used to define
@@ -341,7 +348,7 @@ class ImageReference(renpy.display.core.Displayable):
         super(ImageReference, self).__init__(**properties)
 
         self.name = name
-        self.target = None # type: renpy.display.core.Displayable|None
+        self.target = None # type: renpy.display.displayable.Displayable|None
 
     def _repr_info(self):
         return repr(self.name)
@@ -372,7 +379,7 @@ class ImageReference(renpy.display.core.Displayable):
 
         name = self.name
 
-        if isinstance(name, renpy.display.core.Displayable):
+        if isinstance(name, renpy.display.displayable.Displayable):
             self.target = name
             return True
 
@@ -380,7 +387,7 @@ class ImageReference(renpy.display.core.Displayable):
             name = tuple(name.split())
 
         def error(msg):
-            self.target = renpy.text.text.Text(msg, color=(255, 0, 0, 255), xanchor=0, xpos=0, yanchor=0, ypos=0)
+            self.target = renpy.text.text.Text(msg, style="_image_error")
 
             if renpy.config.debug:
                 raise Exception(msg)
@@ -415,7 +422,7 @@ class ImageReference(renpy.display.core.Displayable):
 
         except Exception as e:
 
-            if renpy.config.raise_image_exceptions and (renpy.config.debug or renpy.config.developer):
+            if renpy.config.raise_image_exceptions:
                 raise
 
             error(str(e))
@@ -445,7 +452,7 @@ class ImageReference(renpy.display.core.Displayable):
         rv = self._copy(args)
         rv.target = None
 
-        if isinstance(rv.name, renpy.display.core.Displayable):
+        if isinstance(rv.name, renpy.display.displayable.Displayable):
             if rv.name._duplicatable:
                 rv.name = rv.name._duplicate(args)
 
@@ -477,7 +484,7 @@ class ImageReference(renpy.display.core.Displayable):
 
     def _handles_event(self, event):
         if self.target is None:
-            return False
+            self.find_target()
 
         return self.target._handles_event(event)
 
@@ -535,7 +542,7 @@ class ImageReference(renpy.display.core.Displayable):
         return [ self.target ]
 
 
-class DynamicImage(renpy.display.core.Displayable):
+class DynamicImage(renpy.display.displayable.Displayable):
     """
     :doc: disp_imagelike
     :args: (name)
@@ -548,10 +555,10 @@ class DynamicImage(renpy.display.core.Displayable):
     nosave = [ 'raw_target' ]
 
     # The target that this image currently resolves to.
-    target = None # type: renpy.display.core.Displayable|None
+    target = None # type: renpy.display.displayable.Displayable|None
 
     # The raw target that the image resolves to, before it has been parameterized.
-    raw_target = None # type: renpy.display.core.Displayable|None
+    raw_target = None # type: renpy.display.displayable.Displayable|None
 
     # Have we been locked, so we never change?
     locked = False
@@ -681,14 +688,13 @@ class DynamicImage(renpy.display.core.Displayable):
         if not update:
             return True
 
-        raw_target = target # type: renpy.display.core.Displayable
+        raw_target = target # type: renpy.display.displayable.Displayable
         old_target = self.target
 
         if raw_target._duplicatable:
             target = raw_target._duplicate(self._args)
-
             if not self._duplicatable:
-                self.target._unique()
+                target._unique()
 
         self.raw_target = raw_target
         self.target = target
@@ -725,7 +731,8 @@ class DynamicImage(renpy.display.core.Displayable):
     def _unique(self):
         if self.target is not None:
             self.target._unique()
-            self._duplicatable = False
+
+        self._duplicatable = False
 
     def _in_current_store(self):
         rv = self._copy()
@@ -738,7 +745,7 @@ class DynamicImage(renpy.display.core.Displayable):
 
     def _handles_event(self, event):
         if self.target is None:
-            return False
+            self.find_target()
 
         return self.target._handles_event(event)
 
@@ -999,7 +1006,8 @@ class ShownImageInfo(renpy.object.Object):
 
             if ca:
                 ca_required = [ i for i in required if i not in attrs ]
-                ca_optional = [ i for i in optional if i not in attrs ]
+                ca_optional = [ i for i in optional if i not in attrs if i not in required ]
+
                 newattrs = ca(tag, ca_required, ca_optional)
 
                 if newattrs is None:
@@ -1007,18 +1015,20 @@ class ShownImageInfo(renpy.object.Object):
 
                 attrs = attrs + newattrs
 
-            num_required = 0
+            else:
 
-            for i in attrs:
-                if i in required:
-                    num_required += 1
+                num_required = 0
+
+                for i in attrs:
+                    if i in required:
+                        num_required += 1
+                        continue
+
+                # We don't have any not-found attributes. But we might not
+                # have all of the attributes.
+
+                if num_required != len(required):
                     continue
-
-            # We don't have any not-found attributes. But we might not
-            # have all of the attributes.
-
-            if num_required != len(required):
-                continue
 
             len_attrs = len(set(attrs))
 

@@ -1,3 +1,5 @@
-vc_version = 22090809
+branch = 'fix'
+nightly = True
 official = True
-nightly = False
+version = '8.3.5.25011801'
+version_name = 'Second Star to the Right'

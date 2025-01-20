@@ -22,6 +22,8 @@ image hover = "gui/hover.png"
 image jessie smile = "images/Sprites/Jessie profile.png"
 # Side Images
 image side jessie smile = "images/faces/Jessie/smile.png"
+# gui images
+image jessie gui smile = "images/faces/Jessie/smile.png"
 
 
 ###### Sofie ##############################################################################################
@@ -110,8 +112,17 @@ image side esel smile chill = "images/faces/Esel/smile.png"
 
 ###### Merry ##############################################################################################
 # Base images
-image merry sass = "images/Sprites/Merry/sass.png"
+image merry = "images/Sprites/Merry/sass.png"
 # Side Images
 image side merry sass = "images/faces/Merry/sass.png"
+image side merry smile = "images/faces/Merry/smile neutral.png"
+image side merry morning sass = "images/faces/Merry/sass.png"
+image side merry morning burp = "images/faces/Merry/morning/burp.png"
+image side merry morning taunt saliva = "images/faces/Merry/morning/saliva taunt.png"
+image side merry morning tired = "images/faces/Merry/morning/tired.png"
+image side merry morning yawn = "images/faces/Merry/morning/yawn.png"
+image side merry morning stretch = "images/faces/Merry/morning/stretch.png"
+image side merry morning shocked1  = "images/faces/Merry/morning/shocked1.png"
+image side merry morning shocked2 = "images/faces/Merry/morning/shocked2.png"
 
 

@@ -36,8 +36,8 @@
     new "Para construir un paquete para Android, por favor descarga RAPT, descomprímelo y colócalo dentro de la carpeta de Ren'Py. Después reinicia el lanzador de Ren'Py."
 
     # game/android.rpy:31
-    old "A 64-bit/x64 Java 8 Development Kit is required to build Android packages on Windows. The JDK is different from the JRE, so it's possible you have Java without having the JDK.\n\nPlease {a=https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot}download and install the JDK{/a}, then restart the Ren'Py launcher."
-    new "Se requiere un kit de desarrollo Java 8 de 64 bits/x64 para construir paquetes de Android en Windows. El JDK es diferente del JRE, por lo que es posible que tengas Java sin el JDK.\n\nPor favor, {a=https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot}descarga e instala el JDK{/a}, luego reinicia el lanzador de Ren'Py."
+    old "A 64-bit/x64 Java [JDK_REQUIREMENT] Development Kit is required to build Android packages on Windows. The JDK is different from the JRE, so it's possible you have Java without having the JDK.\n\nPlease {a=https://www.renpy.org/jdk/[JDK_REQUIREMENT]}download and install the JDK{/a}, then restart the Ren'Py launcher."
+    new "Se requiere un kit de desarrollo Java 8 de 64 bits/x64 para construir paquetes de Android en Windows. El JDK es diferente del JRE, por lo que es posible que tengas Java sin el JDK.\n\nPor favor, {a=https://www.renpy.org/jdk/[JDK_REQUIREMENT]}descarga e instala el JDK{/a}, luego reinicia el lanzador de Ren'Py."
 
     # android.rpy:32
     old "RAPT has been installed, but you'll need to install the Android SDK before you can build Android packages. Choose Install SDK to do this."
@@ -1185,7 +1185,7 @@
 
     # updater.rpy:91
     old "Release"
-    new "Lanzamiento"
+    new "Estable"
 
     # updater.rpy:97
     old "{b}Recommended.{/b} The version of Ren'Py that should be used in all newly-released games."
@@ -1193,7 +1193,7 @@
 
     # updater.rpy:102
     old "Prerelease"
-    new "Prelanzamiento"
+    new "Preliminar"
 
     # updater.rpy:108
     old "A preview of the next version of Ren'Py that can be used for testing and taking advantage of new features, but not for final releases of games."
@@ -1267,8 +1267,6 @@
     old "Proceed"
     new "Continuar"
 
-translate spanish strings:
-
     # game/add_file.rpy:37
     old "The file name may not be empty."
     new "El nombre del archivo no puede estar vacío."
@@ -1279,11 +1277,11 @@ translate spanish strings:
 
     # game/android.rpy:50
     old "Selects the Debug build, which can be accessed through Android Studio. Changing between debug and release builds requires an uninstall from your device."
-    new "Selecciona la versión de depuración, a la que se puedes acceder a través de Android Studio. Cambiar entre las compilaciones de depuración y de versión requiere una desinstalación de su dispositivo."
+    new "Selecciona la versión de depuración, a la que se puedes acceder a través de Android Studio. Cambiar entre las compilaciones de depuración y estable requiere una desinstalación de su dispositivo."
 
     # game/android.rpy:51
     old "Selects the Release build, which can be uploaded to stores. Changing between debug and release builds requires an uninstall from your device."
-    new "Selecciona la versión de lanzamiento, que se puede cargar en las tiendas. Cambiar entre las compilaciones de depuración y de versión requiere una desinstalación de su dispositivo."
+    new "Selecciona la versión estable, que se puede cargar en las tiendas. Cambiar entre las compilaciones de depuración y estable requiere una desinstalación de su dispositivo."
 
     # game/androidstrings.rpy:7
     old "{} is not a directory."
@@ -2007,7 +2005,7 @@ translate spanish strings:
 
     # game/web.rpy:344
     old "We will restore support in a future release of Ren'Py 8. Until then, please use Ren'Py 7 for web support."
-    new "Restauraremos el soporte en una versión futura de Ren'Py 8. Hasta entonces, use Ren'Py 7 para soporte web."
+    new "Restauraremos el soporte en una versión estable futura de Ren'Py 8. Hasta entonces, use Ren'Py 7 para soporte web."
 
     # game/preferences.rpy:104
     old "General"
@@ -2022,8 +2020,8 @@ translate spanish strings:
     new "Tema del lanzdor"
 
     # game/preferences.rpy:254
-    old "Information about creating a custom theme can be found {a=https://www.renpy.org/doc/html/skins.html}in the Ren'Py Documentation{/a}."
-    new "Puedes encontrar información sobre cómo crear un tema personalizado {a=https://www.renpy.org/doc/html/skins.html}en la documentación de Ren'Py{/a}."
+    old "Information about creating a custom theme can be found {a=[skins_url]}in the Ren'Py Documentation{/a}."
+    new "Puedes encontrar información sobre cómo crear un tema personalizado {a=[skins_url]}en la documentación de Ren'Py{/a}."
 
     # game/preferences.rpy:271
     old "Install Libraries:"
@@ -2047,11 +2045,11 @@ translate spanish strings:
 
     # game/updater.rpy:77
     old "Nightly (Ren'Py 8, Python 3)"
-    new "Nightly (Ren'Py 8, Python 3)"
+    new "Nocturna (Ren'Py 8, Python 3)"
 
     # game/updater.rpy:78
     old "Nightly (Ren'Py 7, Python 2)"
-    new "Nightly (Ren'Py 7, Python 2)"
+    new "Nocturna (Ren'Py 7, Python 2)"
 
     # game/preferences.rpy:327
     old "{#in language font}Welcome! Please choose a language"
@@ -2060,3 +2058,195 @@ translate spanish strings:
     # game/preferences.rpy:327
     old "{#in language font}Start using Ren'Py in [lang_name]"
     new "{font=fonts/Roboto-Light.ttf}Empieza a usar Ren'Py en [lang_name]{/font}"
+
+    # game/distribute_gui.rpy:231
+    old "(DLC)"
+    new "(DLC)"
+
+    # game/project.rpy:46
+    old "Lint checks your game for potential mistakes, and gives you statistics."
+    new "Lint comprueba tu juego en busca de posibles errores y te ofrece estadísticas."
+
+    # game/web.rpy:484
+    old "Creating package..."
+    new "Creando paquete..."
+
+    # game/android.rpy:39
+    old "RAPT has been installed, but a key hasn't been configured. Please generate new keys, or copy android.keystore and bundle.keystore to the base directory."
+    new "RAPT ha sido instalado, pero no se ha configurado una clave. Por favor, genera nuevas claves, o copia android.keystore y bundle.keystore al directorio base."
+
+    # game/android.rpy:46
+    old "Attempts to emulate a televison-based Android console.\n\nController input is mapped to the arrow keys, Enter is mapped to the select button, Escape is mapped to the menu button, and PageUp is mapped to the back button."
+    new "Intenta emular una consola Android basada en televisión.\n\nLa entrada del controlador se asigna a las teclas de flecha, Enter se asigna al botón de selección, Escape se asigna al botón de menú y PageUp se asigna al botón de retroceso."
+
+    # game/android.rpy:48
+    old "Downloads and installs the Android SDK and supporting packages."
+    new "Descarga e instala el SDK de Android y los paquetes de soporte."
+
+    # game/android.rpy:49
+    old "Generates the keys required to sign the package."
+    new "Genera las claves necesarias para firmar el paquete."
+
+    # game/android.rpy:383
+    old "Install SDK"
+    new "Instalar SDK"
+
+    # game/android.rpy:387
+    old "Generate Keys"
+    new "Generar claves"
+
+    # game/androidstrings.rpy:32
+    old "How much RAM (in GB) do you want to allocate to Gradle?\nThis must be a positive integer number."
+    new "¿Cuánta RAM (en GB) quiere asignar a Gradle?\nDebe ser un número entero positivo."
+
+    # game/androidstrings.rpy:33
+    old "The RAM size must contain only numbers and be positive."
+    new "El tamaño de la RAM debe contener sólo números y ser positivo."
+
+    # game/androidstrings.rpy:63
+    old "I found an android.keystore file in the rapt directory. Do you want to use this file?"
+    new "He encontrado un archivo android.keystore en el directorio rapt. ¿Quieres usar este archivo?"
+
+    # game/androidstrings.rpy:66
+    old "\n\nSaying 'No' will prevent key creation."
+    new "\n\nDecir 'No' impedirá la creación de claves."
+
+    # game/androidstrings.rpy:69
+    old "I found a bundle.keystore file in the rapt directory. Do you want to use this file?"
+    new "He encontrado un archivo bundle.keystore en el directorio rapt. ¿Quieres usar este archivo?"
+
+    # game/updater.rpy:79
+    old "A nightly build of fixes to the release version of Ren'Py."
+    new "Compilación nocturna de correcciones para la versión estable de Ren'Py."
+
+    # game/updater.rpy:76
+    old "Nightly Fix"
+    new "Correciones nocturnas"
+
+    # game/updater.rpy:77
+    old "Nightly Fix (Ren'Py 8, Python 3)"
+    new "Correciones nocturnas (Ren'Py 8, Python 3)"
+
+    # game/updater.rpy:78
+    old "Nightly Fix (Ren'Py 7, Python 2)"
+    new "Correciones nocturnas (Ren'Py 7, Python 2)"
+
+    # game/choose_directory.rpy:72
+    old "No directory was selected, but one is required."
+    new "No se seleccionó un directorio, pero uno requerido."
+
+    # game/choose_directory.rpy:79
+    old "The selected directory does not exist."
+    new "El directorio seleccionado no existe."
+
+    # game/choose_directory.rpy:81
+    old "The selected directory is not writable."
+    new "No se puede escribir en el directorio seleccionado."
+
+    # game/distribute.rpy:554
+    old "This may be derived from build.name and config.version or build.version."
+    new "Puede derivarse de build.name y config.version o build.version."
+
+    # game/distribute.rpy:532
+    old "Building distributions failed:\n\nThe project is the Ren'Py Tutorial, which can't be distributed outside of Ren'Py. Consider using The Question as a test project."
+    new "La compilación de distribuciones falló:\n\nEl proyecto es el Tutorial de Ren'Py, que no puede ser distribuido fuera de Ren'Py. Considera usar The Question como proyecto de prueba."
+
+    # game/androidstrings.rpy:46
+    old "I was unable to use javac to compile a test file. If you haven't installed the Java Development Kit yet, please download it from:\n\n{a=https://adoptium.net}https://adoptium.net/{/a}\n\nThe JDK is different from the JRE, so it's possible you have Java without having the JDK. Please install JDK [JDK_REQUIREMENT], and add it to your PATH.\n\nWithout a working JDK, I can't continue."
+    new "No he podido utilizar javac para compilar un archivo de prueba. Si aún no has instalado el Kit de Desarrollo de Java, descárgalo de:\n\n{a=https://adoptium.net}https://adoptium.net/{/a}\nEl JDK es diferente del JRE, por lo que es posible que tengas Java sin tener el JDK. Por favor, instala el JDK [JDK_REQUIREMENT], y añádelo a su PATH.\n\nSin un JDK que funcione, no puedo continuar."
+
+    # game/androidstrings.rpy:47
+    old "The version of Java on your computer does not appear to be JDK [JDK_REQUIREMENT], which is required to build Android apps. If you need to install a newer JDK, you can download it from:\n\n{a=https://adoptium.net/}https://adoptium.net/{/a}, and add it to your PATH.\n\nYou can also set the JAVA_HOME environment variable to use a different version of Java."
+    new "La versión de Java en tu computadora no parece ser JDK [JDK_REQUIREMENT], que se requiere para construir aplicaciones de Android. Si necesita instalar un JDK más reciente, puede descargarlo de:\n\n{a=https://adoptium.net/}https://adoptium.net/{/a}, y añadirlo a su PATH. También puede configurar la variable de entorno JAVA_HOME para utilizar una versión diferente de Java."
+
+    # game/distribute.rpy:1620
+    old "Finishing the [variant] [format] package."
+    new "Finalizando el paquete [variant] [format]."
+
+    # game/editor.rpy:185
+    old "Atom is deprecated and its bugs are known for corrupting games, using another editor is recommended."
+    new "Atom está obsoleto y sus bugs son conocidos por corromper juegos, se recomienda usar otro editor."
+
+    # game/editor.rpy:214
+    old "JEdit is deprecated, using another editor is recommended."
+    new "JEdit está obsoleto, se recomienda utilizar otro editor."
+
+    # game/editor.rpy:607
+    old "The Atom text editor is no longer supported by its developers. We suggest switching to Visual Studio Code or another editor."
+    new "El editor de texto Atom ya no está soportado por sus desarrolladores. Sugerimos cambiar a Visual Studio Code u otro editor."
+
+    # game/editor.rpy:607
+    old "Select editor now."
+    new "Seleccione un editor ahora."
+
+    # game/editor.rpy:607
+    old "Ignore until next launch."
+    new "Ignorar hasta el próximo lanzamiento."
+
+    # game/editor.rpy:607
+    old "Do not ask again."
+    new "No vuelver a preguntar."
+
+    # game/new_project.rpy:38
+    old "Warning : you are using Ren'Py 7. It is recommended to start new projects using Ren'Py 8 instead."
+    new "Advertencia : estás utilizando Ren'Py 7. Se recomienda iniciar nuevos proyectos utilizando Ren'Py 8 en su lugar."
+
+    # game/new_project.rpy:49
+    old "Please select a template project to use."
+    new "Selecciona una plantilla para el proyecto."
+
+    # game/new_project.rpy:49
+    old "Do not use a template project."
+    new "No utilizar una plantilla para el proyecto."
+
+    # game/preferences.rpy:94
+    old "Lint"
+    new "Lint"
+
+    # game/preferences.rpy:233
+    old "Game Options:"
+    new "Opciones del juego:"
+
+    # game/preferences.rpy:240
+    old "Skip splashscreen"
+    new "Saltar pantalla splashscreen"
+
+    # game/preferences.rpy:258
+    old "Restore window position"
+    new "Restablecer la posición de la ventana"
+
+    # game/preferences.rpy:262
+    old "Prefer RPU updates"
+    new "Prefiera las actualizaciones de RPU"
+
+    # game/preferences.rpy:332
+    old "Open projects.txt"
+    new "Abrir projects.txt"
+
+    # game/preferences.rpy:356
+    old "Lint toggles:"
+    new "Ajuestes de Lint:"
+
+    # game/preferences.rpy:360
+    old "Check for orphan/obsolete translations"
+    new "Buscar traducciones huérfanas/obsoletas"
+
+    # game/preferences.rpy:363
+    old "Check parameters shadowing reserved names"
+    new "Comprobar los parámetros que ocultan a los nombres reservados"
+
+    # game/preferences.rpy:366
+    old "Print block, word, and character counts by speaking character."
+    new "Imprime el recuento de bloques, palabras y contador de caracteres por carpersonaje."
+
+    # game/preferences.rpy:369
+    old "Unclosed text tags"
+    new "Etiquetas de texto no cerradas"
+
+    # game/preferences.rpy:372
+    old "Show all unreachable blocks and orphaned translations."
+    new "Mostrar todos los bloques inalcanzables y las traducciones huérfanas."
+
+    # game/project.rpy:776
+    old "Splashscreen skipped in launcher preferences."
+    new "Se omite la pantalla Splashscreen en las preferencias del lanzador."

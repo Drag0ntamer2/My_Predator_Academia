@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -158,7 +158,8 @@ def launch_editor(filenames, line=1, transient=False):
     if editor is None:
         return False
 
-    filenames = [ renpy.parser.unelide_filename(i) for i in filenames ]
+    filenames = [ renpy.lexer.unelide_filename(i) for i in filenames ]
+    filenames = [ os.path.realpath(i) for i in filenames ]
 
     try:
         editor.begin(new_window=transient)

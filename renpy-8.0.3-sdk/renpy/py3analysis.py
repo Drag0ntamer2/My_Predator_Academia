@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -39,13 +39,20 @@ from renpy.compat.pickle import loads, dumps
 always_constants = { 'True', 'False', 'None' }
 
 # The set of names that should be treated as pure functions.
-pure_functions = set(i for i in dir(builtins) if not i.startswith("__"))
-pure_functions -= { "copyright", "credits", "enumerate", "help", "input", "license", "map", "memoryview", "next", "open", "print", "reversed" }
 pure_functions = {
+    # Python 3 builtins.
+    'abs', 'all', 'any', 'ascii', 'bin', 'bool', 'bytes', 'callable',
+    'chr', 'complex', 'dict', 'dir', 'divmod', 'enumerate', 'filter', 'float',
+    'format', 'frozenset', 'getattr', 'hasattr', 'hash', 'hex', 'int',
+    'isinstance', 'issubclass', 'len', 'list', 'map', 'max', 'min', 'oct',
+    'ord', 'pow', 'range', 'repr', 'reversed', 'round', 'set', 'slice', 'sorted',
+    'str', 'sum', 'tuple', 'type', 'zip',
+
     # minstore.py
     "_",
     "_p",
     "absolute",
+    "position",
     "__renpy__list__",
     "__renpy__dict__",
     "__renpy__set__",
@@ -80,7 +87,7 @@ pure_functions = {
     "renpy.version_tuple",
     "renpy.version_name",
     "renpy.license",
-    }
+}
 
 constants = { "config", "style" } | always_constants | pure_functions
 
@@ -181,11 +188,23 @@ class Control(object):
         self.loop = loop
         self.imagemap = imagemap
 
+    def __repr__(self):
+        return "<Control const={0} loop={1} imagemap={2}>".format(self.const, self.loop, self.imagemap)
+
 
 # Three levels of constness.
-GLOBAL_CONST = 2 # Expressions that are const everywhere.
-LOCAL_CONST = 1 # Expressions that are const with regard to a screen + parameters.
-NOT_CONST = 0 # Expressions that are not const.
+
+# An expression is globally constant if it will evaluate to the same value
+# whenever it is run.
+GLOBAL_CONST = 2
+
+# An expression is locally const if it will evaluate to the same value when
+# run in the same place - the same screen, with the same parameters, the same
+# statement, and the same iteration of a for loop.
+LOCAL_CONST = 1
+
+# An expression is not const if it wilk change it's value.
+NOT_CONST = 0
 
 
 class DeltaSet(object):
@@ -284,7 +303,7 @@ class Analysis(object):
         return rv
 
     def push_control(self, const=True, loop=False, imagemap=False):
-        self.control = Control(self.control.const and const, loop, self.imagemap or imagemap)
+        self.control = Control(self.control.const and const, loop, self.control.imagemap or imagemap)
         self.control_stack.append(self.control) # type: ignore
 
     def pop_control(self):
@@ -565,14 +584,8 @@ class Analysis(object):
 
         # As we have parameters, analyze with those parameters.
 
-        for name, _default in parameters.parameters:
+        for name in parameters.parameters:
             self.mark_not_constant(name)
-
-        if parameters.extrapos is not None:
-            self.mark_not_constant(parameters.extrapos)
-
-        if parameters.extrakw is not None:
-            self.mark_not_constant(parameters.extrakw)
 
 
 class PyAnalysis(ast.NodeVisitor):

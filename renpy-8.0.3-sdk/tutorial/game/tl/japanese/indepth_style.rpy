@@ -110,7 +110,7 @@ translate japanese style_basics_dbe80939:
 # game/indepth_style.rpy:174
 translate japanese style_basics_ac6a8414:
 
-    # e "Finally, there is the the style statement, which creates or changes a named style. By giving Text the style argument, we tell it to use the blue_text style."
+    # e "Finally, there is the style statement, which creates or changes a named style. By giving Text the style argument, we tell it to use the blue_text style."
     e "最後はstyleステートメントで、これは名前つきのスタイルを作成または変更します。Textにstyle引数を与えて、blue_textスタイルを使用するよう指示します。"
 
 # game/indepth_style.rpy:180
@@ -122,7 +122,7 @@ translate japanese style_basics_3d9bdff7:
 # game/indepth_style.rpy:182
 translate japanese style_basics_49c5fbfe:
 
-    # e "By default the parent of the style has the same name, with the prefix up to the the first underscore removed. If the style does not have an underscore in its name, 'default' is used."
+    # e "By default the parent of the style has the same name, with the prefix up to the first underscore removed. If the style does not have an underscore in its name, 'default' is used."
     e "デフォルトでは、スタイルの親は最初の接頭辞が除去された同じ名前であり、スタイル名にアンダースコアがなければ'default'が使用されます。"
 
 # game/indepth_style.rpy:184
@@ -332,20 +332,20 @@ translate japanese style_text_5a0c2c02:
 # game/indepth_style.rpy:443
 translate japanese style_text_430c1959:
 
-    # e "The text_align property controls the positioning of multiple lines of text inside the text displayable. For example, 0.5 means centered."
-    e "text_alignプロパティーはtext Displayable内の複数行の配置を制御します。例えば、0.5は中央です。"
+    # e "The textalign property controls the positioning of multiple lines of text inside the text displayable. For example, 0.5 means centered."
+    e "textalignプロパティーはtext Displayable内の複数行の配置を制御します。例えば、0.5は中央です。"
 
 # game/indepth_style.rpy:445
 translate japanese style_text_19aa0833:
 
-    # e "It doesn't change the position of the text displayable itself. For that, you'll often want to set the text_align and xalign to the same value."
-    e "text Displayable自体の位置は変更しません。そのため、text_alignとxalignは同じ値にすることが多いでしょう。"
+    # e "It doesn't change the position of the text displayable itself. For that, you'll often want to set the textalign and xalign to the same value."
+    e "text Displayable自体の位置は変更しません。そのため、textalignとxalignは同じ値にすることが多いでしょう。"
 
 # game/indepth_style.rpy:455
 translate japanese style_text_efc3c392:
 
-    # e "When both text_align and xalign are set to 1.0, the text is properly right-justified."
-    e "text_alignとxalignが共に1.0だと、テキストは右寄せになります。"
+    # e "When both textalign and xalign are set to 1.0, the text is properly right-justified."
+    e "textalignとxalignが共に1.0だと、テキストは右寄せになります。"
 
 # game/indepth_style.rpy:464
 translate japanese style_text_43be63b9:
@@ -813,4 +813,3 @@ translate japanese strings:
     # game/indepth_style.rpy:329
     old "Far better it is to dare mighty things, to win glorious triumphs, even though checkered by failure, than to rank with those poor spirits who neither enjoy nor suffer much, because they live in the gray twilight that knows not victory nor defeat.\n\n–Theodore Roosevelt"
     new "Far better it is to dare mighty things, to win glorious triumphs, even though checkered by failure, than to rank with those poor spirits who neither enjoy nor suffer much, because they live in the gray twilight that knows not victory nor defeat.\n\n–Theodore Roosevelt"
-

@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -48,17 +48,18 @@ init python in project:
         _("Press shift+O (the letter) to access the console."),
         _("Press shift+D to access the developer menu."),
         _("Have you backed up your projects recently?"),
+        _("Lint checks your game for potential mistakes, and gives you statistics."),
     ]
 
     class Project(object):
 
         def __init__(self, path, name=None):
 
-            if name is None:
-                name = os.path.basename(path)
-
             while path.endswith("/"):
                 path = path[:-1]
+
+            if name is None:
+                name = os.path.basename(path)
 
             if not os.path.exists(path):
                 raise Exception("{} does not exist.".format(path))
@@ -127,6 +128,7 @@ init python in project:
             data.setdefault("add_from", True)
             data.setdefault("force_recompile", True)
             data.setdefault("android_build", "Release")
+            data.setdefault("tutorial", False)
 
             if "renamed_all" not in data:
                 dp = data["packages"]
@@ -258,7 +260,15 @@ init python in project:
 
             environ = dict(os.environ)
             environ["RENPY_LAUNCHER_LANGUAGE"] = _preferences.language or "english"
+
+            if persistent.skip_splashscreen:
+                environ["RENPY_SKIP_SPLASHSCREEN"] = "1"
+
             environ.update(env)
+
+            # Filter out system PYTHON* environment variables.
+            if hasattr(sys, "renpy_executable"):
+                environ = { k : v for k, v in environ.items() if not k.startswith("PYTHON") }
 
             encoded_environ = { }
 
@@ -275,6 +285,8 @@ init python in project:
 
             if wait:
                 if p.wait():
+
+                    print("Launch failed. command={!r}, returncode={!r}".format(cmd, p.returncode))
 
                     if args and not self.is_writeable():
                         interface.error(_("Launching the project failed."), _("This may be because the project is not writeable."))
@@ -387,9 +399,18 @@ init python in project:
             can be included in the project.
             """
 
+            def is_script(fn):
+                fn = fn.lower()
+
+                for i in [ ".rpy", ".rpym", "_ren.py" ]:
+                    if fn.endswith(i):
+                        return True
+
+                return False
+
             rv = [ ]
             rv.extend(i for i, isdir in util.walk(self.path)
-                if (not isdir) and (i.endswith(".rpy") or i.endswith(".rpym")) and (not i.startswith("tmp/")) )
+                if (not isdir) and is_script(i) and (not i.startswith("tmp/")) )
 
             return rv
 
@@ -467,13 +488,10 @@ init python in project:
             if self.projects_directory is not None:
                 self.scan_directory(self.projects_directory)
 
-
             self.scan_directory(config.renpy_base)
-            self.scan_directory(os.path.join(config.renpy_base, "templates"))
 
             self.projects.sort(key=lambda p : p.name.lower())
             self.templates.sort(key=lambda p : p.name.lower())
-
 
             # Select the default project.
             if persistent.active_project is not None:
@@ -538,6 +556,10 @@ init python in project:
 
                     for path in f:
                         path = path.strip()
+
+                        if path.startswith("#"):
+                            continue
+
                         if len(path) > 0:
                             self.scan_directory_direct(path)
 
@@ -576,6 +598,7 @@ init python in project:
             if project_type == "hidden":
                 pass
             elif project_type == "template":
+                self.projects.append(p)
                 self.templates.append(p)
             else:
                 self.projects.append(p)
@@ -749,7 +772,12 @@ init python in project:
             blurb = LAUNCH_BLURBS[persistent.blurb % len(LAUNCH_BLURBS)]
             persistent.blurb += 1
 
-            interface.interaction(_("Launching"), blurb, pause=2.5)
+            if persistent.skip_splashscreen:
+                submessage = _("Splashscreen skipped in launcher preferences.")
+            else:
+                submessage = None
+
+            interface.interaction(_("Launching"), blurb, submessage=submessage, pause=2.5)
 
 
         def __call__(self):
@@ -833,3 +861,24 @@ init python:
         return False
 
     renpy.arguments.register_command("get_projects_directory", get_projects_directory_command)
+
+    def set_project_command():
+        ap = renpy.arguments.ArgumentParser()
+        ap.add_argument("project", help="The full path to the project to select.")
+
+        args = ap.parse_args()
+
+        projects = os.path.dirname(os.path.abspath(args.project))
+        name = os.path.basename(args.project)
+
+        persistent.projects_directory = renpy.fsdecode(projects)
+        project.multipersistent.projects_directory = persistent.projects_directory
+
+        persistent.active_project = name
+
+        project.multipersistent.save()
+        renpy.save_persistent()
+
+        return False
+
+    renpy.arguments.register_command("set_project", set_project_command)

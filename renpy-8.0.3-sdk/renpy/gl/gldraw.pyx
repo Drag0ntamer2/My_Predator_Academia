@@ -1,6 +1,6 @@
 #cython: profile=False
 #@PydevCodeAnalysisIgnore
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -149,8 +149,9 @@ cdef class GLDraw:
         gltexture.dealloc_textures()
         gltexture.free_texture_numbers()
 
-        if renpy.android or renpy.ios:
-            pygame.display.get_window().recreate_gl_context()
+
+        if renpy.android or renpy.ios or renpy.emscripten:
+            pygame.display.get_window().recreate_gl_context(always=renpy.emscripten)
 
         # Are we in fullscreen mode?
         fullscreen = bool(pygame.display.get_window().get_window_flags() & (pygame.WINDOW_FULLSCREEN_DESKTOP | pygame.WINDOW_FULLSCREEN))
@@ -657,7 +658,7 @@ cdef class GLDraw:
         rv = self.texture_cache.get(surf, None)
 
         if rv is None:
-            rv = gltexture.texture_grid_from_surface(surf, transient)
+            rv = gltexture.texture_grid_from_surface(surf, transient, properties)
             self.texture_cache[surf] = rv
             self.ready_texture_queue.add(rv)
 
@@ -1096,15 +1097,13 @@ cdef class GLDraw:
         return rv
 
 
-    def is_pixel_opaque(self, what, x, y):
+    def is_pixel_opaque(self, what):
         """
         Returns true if the pixel is not 100% transparent.
+
+        `what`
+            A 1x1 Render.
         """
-
-        if x < 0 or y < 0 or x >= what.width or y >= what.height:
-            return 0
-
-        what = what.subsurface((x, y, 1, 1))
 
         reverse = IDENTITY
 

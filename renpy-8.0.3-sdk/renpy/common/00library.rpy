@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -139,14 +139,17 @@ init -1700 python:
     def _default_empty_window():
 
         try:
+
             scry = renpy.scry()
+
+            window_hide = renpy.get_statement_name() == "window hide"
 
             # When running in a say statement or menu-with-caption, scry for
             # the next say statement, and get the window from that.
-            if scry.say or scry.menu_with_caption:
+            if (scry.say or scry.menu_with_caption or store._window_next) and not window_hide:
                 who = None
 
-                for i in range(10):
+                for i in range(20):
                     if scry.say:
                         who = scry.who
                         break
@@ -178,29 +181,47 @@ init -1700 python:
 
     config.extend_interjection = "{fast}"
 
-    def extend(what, interact=True, *args, **kwargs):
-        who = _last_say_who
-        who = renpy.eval_who(who)
+    class _Extend(object):
 
-        if who is None:
-            who = narrator
-        elif isinstance(who, basestring):
-            who = Character(who, kind=name_only)
+        def get_who(self):
 
-        # This ensures extend works even with NVL mode.
-        who.do_extend()
+            who = _last_say_who
+            who = renpy.eval_who(who)
 
-        what = _last_say_what + config.extend_interjection + _last_raw_what
+            if who is None:
+                who = narrator
+            elif isinstance(who, basestring):
+                who = Character(who, kind=name_only)
 
-        args = args + _last_say_args
-        kw = dict(_last_say_kwargs)
-        kw.update(kwargs)
-        kw["interact"] = interact and kw.get("interact", True)
+            return who
 
-        renpy.exports.say(who, what, *args, **kw)
-        store._last_say_what = what
+        def __call__(self, what, interact=True, *args, **kwargs):
+            who = self.get_who()
 
-    extend.record_say = False
+            # This ensures extend works even with NVL mode.
+            who.do_extend()
+
+            what = _last_say_what + config.extend_interjection + _last_raw_what
+
+            args = args + _last_say_args
+            kw = dict(_last_say_kwargs)
+            kw.update(kwargs)
+            kw["interact"] = interact and kw.get("interact", True)
+
+            renpy.exports.say(who, what, *args, **kw)
+            store._last_say_what = what
+
+        record_say = False
+
+        def get_extend_text(self, what):
+            return config.extend_interjection + what
+
+        @property
+        def statement_name(self):
+            who = self.get_who()
+            return getattr(who, "statement_name", "say")
+
+    extend = _Extend()
 
 
     ##########################################################################
@@ -302,6 +323,7 @@ init -1700 python:
         who = Character(who, kind=name_only)
         who(what, interact=interact, *args, **kwargs)
 
+
     ##########################################################################
     # Misc.
 
@@ -315,7 +337,12 @@ init -1700 python:
     # License text.
     renpy.license = _("This program contains free software under a number of licenses, including the MIT License and GNU Lesser General Public License. A complete list of software, including links to full source code, can be found {a=https://www.renpy.org/l/license}here{/a}.")
 
+
 init -1000 python:
+
+    # Not used, may be in old save files.
+    config.missing_background = "black"
+
     # Set developer to the auto default.
     config.original_developer = "auto"
 
@@ -411,6 +438,7 @@ _quit_slot
 _rollback
 _skipping
 _window_subtitle
+_scene_show_hide_transition
 """.split():
 
         # _history, history_list, and _version are set later, so aren't included.
@@ -453,7 +481,6 @@ label _developer:
 # its own layer.
 screen _ctc:
     add ctc
-
 
 # Creates the data structure that history is stored in.
 default _history = True

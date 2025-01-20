@@ -1,4 +1,4 @@
-﻿# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+﻿# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -355,8 +355,8 @@ style l_left_button_text is l_right_button_text
 style l_root is l_default:
     background BACKGROUND
     xpadding 10
-    top_padding 64
-    bottom_padding 128
+    top_padding 32
+    bottom_padding 120
 
 # An inner window.
 style l_window is l_default:
@@ -402,7 +402,7 @@ style l_alternate is l_default:
 style l_alternate_text is l_default:
     size size(14)
     font light_font()
-    text_align 1.0
+    textalign 1.0
 
 style l_small_button is l_button
 
@@ -488,7 +488,7 @@ style l_info_button is l_button:
     xmargin 50
 
 style l_info_button_text is l_button_text:
-    text_align 0.5
+    textalign 0.5
     layout "subtitle"
 
 # Progress bar.

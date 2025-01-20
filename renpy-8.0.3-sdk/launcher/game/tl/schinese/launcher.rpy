@@ -37,20 +37,16 @@
     new "要构建安卓应用包，请下载 RAPT，并解压到 Ren'Py 目录中。之后重启 Ren'Py。"
 
     # game/android.rpy:35
-    old "A 64-bit/x64 Java 8 Development Kit is required to build Android packages on Windows. The JDK is different from the JRE, so it's possible you have Java without having the JDK.\n\nPlease {a=https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot}download and install the JDK{/a}, then restart the Ren'Py launcher."
-    new "在 Windows 中构建安卓应用包需要 64 位/x64 Java 8 开发套件（JDK）。JDK 不同于 JRE，所以您可能已安装过 Java 但尚未安装 JDK。\n\n请{a=https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=hotspot}下载并安装 JDK{/a}，然后重启 Ren'Py。"
+    old "A 64-bit/x64 Java [JDK_REQUIREMENT] Development Kit is required to build Android packages on Windows. The JDK is different from the JRE, so it's possible you have Java without having the JDK.\n\nPlease {a=https://www.renpy.org/jdk/[JDK_REQUIREMENT]}download and install the JDK{/a}, then restart the Ren'Py launcher."
+    new "在 Windows 中构建安卓应用包需要 64 位/x64 Java 8 开发套件（JDK）。JDK 不同于 JRE，所以您可能已安装过 Java 但尚未安装 JDK。\n\n请{a=https://www.renpy.org/jdk/[JDK_REQUIREMENT]}下载并安装 JDK{/a}，然后重启 Ren'Py。"
 
     # game/android.rpy:36
     old "RAPT has been installed, but you'll need to install the Android SDK before you can build Android packages. Choose Install SDK to do this."
     new "RAPT 已安装，但您还需要安装安卓 SDK 才可以构建安卓应用包。请继续安装 SDK。"
 
-    # game/android.rpy:37
-    old "RAPT has been installed, but a key hasn't been configured. Please create a new key, or restore android.keystore."
-    new "RAPT 已安装，但尚未配置密钥。请创建一个新密钥，或恢复 android.keystore 文件。"
-
-    # game/android.rpy:38
-    old "RAPT has been installed, but a bundle key hasn't been configured. Please create a new key, or restore bundle.keystore."
-    new "RAPT 已安装，但尚未配置 bundle 密钥。请创建一个新密钥，或恢复 bundle.keystore 文件。"
+    # game/android.rpy:39
+    old "RAPT has been installed, but a key hasn't been configured. Please generate new keys, or copy android.keystore and bundle.keystore to the base directory."
+    new "RAPT 已安装，但尚未配置密钥。请生成新的密钥，或将 android.keystore 和 bundle.keystore 复制到基础目录中。"
 
     # game/android.rpy:39
     old "The current project has not been configured. Use \"Configure\" to configure it before building."
@@ -73,12 +69,16 @@
     new "尝试模拟为安卓平板。\n\nEsc 和 PageUp 键将分别重映射为平板的菜单键和返回键。"
 
     # game/android.rpy:45
-    old "Attempts to emulate a televison-based Android console, like the OUYA or Fire TV.\n\nController input is mapped to the arrow keys, Enter is mapped to the select button, Escape is mapped to the menu button, and PageUp is mapped to the back button."
-    new "尝试模拟为基于电视的安卓平台，例如 OUYA 或 Fire TV。\n\n键盘方向键将重映射为手柄方向键，Enter、Esc 和 PageUp 键将分别重映射为手柄的选择键、菜单键和返回键。"
+    old "Attempts to emulate a televison-based Android console.\n\nController input is mapped to the arrow keys, Enter is mapped to the select button, Escape is mapped to the menu button, and PageUp is mapped to the back button."
+    new "尝试模拟为基于电视的安卓游戏机。\n\n键盘方向键将重映射为手柄方向键，Enter、Esc 和 PageUp 键将分别重映射为手柄的选择键、菜单键和返回键。"
 
     # game/android.rpy:47
-    old "Downloads and installs the Android SDK and supporting packages. Optionally, generates the keys required to sign the package."
-    new "下载并安装安卓 SDK 以及支持包。还可以选择生成对应用包进行签名所需的密钥。"
+    old "Downloads and installs the Android SDK and supporting packages."
+    new "下载并安装安卓 SDK 以及支持包。"
+
+    # game/android.rpy:49
+    old "Generates the keys required to sign the package."
+    new "生成对应用包进行签名所需的密钥。"
 
     # game/android.rpy:48
     old "Configures the package name, version, and other information about this project."
@@ -195,10 +195,6 @@
     # game/android.rpy:444
     old "Other:"
     new "其他："
-
-    # game/android.rpy:452
-    old "Logcat"
-    new "Logcat"
 
     # game/android.rpy:456
     old "List Devices"
@@ -353,12 +349,12 @@
     new "版本号应仅含数字和点。"
 
     # game/androidstrings.rpy:32
-    old "How much RAM do you want to allocate to Gradle?\n\nThis must be a positive integer number."
-    new "您打算给 Gradle 分配多少内存？\n\n必须为正整数。"
+    old "How much RAM (in GB) do you want to allocate to Gradle?\nThis must be a positive integer number."
+    new "您希望为 Gradle 分配多少 GB 的内存？\n\n必须为正整数。"
 
     # game/androidstrings.rpy:33
-    old "The RAM size must contain only numbers."
-    new "内存大小应仅含数字。"
+    old "The RAM size must contain only numbers and be positive."
+    new "内存大小应为正整数。"
 
     # game/androidstrings.rpy:34
     old "How would you like your application to be displayed?"
@@ -495,10 +491,6 @@
     # game/choose_theme.rpy:304
     old "Could not change the theme. Perhaps options.rpy was changed too much."
     new "无法更改主题。可能 options.rpy 已被过度修改。"
-
-    # game/choose_theme.rpy:371
-    old "Planetarium"
-    new "Planetarium"
 
     # game/choose_theme.rpy:426
     old "Choose Theme"
@@ -775,10 +767,6 @@
     # game/front_page.rpy:132
     old "Tutorial"
     new "教程"
-
-    # game/front_page.rpy:133
-    old "The Question"
-    new "The Question"
 
     # game/front_page.rpy:149
     old "Active Project"
@@ -1437,8 +1425,8 @@
     new "自定义主题"
 
     # game/preferences.rpy:256
-    old "Information about creating a custom theme can be found {a=https://www.renpy.org/doc/html/skins.html}in the Ren'Py Documentation{/a}."
-    new "有关创建自定义主题的信息可以{a=https://www.renpy.cn/doc/skins.html}在 Ren'Py 文档中找到{/a}。"
+    old "Information about creating a custom theme can be found {a=[skins_url]}in the Ren'Py Documentation{/a}."
+    new "有关创建自定义主题的信息可以{a=[skins_url]}在 Ren'Py 文档中找到{/a}。"
 
     # game/preferences.rpy:273
     old "Install Libraries:"
@@ -1811,3 +1799,213 @@
     # game/web.rpy:348
     old "Before packaging web apps, you'll need to download RenPyWeb, Ren'Py's web support. Would you like to download RenPyWeb now?"
     new "在打包网页应用之前，您需要先下载 Ren'Py 网页支持包 RenPyWeb。您希望现在下载 RenPyWeb 吗？"
+
+    # game/android.rpy:383
+    old "Install SDK"
+    # Automatic translation.
+    new "安装 SDK"
+
+    # game/android.rpy:387
+    old "Generate Keys"
+    # Automatic translation.
+    new "生成密钥"
+
+    # game/androidstrings.rpy:38
+    old "Which app store would you like to support in-app purchasing through?"
+    new "您希望通过哪个应用商店支持应用内购买？"
+
+    # game/androidstrings.rpy:40
+    old "Amazon App Store."
+    new "亚马逊（Amazon）应用商店。"
+
+    # game/androidstrings.rpy:41
+    old "Both, in one app."
+    new "在一个应用程序中同时支持两者。"
+
+    # game/androidstrings.rpy:42
+    old "Neither."
+    new "以上都不需要。"
+
+    # game/androidstrings.rpy:63
+    old "I found an android.keystore file in the rapt directory. Do you want to use this file?"
+    new "我在 RAPT 目录中找到了一个 android.keystore 文件。您希望使用这个文件吗？"
+
+    # game/androidstrings.rpy:66
+    old "\n\nSaying 'No' will prevent key creation."
+    new "\n\n选择“否”将阻止密钥创建。"
+
+    # game/androidstrings.rpy:69
+    old "I found a bundle.keystore file in the rapt directory. Do you want to use this file?"
+    new "我在 RAPT 目录中找到了一个 bundle.keystore 文件。您希望使用这个文件吗？"
+
+    # game/distribute_gui.rpy:231
+    old "(DLC)"
+    new "（DLC）"
+
+    # game/project.rpy:46
+    old "Lint checks your game for potential mistakes, and gives you statistics."
+    new "Lint 工具会检查您的游戏中可能的错误，并为您提供统计数据。"
+
+    # game/web.rpy:485
+    old "Creating package..."
+    new "正在创建应用包……"
+
+    # game/updater.rpy:79
+    old "A nightly build of fixes to the release version of Ren'Py."
+    new "对 Ren'Py 发布版进行修正的每夜构建。"
+
+    # game/android.rpy:455
+    old "Logcat"
+    new "Logcat"
+
+    # game/androidstrings.rpy:37
+    old "Google Play."
+    new "Google Play"
+
+    # game/androidstrings.rpy:46
+    old "I was unable to use javac to compile a test file. If you haven't installed the Java Development Kit yet, please download it from:\n\n{a=https://adoptium.net}https://adoptium.net/{/a}\n\nThe JDK is different from the JRE, so it's possible you have Java without having the JDK. Please install JDK [JDK_REQUIREMENT], and add it to your PATH.\n\nWithout a working JDK, I can't continue."
+    new "我无法使用 javac 编译测试文件。如果您尚未安装 Java 开发工具包，请从以下位置下载：\n\n{a=https://adoptium.net}https://adoptium.net/{/a}\n\nJDK 与 JRE 不同，因此您可能有 Java，但没有 JDK。请安装 JDK [JDK_REQUIREMENT] ，并将其添加到您的 PATH 中。\n\n没有可用的 JDK 的话，我无法继续"
+
+    # game/androidstrings.rpy:47
+    old "The version of Java on your computer does not appear to be JDK [JDK_REQUIREMENT], which is required to build Android apps. If you need to install a newer JDK, you can download it from:\n\n{a=https://adoptium.net/}https://adoptium.net/{/a}, and add it to your PATH.\n\nYou can also set the JAVA_HOME environment variable to use a different version of Java."
+    new "您计算机上的 Java 版本似乎不是构建 Android 应用程序所需的 JDK [JDK_REQUIREMENT] ，如果您需要安装较新的 JDK，可以从以下位置下载：\n\n{a=https://adoptium.net/}https://adoptium.net/{/a}，并将其添加到您的 PATH。\n\n您还可以设置 JAVA_HOME 环境变量以使用不同版本的 Java。"
+
+    # game/choose_directory.rpy:72
+    old "No directory was selected, but one is required."
+    new "未选择目录，但至少需要一个。"
+
+    # game/choose_directory.rpy:80
+    old "The selected directory does not exist."
+    new "所选目录不存在"
+
+    # game/choose_directory.rpy:82
+    old "The selected directory is not writable."
+    new "所选目录不可写"
+
+    # game/choose_theme.rpy:371
+    old "Planetarium"
+    new "Planetarium"
+
+    # game/distribute.rpy:543
+    old "Building distributions failed:\n\nThe project is the Ren'Py Tutorial, which can't be distributed outside of Ren'Py. Consider using The Question as a test project."
+    new "构建发行版失败：\n\n该项目是 Ren'Py 教程，无法在 Ren'Py 之外分发。请考虑使用 The Question 作为测试项目。"
+
+    # game/distribute.rpy:570
+    old "This may be derived from build.name and config.version or build.version."
+    new "这可能源自 build.name 和 config.version 或 build.version。"
+
+    # game/distribute.rpy:1606
+    old "Finishing the [variant] [format] package."
+    new "正在完成 [variant] [format] 包。"
+
+    # game/editor.rpy:185
+    old "Atom is deprecated and its bugs are known for corrupting games, using another editor is recommended."
+    new "Atom 已被弃用，其错误会破坏游戏，建议使用其他编辑器。"
+
+    # game/editor.rpy:214
+    old "JEdit is deprecated, using another editor is recommended."
+    new "JEdit 已弃用，建议使用其他编辑器。"
+
+    # game/editor.rpy:607
+    old "The Atom text editor is no longer supported by its developers. We suggest switching to Visual Studio Code or another editor."
+    new "Atom 文本编辑器不再受其开发人员支持。我们建议切换到 Visual Studio Code 或其他编辑器。"
+
+    # game/editor.rpy:607
+    old "Select editor now."
+    new "现在选择编辑器"
+
+    # game/editor.rpy:607
+    old "Ignore until next launch."
+    new "忽略直到下次启动"
+
+    # game/editor.rpy:607
+    old "Do not ask again."
+    new "别再问了"
+
+    # game/front_page.rpy:133
+    old "The Question"
+    new "The Question"
+
+    # game/navigation.rpy:230
+    old "Show translation files"
+    new "显示翻译文件"
+
+    # game/new_project.rpy:38
+    old "Warning : you are using Ren'Py 7. It is recommended to start new projects using Ren'Py 8 instead."
+    new "警告：您正在使用 Ren'Py 7。建议使用 Ren'Py 8 开始新项目。"
+
+    # game/new_project.rpy:49
+    old "Please select a template project to use."
+    new "请选择要使用的模板项目"
+
+    # game/new_project.rpy:49
+    old "Do not use a template project."
+    new "不要使用模板项目"
+
+    # game/preferences.rpy:95
+    old "Lint"
+    new "Lint"
+
+    # game/preferences.rpy:234
+    old "Game Options:"
+    new "游戏选项："
+
+    # game/preferences.rpy:241
+    old "Skip splashscreen"
+    new "跳过启动画面"
+
+    # game/preferences.rpy:258
+    old "Prefer the web documentation"
+    new "偏好网络文档"
+
+    # game/preferences.rpy:262
+    old "Restore window position"
+    new "恢复窗口位置"
+
+    # game/preferences.rpy:266
+    old "Prefer RPU updates"
+    new "偏好 RPU 更新"
+
+    # game/preferences.rpy:338
+    old "Open projects.txt"
+    new "打开 projects.txt"
+
+    # game/preferences.rpy:364
+    old "Lint toggles:"
+    new "Lint 功能开关："
+
+    # game/preferences.rpy:368
+    old "Check for orphan/obsolete translations"
+    new "检查孤立/过时的翻译"
+
+    # game/preferences.rpy:371
+    old "Check parameters shadowing reserved names"
+    new "检查参数隐藏保留名称"
+
+    # game/preferences.rpy:374
+    old "Print block, word, and character counts by speaking character."
+    new "通过对话字符来打印块、单词和字符计数。"
+
+    # game/preferences.rpy:377
+    old "Unclosed text tags"
+    new "未封闭的文本标签"
+
+    # game/preferences.rpy:380
+    old "Show all unreachable blocks and orphaned translations."
+    new "显示所有无法访问的块和孤立的翻译"
+
+    # game/project.rpy:776
+    old "Splashscreen skipped in launcher preferences."
+    new "在启动器首选项中跳过启动画面。"
+
+    # game/updater.rpy:76
+    old "Nightly Fix"
+    new "每夜修复版"
+
+    # game/updater.rpy:77
+    old "Nightly Fix (Ren'Py 8, Python 3)"
+    new "每夜修复版（Ren'Py 8，Python 3）"
+
+    # game/updater.rpy:78
+    old "Nightly Fix (Ren'Py 7, Python 2)"
+    new "每夜修复版（Ren'Py 7，Python 2）"

@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -86,10 +86,6 @@ class _Config(object):
     def __setstate__(self, data):
         return
 
-    def register(self, name, default, cat=None, help=None): # @ReservedAssignment
-        setattr(self, name, default)
-        _config.help.append((cat, name, help))
-
     def __getattr__(self, name):
         cvars = vars(_config)
 
@@ -99,7 +95,7 @@ class _Config(object):
         return cvars[name]
 
     def __setattr__(self, name, value):
-        cvars = vars(_config)
+        cvars = _config.__dict__
 
         if name not in cvars and renpy.config.locked:
             raise Exception('config.%s is not a known configuration variable.' % (name))
@@ -165,8 +161,10 @@ DynamicDisplayable = renpy.display.layout.DynamicDisplayable
 ConditionSwitch = renpy.display.layout.ConditionSwitch
 ShowingSwitch = renpy.display.layout.ShowingSwitch
 AlphaMask = renpy.display.layout.AlphaMask
+Layer = renpy.display.layout.Layer
 
-Transform = renpy.display.motion.Transform
+Transform = renpy.display.transform.Transform
+Camera = renpy.display.transform.Camera
 
 Animation = anim.Animation
 Movie = renpy.display.video.Movie
@@ -335,13 +333,15 @@ def At(d, *args):
             repeat
 
         image birds = At("birds.png", birds_transform)
-        """
+    """
 
     rv = renpy.easy.displayable(d)
 
     for i in args:
 
         if isinstance(i, renpy.display.motion.Transform):
+            # fails to set the child if the transform has a **kwargs parameter and no child parameter
+            # intended corner-case
             rv = i(child=rv)
         else:
             rv = i(rv)
@@ -393,6 +393,7 @@ adv = ADVCharacter(None,
                 callback=None,
                 type='say',
                 advance=True,
+                retain=False,
 
                 who_style='say_label',
                 what_style='say_dialogue',
@@ -418,7 +419,7 @@ def predict_say(who, what):
 
 def say(who, what, interact=True, *args, **kwargs):
     who = Character(who, kind=adv)
-    who(what, interact=interact, *args, **kwargs)
+    who(what, *args, interact=interact, **kwargs)
 
 
 # Used by renpy.reshow_say and extend.

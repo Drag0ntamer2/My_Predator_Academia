@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -40,6 +40,8 @@ class SpriteCache(renpy.object.Object):
     need to be re-rendered.
     """
 
+    nosave = [ 'st', 'render' ]
+
     # Private Fields:
     #
     # child - The child displayable.
@@ -49,13 +51,14 @@ class SpriteCache(renpy.object.Object):
     #
     # render - The render of child.
     #
-    # If true, then the render is simple enough it can just be appended to
+    # fast - If true, then the render is simple enough it can just be appended to
     # the manager's render's children list.
 
-    child = None # type: renpy.display.core.Displayable|None
-    child_copy = None # type: renpy.display.core.Displayable|None
-    st = 0.0 # type: float|None
+    child = None # type: renpy.display.displayable.Displayable|None
+    child_copy = None # type: renpy.display.displayable.Displayable|None
+    st = None # type: float|None
     render = None # type: renpy.display.render.Render|None
+    fast = False # type: bool
 
 
 class Sprite(renpy.object.Object):
@@ -91,7 +94,7 @@ class Sprite(renpy.object.Object):
     zorder = 0 # type: int|float
 
 
-    child = None # type: renpy.display.core.Displayable|None
+    child = None # type: renpy.display.displayable.Displayable|None
     render = None # type: renpy.display.render.Render|None
     live = True # type: bool
     manager = None # type: SpriteManager|None
@@ -145,7 +148,7 @@ class Sprite(renpy.object.Object):
         self.events = False
 
 
-class SpriteManager(renpy.display.core.Displayable):
+class SpriteManager(renpy.display.displayable.Displayable):
     """
     :doc: sprites class
 
@@ -296,7 +299,7 @@ class SpriteManager(renpy.display.core.Displayable):
                 cst = st - cache.st
 
                 cache.render = r = render(cache.child_copy, width, height, cst, cst)
-                cache.fast = (r.operation == BLIT) and (r.forward is None) and (r.alpha == 1.0) and (r.over == 1.0)
+                cache.fast = (r.forward is None) and (not r.mesh) and (not r.uniforms) and (not r.shaders) and (not r.properties) and (not r.xclipping) and not (r.yclipping)
                 rv.depends_on(r)
 
                 caches.append(cache)
@@ -349,7 +352,7 @@ class SpriteManager(renpy.display.core.Displayable):
         self.children = [ ]
 
 
-class Particles(renpy.display.core.Displayable, renpy.rollback.NoRollback):
+class Particles(renpy.display.displayable.Displayable, renpy.rollback.NoRollback):
     """
     Supports particle motion, using the old API.
     """

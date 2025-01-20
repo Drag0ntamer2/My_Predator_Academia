@@ -2,29 +2,29 @@
 
 While running game code:
   File "game/day_1_home.rpy", line 43, in script
-    show merry sass zoom 50 dissolve
-Exception: Image 'merry sass' does not accept attributes 'zoom 50 dissolve'.
+    show merry sass:
+Exception: Image 'merry' does not accept attributes 'sass'.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
   File "game/day_1_home.rpy", line 43, in script
-    show merry sass zoom 50 dissolve
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1408, in execute
+    show merry sass:
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1117, in execute
     show_imspec(self.imspec, atl=getattr(self, "atl", None))
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1371, in show_imspec
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1080, in show_imspec
     renpy.config.show(name,
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\exports.py", line 686, in show
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\exports\displayexports.py", line 477, in show
     if not base.find_target() and renpy.config.missing_show:
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\image.py", line 414, in find_target
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\image.py", line 421, in find_target
     self.target = target._duplicate(a)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 397, in _duplicate
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\displayable.py", line 249, in _duplicate
     args.extraneous()
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\core.py", line 265, in extraneous
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\displayable.py", line 109, in extraneous
     raise Exception("Image '{}' does not accept attributes '{}'.".format(
-Exception: Image 'merry sass' does not accept attributes 'zoom 50 dissolve'.
+Exception: Image 'merry' does not accept attributes 'sass'.
 
 Windows-10-10.0.22631 AMD64
-Ren'Py 8.0.3.22090809
+Ren'Py 8.3.5.25011801+nightly
 My Predator Academia 2025 1.0
-Thu Jan 16 14:01:43 2025
+Mon Jan 20 12:09:54 2025

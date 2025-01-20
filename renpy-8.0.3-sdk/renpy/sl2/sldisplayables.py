@@ -1,4 +1,4 @@
-# Copyright 2004-2022 Tom Rothamel <pytom@bishoujo.us>
+# Copyright 2004-2025 Tom Rothamel <pytom@bishoujo.us>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -188,6 +188,8 @@ Keyword("pixel_width")
 Keyword("value")
 Keyword("mask")
 Keyword("caret_blink")
+Keyword("multiline")
+Keyword("action")
 Style("caret")
 add(text_properties)
 
@@ -422,6 +424,7 @@ Keyword("selected_insensitive")
 Keyword("auto")
 Keyword("alpha")
 Keyword("cache")
+add(box_properties)
 
 DisplayableParser("hotspot", renpy.ui._hotspot, "hotspot", 1, hotspot=True)
 Positional("spot")
@@ -463,7 +466,7 @@ def sl2add(d, replaces=None, scope=None, **kwargs):
 
     if kwargs:
         rv = Transform(child=d, **kwargs)
-        rv._main = d
+        rv._main = d # type: ignore
 
     return rv
 
@@ -493,6 +496,7 @@ Keyword("drag_offscreen")
 Keyword("clicked")
 Keyword("hovered")
 Keyword("unhovered")
+Keyword("snapped")
 Keyword("focus_mask")
 Keyword("mouse_drop")
 Keyword("alternate")
@@ -511,19 +515,27 @@ DisplayableParser("on", renpy.display.behavior.OnEvent, None, 0)
 Positional("event")
 Keyword("action")
 
-
 DisplayableParser("nearrect", renpy.display.layout.NearRect, "default", 1, replaces=True)
 Keyword("rect")
 Keyword("focus")
 Keyword("prefer_top")
-add(position_properties)
+Keyword("preferred_side")
+Keyword("invert_offsets")
 
 DisplayableParser("dismiss", renpy.display.behavior.DismissBehavior , "default", 0)
 Keyword("action")
 Keyword("modal")
+Keyword("keysym")
 Style("alt")
 Style("sound")
-Style("debug")
+
+DisplayableParser("areapicker", renpy.display.behavior.AreaPicker, "default", 1)
+Keyword("rows")
+Keyword("cols")
+Keyword("position")
+Keyword("changed")
+Keyword("finished")
+Keyword("persist")
 
 
 # Ensure that Parsers are no longer added automatically.
