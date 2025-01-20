@@ -40,15 +40,11 @@ label Day1_get_up:
     scene kitchen day at fill_screen with dissolve
     "You make your way into the kitchen, which is connected to the living room on the right side by an arched entryway (one of those door-shaped openings without doors in them), and slip some toast into the toaster."
     "While it's toasting, your sister walks into the room, pajamas on, and hair in a mess."
-    show merry sass:
-        zoom 5 
-    with dissolve
+    show merry sass at centerZoom5 with dissolve
     "Merry, despite being a rather energetic girl, was certainly not a morning person, and generally was never fully functional 'till an hour or two after waking up."
     "Her hair being a mess wasn't exactly anything new either, she never really took remotely as much care in looking pristine as a typical girl might, she was something of a tomboy in that sense."
     "Groggily waltzing in, and still half asleep, Merry drops like a pillow at the kitchen table, slumped over with her upper body lain against the tabletop."
     "She speaks up with a hint of a whine,"
-    # $ renpy.set_tag_attributes("merry morning tired")
-    # $ renpy.say(mer.c, "Jessieee... Gimme some toast and OJ...")
     mer morning tired "Jessieee... Gimme some toast and OJ..."
     "She lifts both arms up, making grabby motions with her hands in the air at you, clearly accentuating her desire for food and fruit juice."
     mer "Cmoonnn, hurry up already or I'll settle for you..."
@@ -128,12 +124,10 @@ label Day1_accept_merrys_offer_to_eat_you:
     scene mouth at fill_screen with dissolve
     "As she leans in, you see nothing but an abyss before you."
     scene kitchen day at fill_screen with dissolve
-    show merry sass:
-        zoom 5
-    with dissolve
+    show merry sass at centerZoom5 with dissolve
     "Just before you begin your journey to your sister's waistline, however, her lips snap shut less than an inch in front of your face."
     "She kisses you on the forehead before letting off you with a impish smile,"
-    mer "Gosh that 5 dollars might be sooner in my future than I thought~" 
+    mer morning sass "Gosh that 5 dollars might be sooner in my future than I thought~" 
     "She grins devilishly at you, before spinning something on her fingertip, and as she stopps it and grips it properly, you see that it's your wallet..."
     $ Jessie_Has_His_Wallet = False
     mer "I'll hold onto this to make sure I get my Five bucks undigested when you inevitably end up padding out some chicks bra."

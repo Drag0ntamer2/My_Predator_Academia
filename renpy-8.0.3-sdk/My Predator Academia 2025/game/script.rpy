@@ -34,6 +34,10 @@ transform left:
 transform right:
     xpos 0.75
     ypos 0.0
+transform centerZoom5:
+    xpos 0.5
+    ypos 0.0
+    zoom 5
 
 
 

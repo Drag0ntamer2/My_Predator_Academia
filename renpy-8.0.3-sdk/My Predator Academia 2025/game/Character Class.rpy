@@ -25,7 +25,7 @@
             elif len(Name) == 3:
                 self.fullName = Name[0] + " " + Name[1] + " " + Name[2]
 # Misc fields ----------------------------------------------------------------------------------------------------------
-            self.c = Character(self.name, who_color = color, what_color = color, image = self.name.lower())
+            self.c = Character(self.name, who_color = color, what_color = color, image = self.name)
             self.color = color
             self.exampts = 0
             self.face = f"{self.name.lower()} {face}" if face != "Default" else face 

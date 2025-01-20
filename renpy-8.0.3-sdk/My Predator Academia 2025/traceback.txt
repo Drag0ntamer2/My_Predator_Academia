@@ -2,14 +2,14 @@
 
 While running game code:
   File "game/day_1_home.rpy", line 43, in script
-    show merry sass:
+    show merry sass at centerZoom5 with dissolve
 Exception: Image 'merry' does not accept attributes 'sass'.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
   File "game/day_1_home.rpy", line 43, in script
-    show merry sass:
+    show merry sass at centerZoom5 with dissolve
   File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1117, in execute
     show_imspec(self.imspec, atl=getattr(self, "atl", None))
   File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1080, in show_imspec
@@ -27,4 +27,4 @@ Exception: Image 'merry' does not accept attributes 'sass'.
 Windows-10-10.0.22631 AMD64
 Ren'Py 8.3.5.25011801+nightly
 My Predator Academia 2025 1.0
-Mon Jan 20 12:09:54 2025
+Mon Jan 20 12:21:16 2025
