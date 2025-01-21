@@ -1,7 +1,4 @@
 ﻿init -9998 python:
-    intvert = True
-    outvert = False
-    socialStance = intvert
     class Char:
         def __init__(self, name, sex, abrev="", altName="", color="#ffffff", health=15, stam=10, strength=1,stomachHealth=0,
             acidStrength=0, stomachSize=0, size=1, acidResistance=1, acidFillRate=0,dexterity=1, constitution=1, lewdness=1,
@@ -76,7 +73,7 @@
             self.whoBoobs = None            # equivilent of 'whoInside' for boob jobs
             self.sexSkill = sexSkill
             return
-
+# Methods ----------------------------------------------------------------------------------------------------------
         def addDis(self, amt):
             if amt == 0:
                 return
@@ -175,39 +172,6 @@
                     self.loseStam(self.maxStam * 0.25)
             else:
                 self.loseStam(self.maxStam * 0.125)
-
-
-        def chooseAction(self):
-
-            num = renpy.random.randint(0,100)
-            if num < 50:
-                actionCost = 40 + diffDamage * 3
-                if self.stam < actionCost:
-                    return "rest"
-                else:
-                    return "shake"
-            elif num < 70:
-                actionCost = 30 + diffDamage * 3
-                if self.stam < actionCost:
-                    actionCost = 15 + diffDamage * 3
-                    if self.stam < actionCost:
-                        return "rest"
-                    else:
-                        return "squeeze"
-                else:
-                    return "crush"
-            elif num < 95:
-                actionCost = 15 + diffDamage * 2
-                if self.stam < actionCost:
-                    return "rest"
-                else:
-                    return "massage"
-            else:
-                actionCost = 10 + diffDamage * 2
-                if self.stam < actionCost:
-                    return "rest"
-                else:
-                    return "try to pleasure prey"
         
         def faceProfile(self):
             personalFace = f"images/faces/{self.name}/{self.profileFace}.png" 
