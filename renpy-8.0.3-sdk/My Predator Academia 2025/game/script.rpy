@@ -6,7 +6,7 @@ default Tit_Fishing_Item_Depth = 0
 default Jessie_Has_His_Wallet = False
 
 # Vore Minigame
-default minigame_active = False
+default vore_active = False
 default view = "outer"
 default preyList = []
 default pred = None
@@ -17,8 +17,12 @@ default maxComp = 50
 default predBars = [True, True, True, True, True]
 default preyBars = [True, True, True, True]
 
-
-
+# Sex Minigame
+default sexParticipants = []
+default player = Jes  # some sex scenes may be controling a different character
+default sexPhase = "foreplay"
+default sex_active = False
+default sexBars = [True, True, False, True]
 
 
 # Image style templates
@@ -62,7 +66,7 @@ label start:
     menu:
         "start game":
             jump Day1_start
-        "test vore minigame":
+        "test vore vore":
             jump digestionTesting
 
 

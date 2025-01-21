@@ -1,10 +1,10 @@
-﻿label digestion_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], PreyBars = predBars = [ True, True, True, True ]):
-label minigame_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], PreyBars = predBars = [ True, True, True, True ]):
+﻿label digestion_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], PreyBars = predBars = [ True, True, True, True, False ]):
+label vore_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], PreyBars = predBars = [ True, True, True, True, False]):
     python:
-        preyList = prey_list                                        # List of prey involved in the minigame
-        pred = Pred                                                 # Single pred participating in the minigame
+        preyList = prey_list                                        # List of prey involved in the vore
+        pred = Pred                                                 # Single pred participating in the vore
         predName = pred.name                                        # Store pred's name for display
-        minigame_active = True                                      # Flag to indicate minigame is active
+        vore_active = True                                      # Flag to indicate vore is active
 
         predBars = PredBars
         preyBars = PreyBars
@@ -57,12 +57,16 @@ label prey_vore_action(prey, preyAction="rest", target = None):
         elif preyAction == "Pleasure Self":
             actionCost = 5 + diff
             if prey.stam >= actionCost:
-                prey.addArousal(prey.lewdness * prey.dex * 0.1)     # Increase pred Arousal
+                prey.addArousal(prey.lewdness * prey.dex * 0.1)     # Increase prey Arousal
+                if pred.lewdness >= 4:
+                    pred.addArousal(prey.dex * pred.lewdness * 0.1) # Increase pred Arousal
 
         elif preyAction == "Try to pleasure pred":
             actionCost = 10 + diff * 2
             if prey.stam >= actionCost:
                 pred.addArousal(prey.dex * pred.lewdness * 0.1)     # Increase pred Arousal
+                if prey.lewdness >= 4:
+                    prey.addArousal(prey.dex * prey.lewdness * 0.1) # Increase prey Arousal
 
         elif preyAction == "Pleasure Fellow Prey":
             actionCost = 5 + diff
@@ -105,7 +109,7 @@ label prey_vore_action(prey, preyAction="rest", target = None):
             preyList = newPreyList
 
     if len(preyList) == 0:
-        $ minigame_active = False                                     # Flag to indicate minigame is no longer active
+        $ vore_active = False                                     # Flag to indicate vore is no longer active
     return preyAction
 
 

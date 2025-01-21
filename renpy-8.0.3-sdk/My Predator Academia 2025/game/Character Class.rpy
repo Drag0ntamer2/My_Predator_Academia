@@ -5,7 +5,7 @@
     class Char:
         def __init__(self, name, sex, abrev="", altName="", color="#ffffff", health=15, stam=10, strength=1,stomachHealth=0,
             acidStrength=0, stomachSize=0, size=1, acidResistance=1, acidFillRate=0,dexterity=1, constitution=1, lewdness=1,
-            arousalMax = 50, choiceWeights = 0, face = "Default", profile = None):
+            arousalMax = 50, choiceWeights = 0, face = "Default", profile = None, sensitivity = [0,0,0,0,0,0,0,0], sexSkill = 1):
 # Name fields ----------------------------------------------------------------------------------------------------------
             if name == "EMPTY CHAR":
                 self.name = name
@@ -60,6 +60,21 @@
             self.inStomach = False          # is this character currently in a stomach
             self.alive = True               # is this character currently alive
             self.bracing = False            # is this character currently bracing
+            self.boobSen = sensitivity[0]   # sensitivity of the boobs
+            self.genSen = sensitivity[1]    # sensitivity of the genitals
+            self.lipSen = sensitivity[2]    # sensitivity of the lips
+            self.buttSen = sensitivity[3]   # sensitivity of the butt
+            self.thighSen = sensitivity[4]  # sensitivity of the thighs
+            self.analSen = sensitivity[5]   # sensitivity of the butt hole
+            self.inside = False             # if male, true if penis inside a pussy, if female, true if has a penis in her pussy
+            self.whoInside = None           # who is the interaction partner for the 'inside' stat
+            self.blow = False               # equivilent of 'inside' for blow jobs              
+            self.whoBlow = None             # equivilent of 'whoInside' for blow jobs              
+            self.anal = False               # equivilent of 'inside' for anal
+            self.whoAnal = None             # equivilent of 'whoInside' for anal             
+            self.boobjob = False            # equivilent of 'inside' for boob jobs
+            self.whoBoobs = None            # equivilent of 'whoInside' for boob jobs
+            self.sexSkill = sexSkill
             return
 
         def addDis(self, amt):
@@ -89,7 +104,7 @@
         def addArousal(self, amt):
             self.arousal += amt + (0.1 * self.arousal)
             if self.arousal >= self.arousalMax:
-                #self.arousal = 0
+                self.cum()
                 return True     # reached climax
             return False        # did not reach climax
 
@@ -98,7 +113,7 @@
             return
 
         def addHp(self, amt):
-            self.hp = min(self.maxHp, self.hp + amt)
+            self.hp = max(0, min(self.maxHp, self.hp + amt))
             return
 
         def loseHp(self, amt):
@@ -148,6 +163,18 @@
             self.inStomach = False          # is this character currently in a stomach
             self.alive = True               # is this character currently alive
             self.bracing = False            # is this character currently bracing
+
+        def cum(self):
+            self.arousal = 0
+            if self.sex == "male":
+                end = renpy.random.randint(0,self.sexSkill)
+                if end == 0:
+                    self.loseStam(self.maxStam * 0.75)
+                    self.sexCooldown = 50 / self.sexSkill
+                else:
+                    self.loseStam(self.maxStam * 0.25)
+            else:
+                self.loseStam(self.maxStam * 0.125)
 
 
         def chooseAction(self):

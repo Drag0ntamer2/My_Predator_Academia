@@ -78,24 +78,36 @@ python early:
 
         
     
-
     def parse_character(lexer):
         """
-        Parse the character abbreviation, field name, and changed value from the script.
+        Parse the character abbreviation, field name, action, and value from the script.
         """
-        abrev = lexer.word()  # Match a word
-        
-        # Parse the field name (e.g., stamina, hp, etc.)
-        field_name = lexer.word()  # Match a word
+        # Parse the character abbreviation
+        abrev = lexer.word()
+        if abrev is None:
+            lexer.error("Expected a character abbreviation (e.g., 'jes').")
+
+        # Parse the field name
+        field_name = lexer.word()
         if field_name is None:
             lexer.error("Expected a field name (e.g., stamina, hp).")
 
-        # Parse the changed value (e.g., +40, -20)
-        changed_value = lexer.float()  # Match a floating-point number
-        if changed_value is None:
+        # Parse the rest of the line
+        temp = lexer.rest().strip()  # Remove leading/trailing whitespace
+
+        # Extract the action (first character of temp) and remaining value
+        action = temp[0]  # First character is the action ('=', '+', or '-')
+        if action not in "=+-":
+            lexer.error("Expected an action ('=', '+', or '-').")
+
+        # Parse the numeric value (remaining part of the line)
+        try:
+            changed_value = float(temp[1:].strip())  # Convert the rest to a float
+        except ValueError:
             lexer.error("Expected a numeric value (e.g., -40, +20).")
 
-        return abrev, field_name, float(changed_value)  # Return abbreviation, field name, and value
+        return abrev, field_name, action, changed_value
+
 
 
 
@@ -103,41 +115,48 @@ python early:
         """
         Execute the parsed character statement, handling field updates dynamically.
         """
-        abrev, field_name, changed_value = parsed_object
+        abrev, field_name, action, changed_value = parsed_object
 
         # Resolve the character from the dictionary
         char_obj = characters.get(abrev, None)
         if not char_obj:
             raise Exception(f"Character '{abrev}' is not defined.")
 
-        # Map field names to methods dynamically
-        method_name = None
-        if field_name == "stamina":
-            method_name = "addStam" if changed_value > 0 else "loseStam"
-        elif field_name == "hp":
-            method_name = "addHp" if changed_value > 0 else "loseHp"
-        elif field_name == "dis":
-            method_name = "addDis" if changed_value > 0 else "disDecay"
-        elif field_name == "arousal":
-            method_name = "addArousal" if changed_value > 0 else "arousalDecay"
-        elif field_name == "compression":
-            method_name = "addComp" if changed_value > 0 else "loseComp"
-        elif field_name == "shp":
-            method_name = "addShp" if changed_value > 0 else "loseShp"
-        else:
-            raise Exception(f"Unsupported field name: '{field_name}'.")
-
-        # Dynamically call the method on the character object
         try:
-            method = getattr(char_obj, method_name)  # Get the method dynamically
-            method(abs(changed_value))  # Call the method with the absolute value
-        except AttributeError:
-            raise Exception(f"Method '{method_name}' not found on character '{abrev}'.")
+            if action in "+-":
+                # Handle additive/subtractive updates
+                method_name = None
+                if field_name == "stamina":
+                    method_name = "addStam" if changed_value > 0 else "loseStam"
+                elif field_name == "hp":
+                    method_name = "addHp" if changed_value > 0 else "loseHp"
+                elif field_name == "dis":
+                    method_name = "addDis" if changed_value > 0 else "disDecay"
+                elif field_name == "arousal":
+                    method_name = "addArousal" if changed_value > 0 else "arousalDecay"
+                elif field_name == "compression":
+                    method_name = "addComp" if changed_value > 0 else "loseComp"
+                elif field_name == "shp":
+                    method_name = "addShp" if changed_value > 0 else "loseShp"
+                else:
+                    raise Exception(f"Unsupported field name: '{field_name}'.")
+
+                # Dynamically invoke the method
+                method = getattr(char_obj, method_name)
+                method(abs(changed_value))  # Pass the absolute value to the method
+
+            elif action == '=':
+                # Handle assignment
+                if hasattr(char_obj, field_name):
+                    setattr(char_obj, field_name, changed_value)  # Directly set the field value
+                else:
+                    raise Exception(f"Field '{field_name}' does not exist on character '{abrev}'.")
+
+        except AttributeError as e:
+            raise Exception(f"Error processing '{field_name}': {str(e)}")
 
 
-
-
-    # Register the custom statement for specific characters
+    # Register the custom statement
     renpy.register_statement(
         name="data",
         parse=parse_character,

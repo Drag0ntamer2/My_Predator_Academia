@@ -60,6 +60,21 @@
                 return True
         return False
 
+    
+    def splitList(List):
+        left = False
+        L = []
+        R = []
+        for char in List:
+            if left:
+                L.append(char)
+            else:
+                R.append(char)
+            left = not left
+        return [L, R]
+
+
+
 
 label acidDamage(prey):
     $ damage = pred.aStren * pred.aLev
@@ -70,3 +85,5 @@ label acidDamage(prey):
             $ prey.loseHp(damage + (0.1 * pred.arousal))
 
     return
+
+

@@ -45,7 +45,7 @@ label Day1_get_up:
     "Her hair being a mess wasn't exactly anything new either, she never really took remotely as much care in looking pristine as a typical girl might, she was something of a tomboy in that sense."
     "Groggily waltzing in, and still half asleep, Merry drops like a pillow at the kitchen table, slumped over with her upper body lain against the tabletop."
     "She speaks up with a hint of a whine,"
-    mer morning tired "Jessieee... Gimme some toast and OJ..."
+    mer morning "Jessieee... Gimme some toast and OJ..."
     "She lifts both arms up, making grabby motions with her hands in the air at you, clearly accentuating her desire for food and fruit juice."
     mer "Cmoonnn, hurry up already or I'll settle for you..."
     menu:
@@ -79,7 +79,7 @@ label Day1_make_merry_breakfast:
     jes "There'd be plenty of cover, and I could find someone else who's quirk is not combat oriented, show some creative tactics, and I'll have a real shot at getting in!"
     "She stares at you, maintaining her unimpressed expression as the toast slowly disappeared between her lips like a CD into a disc reader."
     "After a second, she smiles smugly and begins to speak,"
-    mer smug "Five bucks says you don't even make it {i}to{/i} the test solid."
+    mer morning smug "Five bucks says you don't even make it {i}to{/i} the test solid."
     mer "I bet you'll be titty mush before you make it onto school grounds." 
     mer "Anyways, are you sure you're even cut out for being a hero?"
     mer "I've seen videos of them at work online, and they go up against some freaky motherfuckers..." 
@@ -127,11 +127,11 @@ label Day1_accept_merrys_offer_to_eat_you:
     show merry sass at centerZoom5 with dissolve
     "Just before you begin your journey to your sister's waistline, however, her lips snap shut less than an inch in front of your face."
     "She kisses you on the forehead before letting off you with a impish smile,"
-    mer pervy grin "Gosh that 5 dollars might be sooner in my future than I thought~" 
+    mer morning pervy grin "Gosh that 5 dollars might be sooner in my future than I thought~" 
     "She grins devilishly at you, before spinning something on her fingertip, and as she stopps it and grips it properly, you see that it's your wallet..."
     $ Jessie_Has_His_Wallet = False
     mer "I'll hold onto this to make sure I get my Five bucks undigested when you inevitably end up padding out some chicks bra."
-    mer "Oh! But before she liquifies you make sure to get her number and send it to me~"
+    mer morning excited "Oh! But before she liquifies you make sure to get her number and send it to me~"
     "While it might have seemed that last part was a joke, she definitely meant it, Merry was about as straight as a curly fry."
     menu:
         "Wha-? Hey! Give it back!":
@@ -148,13 +148,13 @@ label Day1_fight_merry_for_wallet:
     "It takes a few seconds for the shock to wear off, but when it does, you immediately grab for your wallet."
     jes "Hey, that's mine! I need to get some things at the store today!"
     "She holds your head away with an outstreatched arm as she moves the wallet as far away from you as possible, and sticks out her tongue to tease you"
-    mer "Blehhhh, No chance, dork! If you needed to buy anything important you wouldn't have tried to soften up my tits~"
+    mer morning smug "Blehhhh, No chance, dork! If you needed to buy anything important you wouldn't have tried to soften up my tits~"
     "She briefly lets go of your head, causing you to fall forwards, only to be caught in a headlock as she presses your face into the side of her tits."
-    mer "You wanna be part of these, huh? Dork~?"
+    mer morning pervy grin "You wanna be part of these, huh? Dork~?"
     mer "Is that important thing you needed to buy a new bra for me~?"
     "Holding the hand with the wallet way up in the air, far from your reach, she gasps in sarcastic surprise as she continues,"
-    mer "Oh! That must be why you wanted me to churn you, huh?"
-    mer "You haven't even bought the bra yet dummy~ Really put the cart before the horse on that one, huh?"
+    mer morning excited "Oh! That must be why you wanted me to churn you, huh?"
+    mer morning pervy grin "You haven't even bought the bra yet dummy~ Really put the cart before the horse on that one, huh?"
     "She shoves you back against the wall before stuffing your wallet deep into her cleavage."
     "You won't be getting that back any time soon, unless..."
     menu:
@@ -171,9 +171,9 @@ label Day1_fight_dirty_to_get_wallet:
     "As you're about to reach in and grab it, you trip."
     "Whether it was your own mistake, or something she did to you, you don't know, but the result is the same."
     "Instead of grabbing your wallet with your hands, you end up slamming your face directly into her cleavage!"
-    $ Tit_Fishing_Item_Depth = 5
-    call minigame_start([Jes], Mer, [False, True, False, True, False ], [False, True, False, True] )
+    data mer hp = 20
     data jes arousal +0.5    # add 0.5 to Jessie's arousal
+    call sex_start([Jes, Mer], objective = "wallet")
     "Merry could have stepped out of the way, she chose not to."
     "You fall right smack into Merry's fat rack, and before you can pull out your head, she puts her hand over it to hold it down, thus you find it difficult to retreat from her soft canyon."
     data mer arousal +0.5
@@ -184,9 +184,10 @@ label Day1_fight_dirty_to_get_wallet:
     data jes arousal +0.5
     menu:
         "Commit (Search, %%chance of success)":
-            random:
+            call sex_action(Jes, zone='boobs', action='search', target=Mer, sucChance=5)
+            if _return:
                 jump Day1_tit_fishing_for_wallet_with_merry_success
-                weight 5
+            else:
                 jump Day1_tit_fishing_for_wallet_with_merry_fail
         "Screw it, I'll just let her have it (Try to break free, higher %%chance of success)":
             random:
@@ -200,9 +201,7 @@ label Day1_tit_fishing_for_wallet_with_merry_fail:
     "You fumble in your attempt to fish for your wallet with your mouth."
     "In response, Merry jiggles her chest, causing you to sink in even deeper."
     "She clearly is enjoying herself as she makes motorboat noises and teasing you,"
-    mer "I think you nearly got it that time~ Keep it up you might just get it back~" 
-    data mer arousal +0.5
-    data jes arousal +1
+    mer morning pervy grin "I think you nearly got it that time~ Keep it up you might just get it back~" 
     "The jiggling pushes the wallet up a little more into view, you can see it more clearly."
     $ Tit_Fishing_Item_Depth -= 1
     menu:
@@ -228,8 +227,6 @@ label Day1_tit_fishing_for_wallet_with_merry_play_with_boobs:
     "And, since she was basically asking for it at this point, you decide to let yourself have some fun."
     "Of course, you still try to get your wallet back, but with less focus."
     "You push your face slightly deeper and playfully snappe your mouth for your wallet, however, you miss, ending up with nothing but skin"
-    data jes arousal +0.6
-    data jes stamina -10
-    data mer arousal +0.4
+    call sex_action(Jes, "Pleasure Self")
     "As you begin to have some fun with your sister you begin to slowly sweat a little as your growing thirst and lust begin to take hold."
     "A small shiver runs down your back and you feel some sweat forming as well…"

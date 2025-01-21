@@ -1,30 +1,22 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/day_1_home.rpy", line 43, in script
-    show merry sass at centerZoom5 with dissolve
-Exception: Image 'merry' does not accept attributes 'sass'.
+  File "game/day_1_home.rpy", line 196, in script
+    jump Day1_escape_tit_fishing_for_wallet_with_merry_fail
+ScriptError: could not find label 'Day1_escape_tit_fishing_for_wallet_with_merry_fail'.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/day_1_home.rpy", line 43, in script
-    show merry sass at centerZoom5 with dissolve
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1117, in execute
-    show_imspec(self.imspec, atl=getattr(self, "atl", None))
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1080, in show_imspec
-    renpy.config.show(name,
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\exports\displayexports.py", line 477, in show
-    if not base.find_target() and renpy.config.missing_show:
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\image.py", line 421, in find_target
-    self.target = target._duplicate(a)
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\displayable.py", line 249, in _duplicate
-    args.extraneous()
-  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\display\displayable.py", line 109, in extraneous
-    raise Exception("Image '{}' does not accept attributes '{}'.".format(
-Exception: Image 'merry' does not accept attributes 'sass'.
+  File "game/day_1_home.rpy", line 196, in script
+    jump Day1_escape_tit_fishing_for_wallet_with_merry_fail
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1705, in execute
+    rv = renpy.game.script.lookup(target)
+  File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\script.py", line 1103, in lookup
+    raise ScriptError("could not find label '%s'." % str(original))
+ScriptError: could not find label 'Day1_escape_tit_fishing_for_wallet_with_merry_fail'.
 
 Windows-10-10.0.22631 AMD64
 Ren'Py 8.3.5.25011801+nightly
 My Predator Academia 2025 1.0
-Mon Jan 20 12:21:16 2025
+Tue Jan 21 16:11:58 2025
