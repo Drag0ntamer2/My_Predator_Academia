@@ -79,7 +79,7 @@ label Day1_make_merry_breakfast:
     jes "There'd be plenty of cover, and I could find someone else who's quirk is not combat oriented, show some creative tactics, and I'll have a real shot at getting in!"
     "She stares at you, maintaining her unimpressed expression as the toast slowly disappeared between her lips like a CD into a disc reader."
     "After a second, she smiles smugly and begins to speak,"
-    mer "Five bucks says you don't even make it {i}to{/i} the test solid."
+    mer smug "Five bucks says you don't even make it {i}to{/i} the test solid."
     mer "I bet you'll be titty mush before you make it onto school grounds." 
     mer "Anyways, are you sure you're even cut out for being a hero?"
     mer "I've seen videos of them at work online, and they go up against some freaky motherfuckers..." 
@@ -127,7 +127,7 @@ label Day1_accept_merrys_offer_to_eat_you:
     show merry sass at centerZoom5 with dissolve
     "Just before you begin your journey to your sister's waistline, however, her lips snap shut less than an inch in front of your face."
     "She kisses you on the forehead before letting off you with a impish smile,"
-    mer morning sass "Gosh that 5 dollars might be sooner in my future than I thought~" 
+    mer pervy grin "Gosh that 5 dollars might be sooner in my future than I thought~" 
     "She grins devilishly at you, before spinning something on her fingertip, and as she stopps it and grips it properly, you see that it's your wallet..."
     $ Jessie_Has_His_Wallet = False
     mer "I'll hold onto this to make sure I get my Five bucks undigested when you inevitably end up padding out some chicks bra."
