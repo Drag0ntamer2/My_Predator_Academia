@@ -47,7 +47,7 @@ label Day1_get_up:
     "She speaks up with a hint of a whine,"
     mer morning tired "Jessieee... Gimme some toast and OJ..."
     "She lifts both arms up, making grabby motions with her hands in the air at you, clearly accentuating her desire for food and fruit juice."
-    mer morning tired question "Cmoonnn, hurry up already or I'll settle for you..."
+    mer "Cmoonnn, hurry up already or I'll settle for you..."
     menu:
         "Give In & Feed The Brat.":
             jump Day1_make_merry_breakfast
@@ -67,7 +67,7 @@ label Day1_make_merry_breakfast:
     "Merry didn't even acknowledge the juice, her eyes still shut as she munched on the toast, not even using her hands to hold it, simply chewing with the thing still protruding out her mouth, causing the thing to flop up and down in rhythm with her jaw."
     "You hear what vaguely sounds like a 'thank you' from her stuffed face, but frankly it was totally unintelligible amongst the happy munching 'Mmm' noises she was making."
     "After a few seconds of chewing, she lazily opens her eyes halfway as she looks at you, mouth still full of toast," 
-    mer "O, rh ou ona oo aht aka-emmy hing e..?"
+    mer morning savouring "O, rh ou ona oo aht aka-emmy hing e..?"
     "totally unintelligible... Typical Merry..."    
     "You take a minute to try to parse through what she was trying to say."
     "Eventually you land on it being something along the lines of 'So, are you gonna do that academy thingy?'"
