@@ -12,7 +12,7 @@ label sex_start(participant_list, Player = Jes, statBars = [ False, True, False,
 
 
 
-label sex_action(actor, zone="lips", action="rest", target=None, sucChance = 5):
+label sex_action(actor, zone="lips", action="rest", target=None, sucChance = 5, progressStor=None):
     $ name = actor.name                                          # Get actor's name for display
 
     "[name] used {b}[action]{/b}"                                       # reveal action used by actor
@@ -27,34 +27,44 @@ label sex_action(actor, zone="lips", action="rest", target=None, sucChance = 5):
             selfAct = True
         else:
             selfAct = False
-
+        if not progressStor:
+            progressStor = target
 
         success = renpy.random.randint(1,sucChance)
 
         if action in ['search'] and success == 1:
             progress = actor.dex
+        elif action in ['pull out']: 
+            progress = target.dex * -1
+            actionCost = 10 + diff
         else:
             progress = target.dex * -1
             
         
-        if zone in [ "tits", "boobs" ] and target.sex == "female":
+        if zone in [ "tits", "boobs" ]:
             actionCost = 15 + diff
-            if action in ["search", 'find']: 
-                arousal = 2.5
-            elif action in ["caress", "kiss"]: 
-                arousal = 5
-            elif action in ["lick", "grope"]: 
-                arousal = 6
-            elif action in ["suck", "bite"]:
-                arousal = 7
-            elif action == "pump" and actor.boobjob: 
-                arousal = 10
-            elif action == "insert" and actor.sex == "male" and not selfAct:
-                actor.boobJob = True
-                actor.whoBoobs = target
-                target.boobJob = True
-                target.whoBoobs = actor
-                arousal = 5
+            if target.sex == "female":
+                if action in ["search", 'find']: 
+                    arousal = 2.5
+                elif action in ["caress", "kiss"]: 
+                    arousal = 5
+                elif action in ["lick", "grope"]: 
+                    arousal = 6
+                elif action in ["suck", "bite"]:
+                    arousal = 7
+                elif action == "pump" and actor.boobjob: 
+                    arousal = 10
+                elif action == "insert" and actor.sex == "male" and not selfAct:
+                    actor.boobJob = True
+                    actor.whoBoobs = target
+                    target.boobJob = True
+                    target.whoBoobs = actor
+                    arousal = 5
+            else:
+                if action in ['smother face']:
+                    arousal = 5
+                elif action == "pump" and actor.boobjob: 
+                    arousal = 10
         elif zone in [ "lips" ]:
             actionCost = 15 + diff
             if action in ["kiss"]: 
@@ -91,7 +101,7 @@ label sex_action(actor, zone="lips", action="rest", target=None, sucChance = 5):
         actor.loseStam(actionCost)                                      # apply stamina cost
         actor.addArousal((arousal * actor.lewdness * actor.dex) / 3)
         if not selfAct:
-            target.addArousal((arousal * target.lewdness * actor.dex) / 3)
-        target.addHp(progress)
+            target.addArousal(((0.5 * arousal) * target.lewdness * actor.dex) / 3)
+        progressStor.addHp(progress)
             
-    return action in ['search'] and success == 1
+    return progressStor.hp <= 0

@@ -2,8 +2,7 @@
 #### variables ###########################################################
 
 default loop = 0
-default Tit_Fishing_Item_Depth = 0
-default Jessie_Has_His_Wallet = False
+
 
 # Vore Minigame
 default vore_active = False
@@ -24,6 +23,11 @@ default sexPhase = "foreplay"
 default sex_active = False
 default sexBars = [True, True, False, True]
 
+# Scene Specific Vars
+# Day 1: 
+# Jessie & Merry booby time in the morning
+default Times_Played_With_Boobs = 0
+default Jessie_Has_His_Wallet = False
 
 # Image style templates
 transform fill_screen:

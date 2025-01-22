@@ -2,21 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/day_1_home.rpy", line 174: Expected an action ('=' or '+/-').
-    data mer hp = 20
-               ^
-
-File "game/day_1_home.rpy", line 175: Expected an action ('=' or '+/-').
-    data jes arousal +0.5    
-                    ^
-
-File "game/day_1_home.rpy", line 179: Expected an action ('=' or '+/-').
-    data mer arousal +0.5
-                    ^
-
-File "game/day_1_home.rpy", line 184: Expected an action ('=' or '+/-').
-    data jes arousal +0.5
-                    ^
+File "game/screens.rpy", line 109: 'background' is not a keyword argument or valid child of the fixed statement.
+    background "#00000000"
+              ^
 
 Ren'Py Version: Ren'Py 8.3.5.25011801+nightly
-Tue Jan 21 16:07:15 2025
+Wed Jan 22 11:41:16 2025

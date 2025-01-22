@@ -172,8 +172,8 @@ label Day1_fight_dirty_to_get_wallet:
     "Whether it was your own mistake, or something she did to you, you don't know, but the result is the same."
     "Instead of grabbing your wallet with your hands, you end up slamming your face directly into her cleavage!"
     data mer hp = 20
-    data jes arousal +0.5    # add 0.5 to Jessie's arousal
     call sex_start([Jes, Mer], objective = "wallet")
+    jes "[Jes.arousal]"
     "Merry could have stepped out of the way, she chose not to."
     "You fall right smack into Merry's fat rack, and before you can pull out your head, she puts her hand over it to hold it down, thus you find it difficult to retreat from her soft canyon."
     data mer arousal +0.5
@@ -182,51 +182,72 @@ label Day1_fight_dirty_to_get_wallet:
     mer "Well if you want it back that bad, let's play bobbing for wallets, go on~"
     "She jiggles her chest a little, which only serves to sink your face in more."
     data jes arousal +0.5
+
+
+label Day1_tit_fishing_for_wallet_with_merry_menu:
     menu:
-        "Commit (Search, %%chance of success)":
+        "Commit":
+            jes "well... I'm in too deep now... might as well go for it."
             call sex_action(Jes, zone='boobs', action='search', target=Mer, sucChance=5)
             if _return:
                 jump Day1_tit_fishing_for_wallet_with_merry_success
             else:
-                jump Day1_tit_fishing_for_wallet_with_merry_fail
-        "Screw it, I'll just let her have it (Try to break free, higher %%chance of success)":
+                jump Day1_tit_fishing_for_wallet_with_merry_progress
+        "Go Back" if Times_Played_With_Boobs <= 1:
+            call sex_action(Jes, zone='boobs', action='pull out', target=Mer, sucChance=5)
             random:
                 jump Day1_escape_tit_fishing_for_wallet_with_merry_success
                 weight 3
                 jump Day1_escape_tit_fishing_for_wallet_with_merry_fail
-
-
-
-label Day1_tit_fishing_for_wallet_with_merry_fail:
-    "You fumble in your attempt to fish for your wallet with your mouth."
-    "In response, Merry jiggles her chest, causing you to sink in even deeper."
-    "She clearly is enjoying herself as she makes motorboat noises and teasing you,"
-    mer morning pervy grin "I think you nearly got it that time~ Keep it up you might just get it back~" 
-    "The jiggling pushes the wallet up a little more into view, you can see it more clearly."
-    $ Tit_Fishing_Item_Depth -= 1
-    menu:
-        "Commit":
-            random:
-                jump Day1_tit_fishing_for_wallet_with_merry_success
-                weight 5
-                jump Day1_tit_fishing_for_wallet_with_merry_fail
-        "Go Back":
+        "Need Air" if Times_Played_With_Boobs >= 2:
+            call sex_action(Jes, zone='boobs', action='pull out', target=Mer, sucChance=5)
             random:
                 jump Day1_escape_tit_fishing_for_wallet_with_merry_success
                 weight 3
                 jump Day1_escape_tit_fishing_for_wallet_with_merry_fail
         "Play With Her Tits" if Jes.arousal >= 3:
+            call sex_action(Jes, zone='boobs', action="grope", target=Mer, sucChance=5)
+            
             jump Day1_tit_fishing_for_wallet_with_merry_play_with_boobs
 
 
-label Day1_tit_fishing_for_wallet_with_merry_success:
-    
+label Day1_tit_fishing_for_wallet_with_merry_progress:
+    "You fumble in your attempt to fish for your wallet with your mouth."
+    "In response, Merry jiggles her chest, causing you to sink in even deeper."
+    "She clearly is enjoying herself as she makes motorboat noises and teasing you,"
+    mer morning pervy grin "I think you nearly got it that time~ Keep it up you might just get it back~" 
+    "The jiggling pushes the wallet up a little more into view, you can see it more clearly."
+    jump Day1_tit_fishing_for_wallet_with_merry_menu
+
 
 label Day1_tit_fishing_for_wallet_with_merry_play_with_boobs:
-    "Even though she's your sister, few guys could resist being turned on in a situation like this."
-    "And, since she was basically asking for it at this point, you decide to let yourself have some fun."
-    "Of course, you still try to get your wallet back, but with less focus."
-    "You push your face slightly deeper and playfully snappe your mouth for your wallet, however, you miss, ending up with nothing but skin"
-    call sex_action(Jes, "Pleasure Self")
-    "As you begin to have some fun with your sister you begin to slowly sweat a little as your growing thirst and lust begin to take hold."
-    "A small shiver runs down your back and you feel some sweat forming as well…"
+    if Times_Played_With_Boobs == 0:
+        "Even though she's your sister, few guys could resist being turned on in a situation like this."
+        "And, since she was basically asking for it at this point, you decide to let yourself have some fun."
+        "Of course, you still try to get your wallet back, but with less focus."
+        "You push your face slightly deeper and playfully snappe your mouth for your wallet, however, you miss, ending up with nothing but skin"
+        "As you begin to have some fun with your sister you begin to slowly sweat a little as your growing thirst and lust begin to take hold."
+        "A small shiver runs down your back and you feel some sweat forming as well…"
+        "Her tits jiggled energetically as you shove himself in,"
+        "She responds as you chomp down on her breast, it doesn't hurt her, but it tickes the right boxes." 
+        mer "Woah tiger, easy with the teeth, I'm sensiti- Ahn~" 
+        "She presses your face in harder,"
+        call sex_action(Mer, zone='boobs', action="smother face", target=Jes)
+        mer "You wanna play rough, motorboy? Let's play rough." 
+        "She shoves your face deep into her clevage, jiggling her breasts hard" 
+        "Your wallet sinks deeper inside"
+        jump Day1_tit_fishing_for_wallet_with_merry_menu
+    else: 
+        "At this point, you've all but given up on your wallet, and the pretense of trying to get it back, as the justification for what you're currently doing."
+        "You doesn't care anymore, her tits are too much fun." 
+        "You reache your hand up and grope her right tit as you sink your face deeper into her clevage, {i}vaguely{/i} in the direction of your wallet."
+        "She shoves you deep in, smacking your hand away lightly,"
+        mer "Hands off the merchandise unless you intend to add to it."
+        "The mounds soft shaking cause the wallet to sink deeper into her clevage."
+        call sex_action(Mer, zone='boobs', action="smother face", target=Jes)
+        "As you have your head firmly placed inside, the ample size of her sister’s breasts begin to slowly make it harder to breathe."
+        "Not from lack of oxygen, but from all the shaking wearing your mind down and overwhelming your nose in her feminine scent."
+        "A scent that your body is naturally interpreting as slightly off putting a natural result of biological adaptation to avoid inbreeding in this low-stakes fun the two are having."
+label Day1_tit_fishing_for_wallet_with_merry_success:
+    
+    

@@ -2,7 +2,7 @@
     class Char:
         def __init__(self, name, sex, abrev="", altName="", color="#ffffff", health=15, stam=10, strength=1,stomachHealth=0,
             acidStrength=0, stomachSize=0, size=1, acidResistance=1, acidFillRate=0,dexterity=1, constitution=1, lewdness=1,
-            arousalMax = 50, choiceWeights = 0, face = "Default", profile = None, sensitivity = [0,0,0,0,0,0,0,0], sexSkill = 1):
+            arousalMax = 100, choiceWeights = 0, face = "Default", profile = None, sensitivity = [0,0,0,0,0,0,0,0], sexSkill = 1):
 # Name fields ----------------------------------------------------------------------------------------------------------
             if name == "EMPTY CHAR":
                 self.name = name

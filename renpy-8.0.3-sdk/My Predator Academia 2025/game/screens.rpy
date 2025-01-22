@@ -94,17 +94,37 @@ screen charPicBox(char):
             text char.name size 15 color "#000000" xmaximum  150 xalign 0.5
 
 
-screen charStatBar(statName = "", stat = 0, statmax = 1, direction = 'right', useDir = False):
+screen charStatBar(statName="", stat=0, statmax=1, direction='right', useDir=False): 
     $ isLeft = True if direction == 'left' else False
+    $ bar_xalign = 0.0 if isLeft else 1.0  # Precompute alignment for the bar
+    $ text_xalign = 1.0 if isLeft else 0.0  # Precompute alignment for the text
     $ left = "Full" if isLeft else "Empty" 
     $ right = "Empty" if isLeft else "Full" 
-    $ L = stat if isLeft else statmax 
-    $ R = statmax if isLeft else stat 
     $ Style = "statBar" if isLeft else "statBarRev"
     $ hside = " left" if (isLeft and useDir) else ""
     $ LBar = f"{statName} Bar {left}{hside}.png"
     $ RBar = f"{statName} Bar {right}{hside}.png"
-    bar value (L * 100) range (R * 100) left_bar LBar right_bar RBar style Style
+
+    frame:
+        background None  # Make the frame background transparent
+        xmaximum 300  # Ensure the frame fits the bar width (adjust if needed)
+        ymaximum 40   # Ensure the frame fits the bar height (adjust if needed)
+
+        # The bar itself
+        bar:
+            value (stat * 100)
+            range (statmax * 100)
+            left_bar LBar
+            right_bar RBar
+            style Style
+            xalign bar_xalign  # Align bar to the correct side
+            yalign 0.0  # Top corner alignment
+
+        # The text that overlaps the end of the bar
+        text "[stat:.2f]/[statmax]" size 15 color '#ffffff':
+            xalign text_xalign  # Align text to the correct side
+            yalign 1.0  # Keep the text vertically aligned to the top
+
 
 
 screen charStatBox(char, bars, direction, isPred = False):
@@ -135,6 +155,8 @@ screen CharacterCol(chars, bars, isPred, hside):
         xalign xval
         background Solid("#000000aa")
         vbox:
+            yalign 0.0
+            xalign xval
             for char in chars:
                 if hside == 'left':
                     hbox:
@@ -167,7 +189,7 @@ screen voreGame():
 
 screen sexGame():
     $ columns = splitList(sexParticipants)
-    use CharacterCol(columns[0], sexBars, True, 'left')
+    use CharacterCol(columns[0], sexBars, False, 'left')
     use CharacterCol(columns[1], sexBars, False, 'right')
 
 

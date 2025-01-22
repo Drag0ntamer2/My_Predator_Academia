@@ -1,22 +1,22 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/day_1_home.rpy", line 196, in script
-    jump Day1_escape_tit_fishing_for_wallet_with_merry_fail
-ScriptError: could not find label 'Day1_escape_tit_fishing_for_wallet_with_merry_fail'.
+  File "game/day_1_home.rpy", line 195, in script
+    jump Day1_escape_tit_fishing_for_wallet_with_merry_success
+ScriptError: could not find label 'Day1_escape_tit_fishing_for_wallet_with_merry_success'.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/day_1_home.rpy", line 196, in script
-    jump Day1_escape_tit_fishing_for_wallet_with_merry_fail
+  File "game/day_1_home.rpy", line 195, in script
+    jump Day1_escape_tit_fishing_for_wallet_with_merry_success
   File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\ast.py", line 1705, in execute
     rv = renpy.game.script.lookup(target)
   File "C:\Users\Caleb Merroto\Documents\GitHub\My_Predator_Academia\renpy-8.0.3-sdk\renpy\script.py", line 1103, in lookup
     raise ScriptError("could not find label '%s'." % str(original))
-ScriptError: could not find label 'Day1_escape_tit_fishing_for_wallet_with_merry_fail'.
+ScriptError: could not find label 'Day1_escape_tit_fishing_for_wallet_with_merry_success'.
 
 Windows-10-10.0.22631 AMD64
 Ren'Py 8.3.5.25011801+nightly
 My Predator Academia 2025 1.0
-Tue Jan 21 16:11:58 2025
+Tue Jan 21 17:27:49 2025
