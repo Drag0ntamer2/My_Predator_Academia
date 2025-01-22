@@ -173,7 +173,6 @@ label Day1_fight_dirty_to_get_wallet:
     "Instead of grabbing your wallet with your hands, you end up slamming your face directly into her cleavage!"
     data mer hp = 20
     call sex_start([Jes, Mer], objective = "wallet")
-    jes "[Jes.arousal]"
     "Merry could have stepped out of the way, she chose not to."
     "You fall right smack into Merry's fat rack, and before you can pull out your head, she puts her hand over it to hold it down, thus you find it difficult to retreat from her soft canyon."
     data mer arousal +0.5
