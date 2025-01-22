@@ -102,8 +102,8 @@ screen charStatBar(statName="", stat=0, statmax=1, direction='right', useDir=Fal
     $ right = "Empty" if isLeft else "Full" 
     $ Style = "statBar" if isLeft else "statBarRev"
     $ hside = " left" if (isLeft and useDir) else ""
-    $ LBar = f"{statName} Bar {left}{hside}.png"
-    $ RBar = f"{statName} Bar {right}{hside}.png"
+    $ LBar = f"gui/bar/{statName} Bar {left}{hside}.png"
+    $ RBar = f"gui/bar/{statName} Bar {right}{hside}.png"
 
     frame:
         background None  # Make the frame background transparent
@@ -1622,35 +1622,35 @@ screen characters():
                                 spacing 10
 
                                 hbox:
-                                    add "images/size.png" xsize 75 ysize 75
+                                    add "gui/icon/size.png" xsize 75 ysize 75
                                     text f"{selected_char.size}" style "StatVal"
 
                                 hbox:
-                                    add "images/HP.png" xsize 75 ysize 75
+                                    add "gui/icon/HP.png" xsize 75 ysize 75
                                     text f"{selected_char.maxHp}" style "StatVal"
 
                                 hbox:
-                                    add "images/Stamina.png" xsize 75 ysize 75
+                                    add "gui/icon/Stamina.png" xsize 75 ysize 75
                                     text f"{selected_char.maxStam}" style "StatVal"
 
                                 hbox:
-                                    add "images/stren.png" xsize 75 ysize 75
+                                    add "gui/icon/stren.png" xsize 75 ysize 75
                                     text f"{selected_char.stren}" style "StatVal"
 
                                 hbox:
-                                    add "images/stomach size.png" xsize 60 ysize 60
+                                    add "gui/icon/stomach size.png" xsize 60 ysize 60
                                     text f"{selected_char.sSize}" style "StatVal"
 
                                 hbox:
-                                    add "images/stomach hp.png" xsize 75 ysize 75
+                                    add "gui/icon/stomach hp.png" xsize 75 ysize 75
                                     text f"{selected_char.maxShp}" style "StatVal"
 
                                 hbox:
-                                    add "images/acid fill.png" xsize 75 ysize 75
+                                    add "gui/icon/acid fill.png" xsize 75 ysize 75
                                     text f"{selected_char.aFill}" style "StatVal"
 
                                 hbox:
-                                    add "images/acid stren.png" xsize 75 ysize 75
+                                    add "gui/icon/acid stren.png" xsize 75 ysize 75
                                     text f"{selected_char.aStren}" style "StatVal"
 
                             if selected_char.profile:
