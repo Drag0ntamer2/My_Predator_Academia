@@ -40,6 +40,11 @@
             $ pred.reset()
             call stomachPartnerSelect
             call digestion_start(_return, sag)
+        "Yuliana Gomez":
+            $ pred = yul
+            $ pred.reset()
+            call stomachPartnerSelect
+            call digestion_start(_return, yul)
         "quit":
             return
     jump digestionRound
@@ -66,6 +71,11 @@ label stomachPartnerSelect:
             $ mealSize += lea.size
             $ lea.reset()
             $ stomachPartners.append(lea)
+            jump stomachPartnerSelect
+        "Yuliana Gomez" if (pred != yul) and not yul in stomachPartners and pred.sSize >= mealSize + yul.size:
+            $ mealSize += yul.size
+            $ yul.reset()
+            $ stomachPartners.append(yul)
             jump stomachPartnerSelect
         "That's all":
             return stomachPartners

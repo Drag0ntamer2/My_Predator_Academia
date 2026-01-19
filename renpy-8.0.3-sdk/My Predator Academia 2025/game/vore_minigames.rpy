@@ -4,7 +4,7 @@ label vore_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], P
         preyList = prey_list                                        # List of prey involved in the vore
         pred = Pred                                                 # Single pred participating in the vore
         predName = pred.name                                        # Store pred's name for display
-        vore_active = True                                      # Flag to indicate vore is active
+        vore_active = True                                          # Flag to indicate vore is active
 
         predBars = PredBars
         preyBars = PreyBars

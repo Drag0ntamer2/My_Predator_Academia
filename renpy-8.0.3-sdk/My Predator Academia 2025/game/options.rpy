@@ -12,7 +12,7 @@
 ##
 ## The _() surrounding the string marks it as eligible for translation.
 
-define config.name = _("My Predator Academia 2025")
+define config.name = _("IF YOU SEE THIS DRAGON, NEP AND VOEG SAYS HI")
 
 ## The game's difficulty
 ## Default difficulty level: 2 = Normal
