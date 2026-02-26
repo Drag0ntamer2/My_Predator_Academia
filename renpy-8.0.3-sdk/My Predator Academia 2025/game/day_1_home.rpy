@@ -1,4 +1,4 @@
-﻿label Day1_start:
+﻿label Day1_old:
     scene room day at fill_screen with dissolve # show the room background 
     "The day is quiet as the light buzz of a phone alarm sounds off around you, muffled by several layers of blankets and clothes on the bed."
     "The air is nice and brisk as you begin to breath in deeply and try to stretch and sprawl out of the bed in an attempt to further escape the tempting clutches of its soft covers." 

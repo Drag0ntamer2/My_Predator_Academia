@@ -392,14 +392,13 @@ init -9997 python:
         face="smug"
     )
 
-
-define jes = Jes.c
+define yul = Yul.c
+# define jes = Jes.c # On hold for now
 define sof = Sof.c
 define lea = Lea.c
 define fel = Fel.c
 define mer = Mer.c
 define ash = Ash.c
-define yul = Yul.c
 define ste = Ste.c
 define ast = Ast.c
 define sag = Sag.c
