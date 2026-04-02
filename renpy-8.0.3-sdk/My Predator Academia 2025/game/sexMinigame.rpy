@@ -1,3 +1,7 @@
+# We're removing this for now.
+
+
+
 label sex_start(participant_list, Player = Jes, statBars = [ False, True, False, True, False ], objective = 'pleasure'):
     python:
         sexParticipants = participant_list                          # List of actor involved in the minigame
