@@ -5,16 +5,6 @@
     "Starting the digestion minigame test."
     "pick your pred"
     menu:
-        "Felicity Ferocity":
-            $ pred = fel
-            $ pred.reset()
-            call stomachPartnerSelect
-            call digestion_start(_return, fel)
-        "Ash Grigori":
-            $ pred = ash
-            $ pred.reset()
-            call stomachPartnerSelect
-            call digestion_start(_return, ash)
         "Sofie Moon":
             $ pred = sof
             $ pred.reset()
@@ -30,16 +20,6 @@
             $ pred.reset()
             call stomachPartnerSelect
             call digestion_start(_return, lil)
-        "Astaria Oz Blair":
-            $ pred = ast
-            $ pred.reset()
-            call stomachPartnerSelect
-            call digestion_start(_return, ast)
-        "Sage Oz Blair":
-            $ pred = sag
-            $ pred.reset()
-            call stomachPartnerSelect
-            call digestion_start(_return, sag)
         "Yuliana Gomez":
             $ pred = yul
             $ pred.reset()
@@ -52,11 +32,6 @@
 label stomachPartnerSelect:
     "Chose stomach partners"
     menu:
-        "Felicity Ferocity" if (pred != fel) and not fel in stomachPartners and pred.sSize >= mealSize + fel.size:
-            $ stomachPartners.append(fel)
-            $ mealSize += fel.size
-            $ fel.reset()
-            jump stomachPartnerSelect
         "Lilly Oak" if (pred != lil) and not lil in stomachPartners and pred.sSize >= mealSize + lil.size:
             $ stomachPartners.append(lil)
             $ mealSize += lil.size
