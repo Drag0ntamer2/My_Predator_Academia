@@ -2,9 +2,17 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 109: 'background' is not a keyword argument or valid child of the fixed statement.
-    background "#00000000"
-              ^
+File "game/screens.rpy", line 242: expected ':' not found.
+    else
+        ^
 
-Ren'Py Version: Ren'Py 8.3.5.25011801+nightly
-Wed Jan 22 11:41:16 2025
+File "game/screens.rpy", line 339: expected ':' not found.
+    else
+        ^
+
+File "game/screens.rpy", line 379: expected ':' not found.
+    else
+        ^
+
+Ren'Py Version: Ren'Py 8.3.4.24120703
+Mon Aug 24 11:45:12 2026

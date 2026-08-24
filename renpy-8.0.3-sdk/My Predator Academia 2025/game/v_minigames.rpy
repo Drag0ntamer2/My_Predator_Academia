@@ -1,12 +1,34 @@
-﻿label digestion_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], PreyBars = predBars = [ True, True, True, True, False ]):
-label vore_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], PreyBars = predBars = [ True, True, True, True, False]):
+﻿label digestion_start( 
+    prey_list,
+    Pred,
+    PredBars = [ True, True, True, True, True ],
+    PreyBars = [ True, True, True, True, False ]
+):
+    python:
+        preyList = prey_list
+        pred = Pred
+        predName = pred.name
+        v_active = True
+        predBars = PredBars
+        preyBars = PreyBars
+
+        for prey in preyList:
+            prey.inStomach = True
+
+    return
+label v_start(
+    prey_list,
+    Pred,
+    PredBars = [ True, True, True, True, True ],
+    PreyBars = [ True, True, True, True, False ]
+):
     # MINIGAME SETUP: store the participants and mark each prey as inside.
     # The action labels below mutate these participant objects.
     python:
-        preyList = prey_list                                        # List of prey involved in the vore
-        pred = Pred                                                 # Single pred participating in the vore
+        preyList = prey_list                                        # List of prey involved in the v
+        pred = Pred                                                 # Single pred participating in the v
         predName = pred.name                                        # Store pred's name for display
-        vore_active = True                                          # Flag to indicate vore is active
+        v_active = True                                          # Flag to indicate v is active
 
         predBars = PredBars
         preyBars = PreyBars
@@ -17,7 +39,7 @@ label vore_start(prey_list, Pred, PredBars = [ True, True, True, True, True ], P
 
 
 
-label prey_vore_action(prey, preyAction="rest", target = None):
+label prey_v_action(prey, preyAction="rest", target = None):
     # PREY TURN: choose an action, pay its stamina cost, and resolve its effects.
     $ preyName = prey.name                                          # Get prey's name for display
 
@@ -136,12 +158,12 @@ label prey_vore_action(prey, preyAction="rest", target = None):
             preyList = newPreyList
 
     if len(preyList) == 0:
-        $ vore_active = False                                     # Flag to indicate vore is no longer active
+        $ v_active = False                                     # Flag to indicate v is no longer active
     return preyAction
 
 
 
-label pred_vore_action(predAction, type="digest", target=None):
+label pred_v_action(predAction, type="digest", target=None):
     # PREDATOR TURN: choose an action, pay stamina, then update compression,
     # disorientation, acid, and direct effects on the prey.
 

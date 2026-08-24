@@ -173,7 +173,7 @@ screen CharacterCol(chars, bars, isPred, hside):
 
 
 
-screen voreGame():
+screen vGame():
     $ predList = [ pred ]
     use CharacterCol(predList, predBars, True, 'left')
     use CharacterCol(preyList, preyBars, False, 'right')
@@ -187,10 +187,10 @@ screen voreGame():
             text "Compression | [pred.comp:.2f]"
 
 
-screen sexGame():
-    $ columns = splitList(sexParticipants)
-    use CharacterCol(columns[0], sexBars, False, 'left')
-    use CharacterCol(columns[1], sexBars, False, 'right')
+screen sGame():
+    $ columns = splitList(sParticipants)
+    use CharacterCol(columns[0], sBars, False, 'left')
+    use CharacterCol(columns[1], sBars, False, 'right')
 
 
 
@@ -233,13 +233,12 @@ screen say(who, what):
     if not renpy.variant("small"):
         add SideImage() xalign 0.0 yalign 1.0 xsize 300 ysize 300
 
-    # vore stats
-    if vore_active:
-        use voreGame()
-    # sex stats
-    elif sex_active:
-        use sexGame()
-        
+    # v stats
+    if v_active:
+        use vGame()
+    # s stats
+#    elif s_active:
+#        use sGame()
 
 
 
@@ -330,12 +329,12 @@ screen input(prompt):
             text prompt style "input_prompt"
             input id "input"
 
-    # vore stats
-    if vore_active:
-        use voreGame()
-    # sex stats
-    elif sex_active:
-        use sexGame()
+    # v stats
+    if v_active:
+        use vGame()
+    # s stats
+#    elif s_active:
+#        use sGame()
 
 
 
@@ -369,12 +368,12 @@ screen choice(items):
 
 
 
-    # vore stats
-    if vore_active:
-        use voreGame()
-    # sex stats
-    elif sex_active:
-        use sexGame()
+    # v stats
+    if v_active:
+        use vGame()
+    # s stats
+#    elif s_active:
+#        use sGame()
 
 
 style choice_vbox is vbox

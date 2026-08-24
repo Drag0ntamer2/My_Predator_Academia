@@ -2,7 +2,7 @@
 
 
 
-label sex_start(participant_list, Player = Jes, statBars = [ False, True, False, True, False ], objective = 'pleasure'):
+label s_start(participant_list, Player = Jes, statBars = [ False, True, False, True, False ], objective = 'pleasure'):
     python:
         sexParticipants = participant_list                          # List of actor involved in the minigame
         player = player                                             # Single pred participating in the minigame
@@ -16,7 +16,7 @@ label sex_start(participant_list, Player = Jes, statBars = [ False, True, False,
 
 
 
-label sex_action(actor, zone="lips", action="rest", target=None, sucChance = 5, progressStor=None):
+label s_action(actor, zone="lips", action="rest", target=None, sucChance = 5, progressStor=None):
     $ name = actor.name                                          # Get actor's name for display
 
     "[name] used {b}[action]{/b}"                                       # reveal action used by actor

@@ -17,11 +17,11 @@
             jump Day1_get_up
 
 
-label Day1_sleep_in:
+# label Day1_sleep_in:
     # unfinished
 
 
-label Day1_scroll_news:
+# label Day1_scroll_news:
     # unfinished
 
 

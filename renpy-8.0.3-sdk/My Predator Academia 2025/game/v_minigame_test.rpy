@@ -1,30 +1,30 @@
 ﻿label digestionTesting:
     $ round = 1
-    $ stomachPartners = [jes]
-    $ mealSize = jes.size
+    $ stomachPartners = [Yul]
+    $ mealSize = Yul.size
     "Starting the digestion minigame test."
     "pick your pred"
     menu:
         "Sofie Moon":
-            $ pred = sof
+            $ pred = Sof
             $ pred.reset()
             call stomachPartnerSelect
-            call digestion_start(_return, sof)
+            call digestion_start(_return, Sof)
         "Leah Anagro":
-            $ pred = lea
+            $ pred = Lea
             $ pred.reset()
             call stomachPartnerSelect
-            call digestion_start(_return, lea)
+            call digestion_start(_return, Lea)
         "Lilly Oak":
-            $ pred = lil
+            $ pred = Lil
             $ pred.reset()
             call stomachPartnerSelect
-            call digestion_start(_return, lil)
-        "Yuliana Gomez":
-            $ pred = yul
+            call digestion_start(_return, Lil)
+        "Yuliana Gomez (broken?)":
+            $ pred = Yul
             $ pred.reset()
             call stomachPartnerSelect
-            call digestion_start(_return, yul)
+            call digestion_start(_return, Yul)
         "quit":
             return
     jump digestionRound
@@ -32,25 +32,25 @@
 label stomachPartnerSelect:
     "Chose stomach partners"
     menu:
-        "Lilly Oak" if (pred != lil) and not lil in stomachPartners and pred.sSize >= mealSize + lil.size:
-            $ stomachPartners.append(lil)
-            $ mealSize += lil.size
-            $ lil.reset()
+        "Lilly Oak" if (pred != Lil) and not Lil in stomachPartners and pred.sSize >= mealSize + Lil.size:
+            $ stomachPartners.append(Lil)
+            $ mealSize += Lil.size
+            $ Lil.reset()
             jump stomachPartnerSelect
-        "Sofie Moon" if (pred != sof) and not sof in stomachPartners and pred.sSize >= mealSize + sof.size:
-            $ stomachPartners.append(sof)
-            $ mealSize += sof.size
-            $ sof.reset()
+        "Sofie Moon" if (pred != Sof) and not Sof in stomachPartners and pred.sSize >= mealSize + Sof.size:
+            $ stomachPartners.append(Sof)
+            $ mealSize += Sof.size
+            $ Sof.reset()
             jump stomachPartnerSelect
-        "Leah Anagro" if (pred != lea) and not lea in stomachPartners and pred.sSize >= mealSize + lea.size:
-            $ mealSize += lea.size
-            $ lea.reset()
-            $ stomachPartners.append(lea)
+        "Leah Anagro" if (pred != Lea) and not Lea in stomachPartners and pred.sSize >= mealSize + Lea.size:
+            $ mealSize += Lea.size
+            $ Lea.reset()
+            $ stomachPartners.append(Lea)
             jump stomachPartnerSelect
-        "Yuliana Gomez" if (pred != yul) and not yul in stomachPartners and pred.sSize >= mealSize + yul.size:
-            $ mealSize += yul.size
-            $ yul.reset()
-            $ stomachPartners.append(yul)
+        "Yuliana Gomez" if (pred != Yul) and not Yul in stomachPartners and pred.sSize >= mealSize + Yul.size:
+            $ mealSize += Yul.size
+            $ Yul.reset()
+            $ stomachPartners.append(Yul)
             jump stomachPartnerSelect
         "That's all":
             return stomachPartners
@@ -77,62 +77,64 @@ label preyMoveSelection(prey, preyName):
         "Struggle":
             menu:
                 "Light":
-                    call prey_vore_action(prey, "light struggle")
+                    call prey_v_action(prey, "light struggle")
                     return
                 "Moderate":
-                    call prey_vore_action(prey, "moderate struggle")
+                    call prey_v_action(prey, "moderate struggle")
                     return
                 "Aggressive":
-                    call prey_vore_action(prey, "aggressive struggle")
+                    call prey_v_action(prey, "aggressive struggle")
                     return
         "Rest":
-            call prey_vore_action(prey, "rest")
+            call prey_v_action(prey, "rest")
             return
         "Massage":
-            call prey_vore_action(prey, "massage")
+            call prey_v_action(prey, "massage")
             return
         "Brace":
-            call prey_vore_action(prey, "brace")
+            call prey_v_action(prey, "brace")
             return
         "Pleasure Self":
-            call prey_vore_action(prey, "Pleasure Self")
+            call prey_v_action(prey, "Pleasure Self")
             return
         "Pleasure Pred":
-            call prey_vore_action(prey, "Try to pleasure pred")
+            call prey_v_action(prey, "Try to pleasure pred")
             return
         "Interact With Stomach Partner" if len(preyList) > 1:
             menu:
                 "Pleasure [preyList[0].name]" if not prey == preyList[0]:
-                    call prey_vore_action(prey, "Pleasure Fellow Prey", preyList[0])
+                    call prey_v_action(prey, "Pleasure Fellow Prey", preyList[0])
                     return
                 "Pleasure [preyList[1].name]" if not prey == preyList[1]:
-                    call prey_vore_action(prey, "Pleasure Fellow Prey", preyList[1])
+                    call prey_v_action(prey, "Pleasure Fellow Prey", preyList[1])
                     return
                 "Pleasure [preyList[2].name]" if (len(preyList) >= 3) and not (prey == preyList[2]):
-                    call prey_vore_action(prey, "Pleasure Fellow Prey", preyList[2])
+                    call prey_v_action(prey, "Pleasure Fellow Prey", preyList[2])
                     return
                 "Pleasure [preyList[3].name]" if (len(preyList) >= 4) and not (prey == preyList[3]):
-                    call prey_vore_action(prey, "Pleasure Fellow Prey", preyList[3])
+                    call prey_v_action(prey, "Pleasure Fellow Prey", preyList[3])
                     return
 label predActionSelect:
     #$ predAct = renpy.random.randint(1,5)
     #$ predAct = 5
     #if predAct == 1:
-    #    call pred_vore_action("squeeze", "digest")
+    #    call pred_v_action("squeeze", "digest")
     #elif predAct == 2:
     #    if pred.arousal < 35:
-    #        call pred_vore_action("crush", "digest")
+    #        call pred_v_action("crush", "digest")
     #    else:
-    #        call pred_vore_action("squeeze", "digest")
+    #        call pred_v_action("squeeze", "digest")
     #elif predAct == 3:
-    #    call pred_vore_action("massage", "digest")
+    #    call pred_v_action("massage", "digest")
     #elif predAct == 4:
-    #    call pred_vore_action("rest", "digest")
+    #    call pred_v_action("rest", "digest")
     #elif predAct == 5:
-    #    call pred_vore_action("shake", "digest")
+    #    call pred_v_action("shake", "digest")
 
-    call pred_vore_action(pred.chooseAction(), "digest")
-
+    $ predAction = renpy.random.choice(["squeeze", "crush", "massage", "rest", "shake"])
+    call pred_v_action(predAction, "digest")
+    # call pred_v_action(pred.chooseAction(), "digest")
+    
     # Check for end conditions
     if len(preyList) == 0:
         "Game Over"

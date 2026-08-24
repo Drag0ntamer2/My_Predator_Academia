@@ -4,8 +4,8 @@
 default loop = 0
 
 
-# Vore Minigame
-default vore_active = False
+# V Minigame
+default v_active = False
 default view = "outer"
 default preyList = []
 default pred = None
@@ -70,7 +70,7 @@ label start:
     menu:
         "start game":
             jump Day1_start
-        "test vore vore":
+        "test v vo":
             jump digestionTesting
 
 

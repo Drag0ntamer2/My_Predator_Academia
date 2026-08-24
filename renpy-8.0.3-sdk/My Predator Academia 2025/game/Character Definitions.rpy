@@ -114,5 +114,4 @@ define yul = Yul.c
 define sof = Sof.c
 define lea = Lea.c
 define lil = Lil.c
-define esl = Esl.c
 define lau = Lau.c
